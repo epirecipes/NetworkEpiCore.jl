@@ -61,16 +61,16 @@ function _isvariable(x)
     return false
 end
 
-# The variables of an expression in order of first appearance (depth first; SymbolicUtils keeps
-# the arguments of sums and products in a canonical order). A called variable S(t) is one
-# variable: its argument t is not collected.
+# The variables of an expression in order of first appearance (depth first, with the arguments of
+# sums and products in the canonical order of _sorted_arguments, below). A called variable S(t)
+# is one variable: its argument t is not collected.
 function _variables!(out::Vector{Any}, x)
     x = _unwrap(x)
     x isa SU.BasicSymbolic || return out
     if _isvariable(x)
         any(y -> isequal(y, x), out) || push!(out, x)
     elseif SU.iscall(x)
-        for a in SU.arguments(x)
+        for a in _sorted_arguments(x)
             _variables!(out, a)
         end
     end
@@ -116,6 +116,228 @@ function _number(x)
 end
 
 _iszero_const(x) = (n = _number(x); n !== nothing && iszero(n))
+
+# ---------------------------------------------------------------------------------------------
+# Canonical order and printing
+# ---------------------------------------------------------------------------------------------
+#
+# SymbolicUtils keeps (and prints) the terms of a sum and the factors of a product in an internal
+# order that has changed between releases and, in recent ones, depends on hashes that differ
+# between Julia sessions: `q1*σ` or `σ*q1`, `-x + max(x, 0)` or `max(x, 0) - x`, and `t > 150`
+# is stored as `150 < t`. Everything that depends on an order (messages, the order in which
+# variables are collected and probed, the IR expressions of the front ends) uses the order fixed
+# here instead, so it is the same in every session and every release:
+#
+# - in a product, the number, then variables and their powers by name, then the other factors by
+#   their text (`-S*ν*ifelse(t > 150, 1, 0)`, `x*max(-2 + a, 0)`, `q1*σ`);
+# - in a sum, the number, then monomials in variables by degree and text, then the other terms by
+#   their text (`-2 + a`, `σ - q1*σ - q2*σ`, `-x + max(x, 0)`);
+# - a comparison with a number on the left and no number on the right is turned around
+#   (`t > 150`, `a > 2`).
+#
+# `_canonical_string` prints an expression in that order, in the format of SymbolicUtils
+# (`2β`, `-10000.0a`, `x*(y^2)`, `x / (1 + a)`, `(1//2)*x`).
+
+_isop(x, f) = x isa SU.BasicSymbolic && SU.iscall(x) && SU.operation(x) === f
+
+const _FLIPPED = Dict{Any,Any}((<) => (>), (>) => (<), (<=) => (>=), (>=) => (<=))
+
+# A factor that is a variable or a power of one (the base is returned), else nothing.
+function _variable_base(a)
+    _isvariable(a) && return a
+    if _isop(a, ^)
+        b, e = SU.arguments(a)
+        (_isvariable(b) && _number(e) isa Real) && return b
+    end
+    return nothing
+end
+
+_typetext(v) = v isa SU.BasicSymbolic ? string(SU.symtype(v)) : string(typeof(v))
+
+# Sort key of a factor of a product: (class, name or text, text, type).
+function _factor_key(a)
+    a = _unwrap(a)
+    n = _number(a)
+    n !== nothing && return (0, "", string(n), "")
+    b = _variable_base(a)
+    b !== nothing && return (1, _canonical_string(b), _canonical_string(a), _typetext(b))
+    return (2, _canonical_string(a), "", _typetext(a))
+end
+
+# A term of a sum as (numeric coefficient, the other factors).
+function _coefficient_split(x)
+    n = _number(x)
+    n !== nothing && return (n, Any[])
+    if _isop(x, *)
+        c = 1
+        rest = Any[]
+        for a in SU.arguments(x)
+            m = _number(a)
+            m === nothing ? push!(rest, _unwrap(a)) : (c *= m)
+        end
+        return (c, rest)
+    end
+    return (1, Any[x])
+end
+
+# Sort key of a term of a sum: (class, degree, exponents, text without the coefficient, text,
+# type). Monomials of one degree are in graded lexicographic order of their exponents by variable
+# name (`δ^2 - 2δ*τ + τ^2`).
+function _term_key(x)
+    x = _unwrap(x)
+    c, rest = _coefficient_split(x)
+    noexp = Tuple{String,Float64}[]
+    isempty(rest) && return (0, 0.0, noexp, "", string(c), "")
+    degree = 0.0
+    monomial = true
+    exps = Tuple{String,Float64}[]
+    for f in rest
+        b = _variable_base(f)
+        if b === nothing
+            monomial = false
+            continue
+        end
+        e = b === f ? 1.0 : Float64(_number(SU.arguments(f)[2]))
+        degree += e
+        push!(exps, (_canonical_string(b), -e))
+    end
+    mag = _mul_string(1, _sorted_factors(rest))
+    return (monomial ? 1 : 2, monomial ? degree : 0.0, monomial ? sort!(exps) : noexp, mag,
+            _canonical_string(x), join(_typetext.(rest), ","))
+end
+
+_sorted_factors(fs) = sort!(collect(Any, fs); by = _factor_key)
+
+# The arguments of x in the canonical order (sums and products sorted; other calls as they are).
+function _sorted_arguments(x)
+    args = collect(Any, SU.arguments(x))
+    _isop(x, +) && return sort!(args; by = _term_key)
+    _isop(x, *) && return sort!(args; by = _factor_key)
+    return args
+end
+
+function _canonical_string(x)
+    x = _unwrap(x)
+    x isa SU.BasicSymbolic || return string(x)
+    io = IOBuffer()
+    _cprint(io, x)
+    return String(take!(io))
+end
+
+_paren_number(n) = n isa Rational || (n isa Complex && !iszero(imag(n))) ||
+                   (n isa Number && !isfinite(n))
+
+function _print_number(io, n)
+    _paren_number(n) ? print(io, "(", n, ")") : print(io, n)
+end
+
+# An argument of a product, a power or a binary operator: in parentheses if it is itself a
+# product, sum, power, quotient or binary operation (as SymbolicUtils prints it).
+function _cprint_arg(io, a)
+    a = _unwrap(a)
+    if a isa SU.BasicSymbolic && SU.iscall(a)
+        f = SU.operation(a)
+        if !(f isa SU.BasicSymbolic) && (f === (*) || f === (+) || f === (^) || f === (/) ||
+                                         (applicable(nameof, f) &&
+                                          Base.isbinaryoperator(nameof(f))))
+            print(io, "(")
+            _cprint(io, a)
+            print(io, ")")
+            return
+        end
+    end
+    _cprint(io, a)
+end
+
+# A product c·f₁·f₂⋯ with the factors already in order.
+function _mul_string(c, fs)
+    io = IOBuffer()
+    _print_mul(io, c, fs)
+    return String(take!(io))
+end
+
+function _print_mul(io, c, fs)
+    isempty(fs) && return _print_number(io, c)
+    (isone(c) && length(fs) == 1) && return _cprint(io, fs[1])   # a term of a sum: sin(x)^2
+    if c == -1
+        print(io, "-")
+    elseif !isone(c)
+        _print_number(io, c)
+        _paren_number(c) && print(io, "*")          # (1//2)*x, but 2x and -10000.0a
+    end
+    for (i, f) in enumerate(fs)
+        i == 1 || print(io, "*")
+        _cprint_arg(io, f)
+    end
+end
+
+function _cprint(io, x)
+    n = _number(x)
+    n !== nothing && return _print_number(io, n)
+    x isa SU.BasicSymbolic || return print(io, x)
+    SU.iscall(x) || return print(io, x)
+    f = SU.operation(x)
+    args = SU.arguments(x)
+    if f === (+)
+        for (i, t) in enumerate(_sorted_arguments(x))
+            c, rest = _coefficient_split(t)
+            neg = c isa Real && c < 0
+            if i == 1
+                neg && print(io, "-")
+            else
+                print(io, neg ? " - " : " + ")
+            end
+            _print_mul(io, neg ? -c : c, _sorted_factors(rest))
+        end
+    elseif f === (*)
+        c, rest = _coefficient_split(x)
+        _print_mul(io, c, _sorted_factors(rest))
+    elseif f === (^) && length(args) == 2
+        b, e = args
+        nb = _number(b)
+        if nb isa Real && nb < 0
+            print(io, "(")
+            _cprint(io, b)
+            print(io, ")")
+        else
+            _cprint_arg(io, b)
+        end
+        print(io, "^")
+        _cprint_arg(io, e)
+    elseif haskey(_FLIPPED, f) && length(args) == 2
+        l, r = args
+        if _number(l) !== nothing && _number(r) === nothing
+            l, r, f = r, l, _FLIPPED[f]
+        end
+        _cprint_arg(io, l)
+        print(io, " ", nameof(f), " ")
+        _cprint_arg(io, r)
+    elseif _isvariable(x) || f === getindex
+        print(io, x)
+    elseif !(f isa SU.BasicSymbolic) && applicable(nameof, f) &&
+           Base.isunaryoperator(nameof(f)) && length(args) == 1
+        print(io, nameof(f))
+        _cprint_arg(io, args[1])
+    elseif !(f isa SU.BasicSymbolic) && applicable(nameof, f) &&
+           Base.isbinaryoperator(nameof(f)) && length(args) > 1
+        for (i, a) in enumerate(args)
+            i == 1 || print(io, " ", nameof(f), " ")
+            _cprint_arg(io, a)
+        end
+    else
+        f isa SU.BasicSymbolic ? _cprint(io, f) :
+            print(io, applicable(nameof, f) ? nameof(f) : f)
+        print(io, "(")
+        for (i, a) in enumerate(args)
+            i == 1 || print(io, ", ")
+            _cprint(io, a)
+        end
+        print(io, ")")
+    end
+    return nothing
+end
+
+NEC._symbolic_string(x::Union{Symbolics.Num,SU.BasicSymbolic}) = _canonical_string(x)
 
 # Fold the constant subexpressions of x (exp(0) → 1.0, log(1) → 0): simplify does not, so
 # without folding exp(0)·τ − τ is not recognised as 0 (§D.7). An ifelse whose branches are equal,
@@ -281,8 +503,8 @@ function _display(e)
     x isa SU.BasicSymbolic || return string(x)
     subs = Dict{Any,Any}(v => _unwrap(Symbolics.variable(_fresh_name(v)))
                          for v in _variables(x) if occursin('›', string(_name(v))))
-    isempty(subs) && return string(x)
-    return string(Symbolics.substitute(x, subs))
+    isempty(subs) && return _canonical_string(x)
+    return _canonical_string(Symbolics.substitute(x, subs))
 end
 
 # Numeric evaluation of expressions in the variables `vars` (vectors of values in that order):
@@ -317,7 +539,7 @@ end
 function _tofloat(x)
     n = _number(x)
     n === nothing && throw(ArgumentError(
-        "the expression $(x) did not evaluate to a number (free variables " *
+        "the expression $(_canonical_string(x)) did not evaluate to a number (free variables " *
         "$(join(string.(_name.(_variables(x))), ", ")))"))
     return Float64(real(n))
 end
@@ -421,11 +643,12 @@ function NEC._symbolic_nonscalar_variables(r::_SymRate)
         isarray = SU.symtype(x) <: AbstractArray
         (SU.issym(x) && !isarray) && continue
         desc = if SU.iscall(x) && SU.operation(x) === getindex
-            "$(x) (an element of the array $(first(SU.arguments(x))))"
+            "$(_canonical_string(x)) (an element of the array $(first(SU.arguments(x))))"
         elseif isarray
-            "$(x) (an array)"
+            "$(_canonical_string(x)) (an array)"
         else
-            "$(x) (a function of $(join(string.(SU.arguments(x)), ", ")))"
+            "$(_canonical_string(x)) (a function of " *
+            "$(join(_canonical_string.(SU.arguments(x)), ", ")))"
         end
         desc in out || push!(out, desc)
     end
@@ -618,13 +841,13 @@ const _ANALYTIC_OPS = Set{Any}([+, -, *, /, ^, inv, identity, abs2, exp, exp2, e
                                 sinpi, cospi, sinh, cosh, tanh, asin, acos, atan, asinh, acosh,
                                 atanh])
 
-# The maximal subexpressions of x whose operation is not analytic, in order of first appearance.
-# A variable (θ, S(t), x[1]) is not one.
+# The maximal subexpressions of x whose operation is not analytic, in order of first appearance
+# (in the canonical order of the arguments). A variable (θ, S(t), x[1]) is not one.
 function _opaque_parts!(out::Vector{Any}, x)
     x = _unwrap(x)
     (x isa SU.BasicSymbolic && SU.iscall(x) && !_isvariable(x)) || return out
     if SU.operation(x) in _ANALYTIC_OPS
-        for a in SU.arguments(x)
+        for a in _sorted_arguments(x)
             _opaque_parts!(out, a)
         end
     else
@@ -1080,7 +1303,7 @@ function _additive_terms(x)
     x = _unwrap(x)
     _iszero_const(x) && return Any[]
     if x isa SU.BasicSymbolic && SU.iscall(x) && SU.operation(x) === (+)
-        return reduce(vcat, (_additive_terms(a) for a in SU.arguments(x)); init = Any[])
+        return reduce(vcat, (_additive_terms(a) for a in _sorted_arguments(x)); init = Any[])
     elseif x isa SU.BasicSymbolic && SU.iscall(x) && SU.operation(x) === (/)
         num, den = SU.arguments(x)
         ts = _additive_terms(Symbolics.expand(_wrap(num)))

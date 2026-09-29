@@ -374,7 +374,7 @@ end
                            D(I) ~ τ * (2 + cos(t)) * S * I - γ * I, D(R) ~ γ * I], t; name = :pos))
     cpos = contact_model(pos; allow_t = true)
     @test NEC._uses_time(only(contacts(cpos)).rate)
-    @test "the sign of the coefficient `2τ + cos(t)*τ` of S*I in D(I) is read numerically: " *
+    @test "the sign of the coefficient `2τ + τ*cos(t)` of S*I in D(I) is read numerically: " *
           "positive at all 41 probe points with t ∈ [0.1, 1000.0] (log scale) and τ ∈ [0.1, 0.9] " *
           "(its form alone does not fix it)" in provenance(cpos).assumptions
     # the ambiguity error names each loss when they differ, and the actual products
@@ -591,14 +591,14 @@ end
     @test rate_value(va, Dict(:ν => 0.5); t = 200.0) == 0.5
     @test rate_value(va, Dict(:ν => 0.5); t = 100.0) == 0
     @test same_field(ca, eqa)
-    @test "the sign of the coefficient `ifelse(t > 150, 1, 0)*ν` of S in D(V) is read " *
+    @test "the sign of the coefficient `ν*ifelse(t > 150, 1, 0)` of S in D(V) is read " *
           "numerically: positive at 11 of the 41 probe points and 0 at the other 30, with " *
           "t ∈ [0.1, 1000.0] (log scale) and ν ∈ [0.1, 0.9] (its form alone does not fix it)" in
           provenance(ca).assumptions
     # on a time box that ends before the switch, the coefficient is 0 at every probe point: an
     # error that names it, never a silent 0
     @test err(() -> contact_model(sa; allow_t = true, time_box = (0.1, 100.0))) ==
-          "ArgumentError: contact_model(:sa): the coefficient `ifelse(t > 150, 1, 0)*ν` of S in " *
+          "ArgumentError: contact_model(:sa): the coefficient `ν*ifelse(t > 150, 1, 0)` of S in " *
           "D(S) is not provably 0, but it is 0 at all 41 probe points with t ∈ [0.1, 100.0] " *
           "(log scale) and ν ∈ [0.1, 0.9], so its sign cannot be read (a rate that is switched " *
           "on outside the probe box, such as ν*ifelse(t > 150, 1, 0) for t ≤ 100 or " *
@@ -612,14 +612,14 @@ end
                        transitions = [ν * ifelse(t > 150, 1, 0) * S => (:S, :V)])
     @test [(tr.from, tr.to) for tr in node_transitions(cx)] == [(:S, :V), (:I, :R)]
     @test same_field(cx, eqa)
-    @test "the rate `ifelse(t > 150, 1, 0)*ν` of the explicit transition S → V is taken as " *
+    @test "the rate `ν*ifelse(t > 150, 1, 0)` of the explicit transition S → V is taken as " *
           "given: it is not provably 0, but it is 0 at all 41 probe points with " *
           "t ∈ [0.1, 100.0] (log scale) and ν ∈ [0.1, 0.9]" in provenance(cx).assumptions
     # a positive sign read from the probes is noted for an explicit rate as well (WP10fix
     # review: only the rates taken as given were noted)
     cy = contact_model(sa; allow_t = true,
                        transitions = [ν * ifelse(t > 150, 1, 0) * S => (:S, :V)])
-    @test "the sign of the rate `ifelse(t > 150, 1, 0)*ν` of the explicit transition S → V is " *
+    @test "the sign of the rate `ν*ifelse(t > 150, 1, 0)` of the explicit transition S → V is " *
           "read numerically: positive at 11 of the 41 probe points and 0 at the other 30, with " *
           "t ∈ [0.1, 1000.0] (log scale) and ν ∈ [0.1, 0.9] (its form alone does not fix it)" in
           provenance(cy).assumptions
@@ -630,7 +630,7 @@ end
     # is refused, as not provably 0 (WP10fix review: the message said "not identically 0")
     eqg = [D(S) ~ -τ * S * I + (exp(log(p)) - p) * ν * S, D(I) ~ τ * S * I - γ * I, D(R) ~ γ * I]
     @test startswith(err(() -> contact_model(complete(System(eqg, t; name = :sg)))),
-                     "ArgumentError: contact_model(:sg): the coefficient `p*ν - exp(log(p))*ν` " *
+                     "ArgumentError: contact_model(:sg): the coefficient `p*ν - ν*exp(log(p))` " *
                      "of S in D(S) is not provably 0, but it is 0 at all 41 probe points")
     @test_throws ArgumentError contact_model(sa; allow_t = true, time_box = (100.0, 10.0))
     @test_throws ArgumentError contact_model(sa; allow_t = true, time_box = (-1.0, 10.0))
@@ -639,9 +639,9 @@ end
            D(R) ~ γ * I]
     sb = complete(System(eqb, t; name = :sb))
     cb = contact_model(sb; allow_t = true)
-    @test only(contacts(cb)).rate == :(max(t - 200, 0) * τ) && same_field(cb, eqb)
+    @test only(contacts(cb)).rate == :(τ * max(t - 200, 0)) && same_field(cb, eqb)
     @test startswith(err(() -> contact_model(sb; allow_t = true, time_box = (0.1, 100.0))),
-                     "ArgumentError: contact_model(:sb): the coefficient `-max(-200 + t, 0)*τ` " *
+                     "ArgumentError: contact_model(:sb): the coefficient `-τ*max(-200 + t, 0)` " *
                      "of S*I in D(S) is not provably 0, but it is 0 at all 41 probe points " *
                      "with t ∈ [0.1, 100.0] (log scale) and τ ∈ [0.1, 0.9], so its sign cannot " *
                      "be read")

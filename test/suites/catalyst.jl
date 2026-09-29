@@ -1448,7 +1448,7 @@ end
     @test !isequal(βr, βi)
     cmdup = ContactModel(:dup; contacts = [Contact(:S, :I, :I, βr + 2βi)],
                          transitions = [NodeTransition(:I, :R, :γ)])
-    @test occursin("uses two different variables named β (Real and Int64)",
+    @test occursin("uses two different variables named β (Int64 and Real)",
                    errtext(() -> Catalyst.ReactionSystem(cmdup)))
     # a scalar symbolic rate is rebound to the new parameter of that name
     @parameters ksc

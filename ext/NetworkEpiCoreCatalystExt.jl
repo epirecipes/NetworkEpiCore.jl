@@ -37,6 +37,11 @@ const MTKB = Catalyst.ModelingToolkitBase
 _name(x) = Symbol(Symbolics.getname(x))
 _issymbolic(x) = Symbolics.unwrap(x) isa SU.BasicSymbolic
 
+# The canonical order of the arguments of sums and products, and the canonical printing, of
+# NetworkEpiCoreSymbolicsExt (SymbolicUtils' own order changes between releases and sessions).
+_SX() = Base.get_extension(NetworkEpiCore, :NetworkEpiCoreSymbolicsExt)
+_canonical(x) = _SX()._canonical_string(x)
+
 struct _Context
     species::Vector{Any}              # unwrapped species variables, in Catalyst order
     species_names::Vector{Symbol}
@@ -216,9 +221,9 @@ function _to_expr(x, ctx, display)
         (display || haskey(ctx.params, n)) && return n
         throw(_NotArithmetic("the variable $(n), which is not a parameter"))
     end
-    SU.iscall(x) || throw(_NotArithmetic(string(x)))
+    SU.iscall(x) || throw(_NotArithmetic(_canonical(x)))
     op = SU.operation(x)
-    args = SU.arguments(x)
+    args = _SX()._sorted_arguments(x)       # sums and products in the canonical order
     conv(a) = _to_expr(a, ctx, display)
     if op === (+)
         ts = Any[conv(a) for a in args]
@@ -352,8 +357,8 @@ function _display_string(x, ctx)
     _issymbolic(x) || return string(x)
     subs = Dict{Any,Any}(v => Symbolics.unwrap(Symbolics.variable(_name(v)))
                          for v in _variables(x) if _is_variable_term(v))
-    isempty(subs) && return string(x)
-    return string(Symbolics.substitute(x, subs))
+    isempty(subs) && return _canonical(x)
+    return _canonical(Symbolics.substitute(x, subs))
 end
 
 function _rate_display(r, ctx)
@@ -812,7 +817,7 @@ function _probe_equal(f, g, what; probes = 8)
     return v.verdict === :equal
 end
 
-_display_expr(x) = "`$(Symbolics.wrap(Symbolics.unwrap(x)))`"
+_display_expr(x) = "`$(_canonical(x))`"
 
 _substitute(x, vals) = _issymbolic(x) ? Symbolics.substitute(x, vals; fold = Val(true)) : x
 
@@ -826,7 +831,8 @@ function _numeric(v)
     return Float64(v)
 end
 
-_variables(x) = _issymbolic(x) ? collect(Symbolics.get_variables(Symbolics.unwrap(x))) : Any[]
+# In order of first appearance, with sums and products in the canonical order.
+_variables(x) = _issymbolic(x) ? _SX()._variables(Symbolics.unwrap(x)) : Any[]
 
 function _population_var(ctx, N, what)
     if haskey(ctx.params, N)
@@ -1123,7 +1129,10 @@ function _defaults(rn, ctx)
             progress = true
         end
     end
-    return vals, unique!(species_ic), sort!(collect(keys(pending))), arrays
+    # (the sources are dictionaries: the species in model order, the arrays by name)
+    unique!(species_ic)
+    sort!(species_ic; by = n -> something(findfirst(==(n), ctx.species_names), typemax(Int)))
+    return vals, species_ic, sort!(collect(keys(pending))), sort!(arrays)
 end
 
 function _unique_name(base::Symbol, used::Set{Symbol})

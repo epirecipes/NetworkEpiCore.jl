@@ -344,9 +344,9 @@ _rate_sub(a, b) = _isnum(a) && _isnum(b) ? a - b :
 # Printing rates (RN style: spaces around + and -, none around * / ^)
 # ---------------------------------------------------------------------------------------------
 
-_rate_string(r) = string(r)
+_rate_string(r) = _symbolic_string(r)
 _rate_string(r::Symbol) = string(r)
-_rate_string(r::Real) = _is_symbolic_rate(r) ? string(r) : _number_string(r)
+_rate_string(r::Real) = _is_symbolic_rate(r) ? _symbolic_string(r) : _number_string(r)
 _rate_string(r::Expr) = _expr_string(r)[1]
 
 _number_string(x::Integer) = string(x)
@@ -525,6 +525,9 @@ end
 #   _symbolic_nonscalar_variables(r)   -> Vector{String}, the variables of r that are neither a
 #                                         scalar parameter nor time t (an array element k[1], a
 #                                         called parameter β(t)), which a ContactModel rejects
+#   _symbolic_string(x)                -> String, x printed with its sums and products in a fixed
+#                                         order (SymbolicUtils' own order changes between
+#                                         releases and sessions); `string(x)` for anything else
 # ---------------------------------------------------------------------------------------------
 
 function _symbolic_rate_parameters end
@@ -532,3 +535,4 @@ function _symbolic_parameter_name end
 function _symbolic_rate_value end
 function _symbolic_rate_uses_time end
 function _symbolic_nonscalar_variables end
+_symbolic_string(x) = string(x)

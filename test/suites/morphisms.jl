@@ -523,7 +523,7 @@ end
     early = SymbolicODE(:early; states = [S, I], rhs = vax.rhs, domain = [t => (0.1, 100.0)])
     @test err(() -> vector_fields_equal(early, novax)) ==
           "vector_fields_equal(:early, :novax): cannot decide dS/dt: the difference " *
-          "`-S*ifelse(t > 150, 1, 0)*ν` does not cancel: its term `-S*ifelse(t > 150, 1, 0)*ν` " *
+          "`-S*ν*ifelse(t > 150, 1, 0)` does not cancel: its term `-S*ν*ifelse(t > 150, 1, 0)` " *
           "is 0 at all 8 probe points, so they are no evidence that the difference is 0 (a term " *
           "that vanishes on the probe box but not everywhere, such as ν*ifelse(t > 150, 1, 0) " *
           "or max(x - 2, 0), or one too small to evaluate); the answer is unknown, not false: " *
@@ -626,7 +626,7 @@ end
     end
     # (2) a vaccination switched on after t = 2000, beyond the time box, next to max(x, 0) − x
     f1 = SymbolicODE(:f1; states = [x], rhs = [max(x, 0) + ν * ifelse(t > 2000, 1, 0) * x])
-    @test occursin("its term `x*ifelse(t > 2000, 1, 0)*ν` is 0 at all 8 probe points",
+    @test occursin("its term `x*ν*ifelse(t > 2000, 1, 0)` is 0 at all 8 probe points",
                    err(() -> vector_fields_equal(f1, idx)))
     # a term too small to evaluate (exp(−10⁴a) underflows) is not seen either
     fu = SymbolicODE(:fu; states = [x], rhs = [sin(x)^2 + cos(x)^2 - 1 + exp(-1e4 * a) * x + x])

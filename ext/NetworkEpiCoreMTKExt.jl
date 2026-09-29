@@ -55,6 +55,11 @@ _toparam(v) = MB.toparam(v)
 _unwrap(x) = Symbolics.unwrap(x)
 _wrap(x) = x isa SU.BasicSymbolic ? Symbolics.wrap(x) : x
 
+# The canonical order of the arguments of sums and products, and the canonical printing, of
+# NetworkEpiCoreSymbolicsExt (SymbolicUtils' own order changes between releases and sessions).
+_SX() = Base.get_extension(NetworkEpiCore, :NetworkEpiCoreSymbolicsExt)
+_sorted_args(x) = _SX()._sorted_arguments(x)
+
 function _isvariable(x)
     x isa SU.BasicSymbolic || return false
     SU.issym(x) && return true
@@ -71,7 +76,7 @@ function _variables!(out::Vector{Any}, x)
     if _isvariable(x)
         any(y -> isequal(y, x), out) || push!(out, x)
     elseif SU.iscall(x)
-        for a in SU.arguments(x)
+        for a in _sorted_args(x)
             _variables!(out, a)
         end
     end
@@ -120,7 +125,7 @@ function _additive_terms(x)
     _iszero_const(x) && return Any[]
     if _isop(x, +)
         out = Any[]
-        for a in SU.arguments(x)
+        for a in _sorted_args(x)
             append!(out, _additive_terms(a))
         end
         return out
@@ -145,7 +150,7 @@ function _negated(x)
     n = _number(x)
     n !== nothing && return n < 0 ? -n : nothing
     if _isop(x, *)
-        args = SU.arguments(x)
+        args = _sorted_args(x)                  # the number first
         c = _number(first(args))
         (c !== nothing && c < 0) || return nothing
         return _unwrap(-Symbolics.wrap(x))
@@ -162,7 +167,9 @@ function _to_expr(x)
     SU.iscall(x) || return nothing
     op = SU.operation(x)
     haskey(_OPS, op) || return nothing
-    args = SU.arguments(x)
+    # sums and products in the canonical order (numbers, then variables by name, then compound
+    # factors: `p*σ`, `τ*exp(-t)`), not in SymbolicUtils' internal one
+    args = _sorted_args(x)
     if op === (+)
         pos = Any[]
         neg = Any[]
@@ -614,11 +621,11 @@ _residue_notes!(P::_Probes, c, what, mono) = P
 # `τ*S(t)*I(t)`; the argument of a function such as cos(t) is kept.
 function _show(x)
     x = _unwrap(x)
-    s = string(_wrap(x))
+    s = _SX()._canonical_string(x)
     for v in _variables(x)
         (v isa SU.BasicSymbolic && SU.iscall(v)) || continue
         nm = string(_name(v))
-        arg = join((string(_wrap(a)) for a in SU.arguments(v)), ", ")
+        arg = join((_SX()._canonical_string(a) for a in SU.arguments(v)), ", ")
         s = replace(s, Regex("(?<![\\p{L}\\p{N}_₊])\\Q$(nm)\\E\\(\\Q$(arg)\\E\\)") => nm)
     end
     return s
