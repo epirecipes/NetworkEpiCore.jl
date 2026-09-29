@@ -206,19 +206,46 @@ function _term_key(x)
             _canonical_string(x), join(_typetext.(rest), ","))
 end
 
-_sorted_factors(fs) = sort!(collect(Any, fs); by = _factor_key)
+# v sorted by the keys f(v[i]), each computed once (stable).
+function _sort_by_key(v::Vector{Any}, f)
+    length(v) <= 1 && return v
+    return v[sortperm(map(f, v))]
+end
+
+_sorted_factors(fs) = _sort_by_key(collect(Any, fs), _factor_key)
 
 # The arguments of x in the canonical order (sums and products sorted; other calls as they are).
 function _sorted_arguments(x)
     args = collect(Any, SU.arguments(x))
-    _isop(x, +) && return sort!(args; by = _term_key)
-    _isop(x, *) && return sort!(args; by = _factor_key)
+    _isop(x, +) && return _sort_by_key(args, _term_key)
+    _isop(x, *) && return _sort_by_key(args, _factor_key)
     return args
 end
+
+# The canonical text of every compound subexpression is computed once: the sort keys and the
+# text of a parent are built from those of its children, so ordering the arguments of a large
+# expression (the lifted fields of EdgeBasedModels have thousands of terms) stays linear in its
+# size times its depth. The cache is keyed by object (SymbolicUtils expressions are immutable)
+# and emptied when it grows large.
+const _CANONICAL_CACHE = IdDict{Any,String}()
+const _CANONICAL_LOCK = ReentrantLock()
+const _CANONICAL_CACHE_MAX = 200_000
 
 function _canonical_string(x)
     x = _unwrap(x)
     x isa SU.BasicSymbolic || return string(x)
+    SU.iscall(x) || return _render(x)
+    s = lock(() -> get(_CANONICAL_CACHE, x, nothing), _CANONICAL_LOCK)
+    s === nothing || return s
+    s = _render(x)
+    lock(_CANONICAL_LOCK) do
+        length(_CANONICAL_CACHE) >= _CANONICAL_CACHE_MAX && empty!(_CANONICAL_CACHE)
+        _CANONICAL_CACHE[x] = s
+    end
+    return s
+end
+
+function _render(x)
     io = IOBuffer()
     _cprint(io, x)
     return String(take!(io))
@@ -240,13 +267,11 @@ function _cprint_arg(io, a)
         if !(f isa SU.BasicSymbolic) && (f === (*) || f === (+) || f === (^) || f === (/) ||
                                          (applicable(nameof, f) &&
                                           Base.isbinaryoperator(nameof(f))))
-            print(io, "(")
-            _cprint(io, a)
-            print(io, ")")
+            print(io, "(", _canonical_string(a), ")")
             return
         end
     end
-    _cprint(io, a)
+    print(io, _canonical_string(a))
 end
 
 # A product c·f₁·f₂⋯ with the factors already in order.
@@ -258,7 +283,7 @@ end
 
 function _print_mul(io, c, fs)
     isempty(fs) && return _print_number(io, c)
-    (isone(c) && length(fs) == 1) && return _cprint(io, fs[1])   # a term of a sum: sin(x)^2
+    (isone(c) && length(fs) == 1) && return print(io, _canonical_string(fs[1]))  # sin(x)^2
     if c == -1
         print(io, "-")
     elseif !isone(c)
@@ -330,7 +355,7 @@ function _cprint(io, x)
         print(io, "(")
         for (i, a) in enumerate(args)
             i == 1 || print(io, ", ")
-            _cprint(io, a)
+            print(io, _canonical_string(a))
         end
         print(io, ")")
     end
