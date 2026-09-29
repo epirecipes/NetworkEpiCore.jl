@@ -1,0 +1,297 @@
+# SA-PASS claim registry fragment: group SemanticsSolutions
+# Source module: NetworkEpi.Semantics.Solutions (NetworkEpi/Semantics/Solutions.lean; paths relative to proofs/). Trusted library NetworkEpi.* (namespace NEP).
+# Registrar: claim registrar 1/2 (non-blind). Merged into Alignment/claims.yaml by scripts/sa_merge_claims.py.
+#
+# Conventions
+#   id      <Group>.<lowerCamelTheoremName> for a theorem docstring (namespace prefix only where two
+#           theorems share a last component); '.b', '.c' for further claims of the same docstring;
+#           <Group>.header.<slug> for module-header prose/tables; <Group>.<lowerCamelDefName> for a
+#           claim made in the docstring of a definition or instance.
+#   text    VERBATIM (whitespace-normalised) quote; fragments separated by a line '[...]'. Lean comment
+#           delimiters are not part of the text. For a citable theorem the text is the bold title plus the
+#           full 'Design statement' paragraph. 'Lean statement:' paragraphs are NOT quoted (they transcribe
+#           the Lean statement and would leak it to blind shadow authors). 'Scope:' sentences are
+#           registered separately only when they assert mathematics.
+#   status  implemented -> impl lists trusted theorems; required: true
+#           missing     -> checkable mathematical claim that no trusted theorem states
+#           informal    -> definitional / interpretive / meta prose, Mathlib background facts, or a
+#                          summary of a claim registered elsewhere (see supporting + notes)
+#   Merged claims: where several theorems of one module quote overlapping design statements that
+#           name each other, they form ONE claim whose impl lists all of them (each citable name is the
+#           impl of exactly one required claim).
+#   impl_note / notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: SemanticsSolutions.header.hypothesesMet
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 11-12
+  text: 'The conservation laws of `NetworkEpi.Semantics.EB` are stated for solutions on a time interval
+    `I ∋ 0`. This module shows that their hypotheses can be met for every T_EB model:'
+  kind: existence
+  impl: []
+  supporting:
+  - NEP.conservation_local
+  - NEP.exists_local_solution
+  impl_note: conservation_local shows the hypotheses of conservation met together only for REMOVAL-FREE
+    T_EB models whose ψ, ψ', ψ'' are C¹ at 1, with ψ'' = (ψ')' near 1 and ψ'(1) ≠ 0. For a model with
+    a removal X → ∅ the hypothesis 'no removal' of conservation (and node_conservation) cannot be met,
+    so 'for every T_EB model' is not implemented (it holds after lowering removals to a sink species,
+    DESIGN §J.2).
+  required: false
+  status: missing
+  notes: 'ALIGNMENT: ''for every T_EB model'' overstates what conservation_local shows.'
+- id: SemanticsSolutions.header.bullets
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 14-24
+  text: '* `contDiffAt_lift`: the EB field `lift N q rs` is `C^n` at every state whose θ is a point where
+    ψ, ψ'', ψ'''' are `C^n`. `contDiff_lift`: if ψ, ψ'', ψ'''' are `C¹` everywhere (for example Poisson),
+    the EB model `ebSys N q rs` is an object of the design''s category **Dyn**. * `exists_local_solution`:
+    by the Picard–Lindelöf theorem, from every such state there is a solution on an open interval `(−ε,
+    ε)`. * `conservation_local`: for every removal-free T_EB model on a network whose degree data are
+    `C¹` near θ = 1, with `ψ''''` the derivative of `ψ''` near 1 and `ψ''(1) ≠ 0`, there is a solution
+    on some `(−ε, ε)` from the design''s initial condition, and `θ = φ_S + Σ_X φ_X` holds along it. `conservation_local_poisson`
+    specialises this to Poisson(μ), `μ ≠ 0`, and `seir_conservation_local` to EB SEIR on Poisson(5) with
+    τ = 1/6, σ = 1/3, γ = 1/4 and φ_I(0) = 0.01: a model with no global solution (numerically, it blows
+    up backward at t ≈ −7.33).'
+  kind: existence
+  impl: []
+  supporting:
+  - NEP.contDiffAt_lift
+  - NEP.contDiff_lift
+  - NEP.exists_local_solution
+  - NEP.conservation_local
+  - NEP.conservation_local_poisson
+  - NEP.seir_conservation_local
+  impl_note: Summaries of the theorem claims registered in this group (contDiffAtLift, contDiffLift, existsLocalSolution,
+    conservationLocal, conservationLocalPoisson, seirConservationLocal). The 'no global solution (numerically
+    ...)' remark is SemanticsSolutions.seirConservationLocal.b.
+  required: false
+  status: informal
+  notes: Summary.
+- id: SemanticsSolutions.contDiffAtPiSingle
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 35-35
+  text: '`Pi.single Y` applied to a `C^n` function is `C^n` (a `fun_prop` rule).'
+  kind: structural
+  impl:
+  - NEP.contDiffAt_pi_single
+  supporting: []
+  impl_note: 'ContDiffAt ℝ n g u → ContDiffAt ℝ n (fun u => (Pi.single Y (g u) : σ → ℝ)) u (σ finite,
+    g : E → ℝ).'
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsSolutions.ebFieldContactEq
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 47-47
+  text: The EB field of a contact `s + J → X + J`, written with the coordinate projections.
+  kind: algebraic-identity
+  impl:
+  - NEP.ebField_contact_table
+  supporting:
+  - NEP.ebField_contact_eq
+  impl_note: ebField N q (.contact J X τ) = fun u => (−(τ φ_J), 0, single X (τ φ_J (q ξ ψ''(θ)/ψ'(1)))
+    − single J (τ φ_J), single X (τ φ_J (q ξ ψ'(θ)))) with θ = u.1, ξ = u.2.1, φ = u.2.2.1.
+  required: true
+  status: implemented
+  notes: 'Also in the impl of SemanticsEB.header.fieldTable. Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form. WEAK: the _table normal form was written after the shadows; the text fixes no normal form.'
+- id: SemanticsSolutions.ebFieldExitEq
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 58-58
+  text: The EB field of an exit `s → Y`, written with the coordinate projections.
+  kind: algebraic-identity
+  impl:
+  - NEP.ebField_exit_eq
+  supporting: []
+  impl_note: ebField N q (.exit Y ν) = fun u => (0, −(ν ξ), single Y (ν (q ξ ψ'(θ)/ψ'(1))), single Y (ν
+    (q ξ ψ(θ)))).
+  required: true
+  status: implemented
+  notes: Also in the impl of SemanticsEB.header.fieldTable.
+- id: SemanticsSolutions.ebFieldRemoveEq
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 67-67
+  text: The EB field of a removal `X → ∅`, written with the coordinate projections.
+  kind: algebraic-identity
+  impl:
+  - NEP.ebField_remove_table
+  supporting:
+  - NEP.ebField_remove_eq
+  impl_note: ebField N q (.trans X none a) = fun u => (0, 0, −single X (a φ_X), −single X (a pop_X)).
+  required: true
+  status: implemented
+  notes: 'Also in the impl of SemanticsEB.header.fieldTable. Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form. WEAK (normal form written after the shadows).'
+- id: SemanticsSolutions.ebFieldProgressEq
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 75-75
+  text: The EB field of a progression `X → Y`, written with the coordinate projections.
+  kind: algebraic-identity
+  impl:
+  - NEP.ebField_progress_table
+  supporting:
+  - NEP.ebField_progress_eq
+  impl_note: ebField N q (.trans X (some Y) a) = fun u => (0, 0, single Y (a φ_X) − single X (a φ_X),
+    single Y (a pop_X) − single X (a pop_X)).
+  required: true
+  status: implemented
+  notes: 'Also in the impl of SemanticsEB.header.fieldTable. Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form. WEAK (normal form written after the shadows).'
+- id: SemanticsSolutions.contDiffAtEbField
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 119-120
+  text: The EB field of one reaction is `C^n` at every state `u` such that ψ, ψ' and ψ'' are `C^n` at
+    `θ = u.1`.
+  kind: structural
+  impl:
+  - NEP.contDiffAt_ebField
+  supporting: []
+  impl_note: 'For every n : WithTop ℕ∞ and r : Rxn σ: ContDiffAt ℝ n N.ψ u.1 → ContDiffAt ℝ n N.ψ'' u.1
+    → ContDiffAt ℝ n N.ψ'''' u.1 → ContDiffAt ℝ n (ebField N q r) u (σ finite).'
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsSolutions.contDiffAtLift
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 143-145
+  text: '**The EB field of a reaction list is `C^n` where the degree data are.** For every T_EB reaction
+    list `rs`, the EB field `lift N q rs` is `C^n` at every state `u` such that ψ, ψ'' and ψ'''' are `C^n`
+    at `θ = u.1`.'
+  kind: structural
+  impl:
+  - NEP.contDiffAt_lift
+  supporting: []
+  impl_note: 'Same as contDiffAt_ebField for lift N q rs, every rs : List (Rxn σ).'
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsSolutions.contDiffLift
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 163-167
+  text: '**EB models on a network with C¹ degree data are objects of Dyn.** Design statement (DESIGN_NetworkEpiCore.md
+    §D.3): "Objects of **Dyn** are (V, F): V a finite-dimensional real normed space, F: V → V a C¹ vector
+    field."; §D.4, the row of the representation functor **EB_N** with domain "Open(Petri/T_EB), N fixed".'
+  kind: structural
+  impl:
+  - NEP.ebSys_mem_dyn
+  supporting:
+  - NEP.contDiff_lift
+  impl_note: 'For σ finite (Fintype, DecidableEq), n : WithTop ℕ∞, ψ, ψ'', ψ'''' ContDiff ℝ n on all of
+    ℝ: ContDiff ℝ n (lift N q rs) for every q and rs. ψ'' and ψ'''' need not be derivatives of ψ. ''Object
+    of Dyn'' is read as n = 1 plus finite-dimensionality of EB σ = ℝ × ℝ × (σ → ℝ) × (σ → ℝ); finite-dimensionality
+    is not stated (it is an instance fact), and there is no Lean Dyn. The §D.4 reference to the representation
+    functor EB_N on Open(Petri/T_EB) is not formalised (no functor; only that each T_EB reaction list
+    gives a C^n field).'
+  required: true
+  status: implemented
+  notes: 'Citable: NEP.ebSys_mem_dyn (NEP.contDiff_lift, now supporting, was removed from CITABLE.txt on 2026-09-28). The Scope sentence (pointwise regularity covers PGFs with a pole) refers to contDiffAt_lift. Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (FiniteDimensional ∧ ContDiff 1: the object of Dyn).'
+- id: SemanticsSolutions.existsLocalSolution
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 205-207
+  text: '**Local existence of EB solutions (Picard–Lindelöf).** For every T_EB reaction list `rs` and
+    every state `u₀` such that ψ, ψ'' and ψ'''' are `C¹` at `θ = u₀.1`, there are `ε > 0` and a curve
+    `x` with `x 0 = u₀` that solves the EB field of `rs` (`HasDerivAt`) at every `t ∈ (−ε, ε)`.'
+  kind: existence
+  impl:
+  - NEP.exists_local_solution
+  supporting: []
+  impl_note: ContDiffAt ℝ 1 of ψ, ψ', ψ'' at u₀.1 → ∃ ε > 0, ∃ x, x 0 = u₀ ∧ ∀ t ∈ Ioo (−ε) ε, HasDerivAt
+    x (lift N q rs (x t)) t (σ finite). 'Picard–Lindelöf' is the proof method.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsSolutions.conservationLocal
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 218-221
+  text: '**Edge conservation along a local EB solution from the design''s initial condition.** Design
+    statement (DESIGN_NetworkEpiCore.md §D.4, Evidence): "The exit terms were checked by hand. Conservation
+    θ = φ_S + Σφ_X holds."'
+  kind: existence
+  impl:
+  - NEP.conservation_local_within
+  supporting:
+  - NEP.conservation_local
+  impl_note: 'Hypotheses: ψ''(1) ≠ 0; ψ, ψ'', ψ'''' C¹ at 1; HasDerivAt ψ'' (ψ'''' θ) θ for θ eventually
+    near 1; rs has no removal X → ∅; φ₀, p₀ : σ → ℝ with Σ φ₀ = 1 − q. Conclusion: ∃ ε > 0, ∃ x, x 0 =
+    (1, 1, φ₀, p₀), x solves the EB field of rs (HasDerivAt) on (−ε, ε), and θ(t) = φ_S(t) + Σ_X φ_X(t)
+    on (−ε, ε). This is existence of ONE local solution along which conservation holds (conservation along
+    every solution is NEP.conservation). The design statement is unqualified; the no-removal hypothesis,
+    ψ''(1) ≠ 0 and the regularity hypotheses are not in it. ''The exit terms were checked by hand'' is
+    meta.'
+  required: true
+  status: implemented
+  notes: 'Citable: NEP.conservation_local_within (NEP.conservation_local, now supporting, was removed from CITABLE.txt on 2026-09-28). Same design statement as SemanticsEB.conservation. Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (HasDerivWithinAt on the interval). Needs the isRemoval bridge registered for this claim.'
+- id: SemanticsSolutions.conservationLocalPoisson
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 293-296
+  text: 'Edge conservation along a local solution on a Poisson(μ) network, `μ ≠ 0` (`conservation_local`
+    for `CNet.poisson μ`): for every removal-free T_EB reaction list `rs` and initial data `φ₀, p₀` with
+    `Σ_X φ₀(X) = 1 − q`, there are `ε > 0` and a solution on `(−ε, ε)` from `(1, 1, φ₀, p₀)` along which
+    `θ = φ_S + Σ_X φ_X`.'
+  kind: existence
+  impl:
+  - NEP.conservation_local_poisson_within
+  supporting:
+  - NEP.conservation_local_poisson
+  impl_note: μ ≠ 0, removal-free rs, φ₀ p₀ with Σ φ₀ = 1 − q → ∃ ε > 0, ∃ x, x 0 = (1, 1, φ₀, p₀) ∧ x
+    solves lift (CNet.poisson μ) q rs on (−ε, ε) (HasDerivAt) ∧ θ = φ_S + Σ_X φ_X on (−ε, ε).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (HasDerivWithinAt). Needs the isRemoval bridge.'
+- id: SemanticsSolutions.seirConservationLocal
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 344-346
+  text: '**Conservation is not vacuous for EB SEIR on Poisson(5).** With τ = 1/6, σ = 1/3, γ = 1/4, seed
+    φ_I(0) = pop_I(0) = 0.01 and q = 0.99 (so `Σ_X φ_X(0) = 1 − q`), there is a solution on some interval
+    `(−ε, ε)` from `(θ, ξ, φ, pop)(0) = (1, 1, φ₀, p₀)` along which `θ = φ_S + Σ_X φ_X`.'
+  kind: existence
+  impl:
+  - NEP.seir_conservation_local_within
+  supporting:
+  - NEP.seir_conservation_local
+  impl_note: '∃ ε > 0, ∃ x : ℝ → EB SEIRSp with x 0 = (1, 1, single I (1/100), single I (1/100)) solving
+    lift (CNet.poisson 5) (99/100) (seirRxns (1/6) (1/3) (1/4)) on (−ε, ε) (HasDerivAt) and θ = φ_S +
+    Σ_X φ_X there. seirRxns τ a γ = [s + I → E + I at τ, E → I at a, I → R at γ]. ''Conservation is not
+    vacuous'' is read as: a solution satisfying the conclusion exists; the statement does not mention
+    the hypotheses of NEP.conservation.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (HasDerivWithinAt; decimal literals 0.01, 0.99). WEAK (literal form mirrors the shadow).'
+- id: SemanticsSolutions.seirConservationLocal.b
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 347-348
+  text: Integrated numerically, this model blows up backward in time at t ≈ −7.33, so it has no global
+    solution.
+  kind: existence
+  impl: []
+  supporting: []
+  impl_note: Numerical claim (backward blow-up at t ≈ −7.33, hence no global solution); not formalised.
+  required: false
+  status: missing
+  notes: ''

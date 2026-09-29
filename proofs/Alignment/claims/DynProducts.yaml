@@ -1,0 +1,159 @@
+# SA-PASS claim registry fragment: group DynProducts
+# Source module: NetworkEpi.Dyn.Products (NetworkEpi/Dyn/Products.lean; paths relative to proofs/). Trusted library NetworkEpi.* (namespace NEP).
+# Registrar: claim registrar 1/2 (non-blind). Merged into Alignment/claims.yaml by scripts/sa_merge_claims.py.
+#
+# Conventions
+#   id      <Group>.<lowerCamelTheoremName> for a theorem docstring (namespace prefix only where two
+#           theorems share a last component); '.b', '.c' for further claims of the same docstring;
+#           <Group>.header.<slug> for module-header prose/tables; <Group>.<lowerCamelDefName> for a
+#           claim made in the docstring of a definition or instance.
+#   text    VERBATIM (whitespace-normalised) quote; fragments separated by a line '[...]'. Lean comment
+#           delimiters are not part of the text. For a citable theorem the text is the bold title plus the
+#           full 'Design statement' paragraph. 'Lean statement:' paragraphs are NOT quoted (they transcribe
+#           the Lean statement and would leak it to blind shadow authors). 'Scope:' sentences are
+#           registered separately only when they assert mathematics.
+#   status  implemented -> impl lists trusted theorems; required: true
+#           missing     -> checkable mathematical claim that no trusted theorem states
+#           informal    -> definitional / interpretive / meta prose, Mathlib background facts, or a
+#                          summary of a claim registered elsewhere (see supporting + notes)
+#   Merged claims: where several theorems of one module quote overlapping design statements that
+#           name each other, they form ONE claim whose impl lists all of them (each citable name is the
+#           impl of exactly one required claim).
+#   impl_note / notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: DynProducts.header.construction
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 15-16
+  text: The product of `(V, F)` and `(W, G)` is `(V × W, F × G)` with the two coordinate projections;
+    the terminal object is the zero-dimensional system `(Fin 0 → ℝ, 0)`.
+  kind: categorical
+  impl: []
+  supporting:
+  - NEP.prod_isLimit
+  - NEP.hasTerminal
+  impl_note: Summary of the constructions DynSys.prod/prodFst/prodSnd and DynSys.point. The product part
+    is stated by prod_isLimit; the terminal-object part is the definition pointIsTerminal (data), and
+    hasTerminal states only HasTerminal DynSys.
+  required: false
+  status: informal
+  notes: Summary of DynProducts.prodIsLimit (registered there).
+- id: DynProducts.header.dynClosure
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 18-26
+  text: |-
+    **Scope: `DynSys`, and the closure of the design's Dyn.** `prod_isLimit`, `hasBinaryProducts`, `point_isTerminal` and `hasTerminal` are limits in `DynSys` (see `NetworkEpi.Dyn.Basic`). Because Dyn is not a full subcategory of `DynSys`, they do not by themselves imply that Dyn has these limits. The same constructions stay in the design's **Dyn** (finite-dimensional, C¹): a product of finite-dimensional spaces with C¹ fields is finite-dimensional with a C¹ field, the projections are C¹, the pairing of two C¹ maps is C¹, `Fin 0 → ℝ` is finite-dimensional with the C¹ field 0, and the maps to it are C¹ (`dyn_prod_closed`, `dyn_point_closed`). Uniqueness of the factorisation is inherited from `DynSys`, so Dyn has binary products and a terminal object, computed as in `DynSys`.
+  kind: categorical
+  impl:
+  - NEP.dyn_prod_closed_of_dyn
+  - NEP.dyn_point_closed_of_dyn
+  - NEP.dyn_isProduct
+  - NEP.dyn_isTerminal
+  supporting:
+  - NEP.dyn_prod_closed
+  - NEP.dyn_point_closed
+  impl_note: 'dyn_prod_closed: for A B with FiniteDimensional V and ContDiff ℝ 1 F: the product system is finite-dimensional with a C¹ field, prodFst/prodSnd maps are C¹, and prodLift of C¹ semiconjugacies is C¹. dyn_point_closed: DynSys.point is finite-dimensional, its field is C¹, every toPoint A is C¹. dyn_isProduct / dyn_isTerminal: the universal properties among finite-dimensional C¹ systems and C¹ semiconjugacies (primitive terms).'
+  required: true
+  status: implemented
+  notes: "Remediation: the header was rewritten (the closure is now formalised); text re-anchored, status missing -> implemented. Needs a blind shadow set. Round-4 remediation (non-blind owner, 2026-09-28): backward failed because the pairing clause of dyn_prod_closed and the toPoint clause of dyn_point_closed are unconditional, stronger than S5/S8 (Dyn domains). New exact-statement theorems dyn_prod_closed_of_dyn / dyn_point_closed_of_dyn (those clauses restricted to finite-dimensional C¹ domains) replace them in the impl; the unconditional ones are supporting. CITABLE: dyn_prod_closed, dyn_point_closed replaced by the _of_dyn names. Impl changed: checker update needed."
+- id: DynProducts.header.notFull
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 19-21
+  text: Because Dyn is not a full subcategory of `DynSys`, they do not by themselves imply that Dyn has
+    these limits.
+  kind: categorical
+  impl: []
+  supporting: []
+  impl_note: No Lean Dyn; the claim that Dyn is not a full subcategory of DynSys (differentiable non-C¹
+    semiconjugacies between Dyn objects) is not formalised.
+  required: false
+  status: missing
+  notes: ''
+- id: DynProducts.prodIsLimit
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: '74-78,91,125'
+  text: |-
+    **`(V × W, F × G)` is the categorical product of `(V, F)` and `(W, G)` in `DynSys`.** Design statement (DESIGN_NetworkEpiCore.md §D.3): "**Products.** Dyn has binary products and a terminal object (Lean stretch L1b)"; §D.7: "L1b `NEP/Dyn/Products` | cartesian structure | `HasBinaryProducts DynSys`, terminal object".
+    [...]
+    **`DynSys` has binary products.**
+    [...]
+    **`DynSys` has a terminal object**, the zero-dimensional system `(Fin 0 → ℝ, 0)`.
+  kind: categorical
+  impl:
+  - NEP.prod_isLimit
+  - NEP.hasBinaryProducts
+  - NEP.hasTerminal
+  - NEP.point_isTerminal
+  supporting:
+  - NEP.dyn_isProduct
+  - NEP.dyn_isTerminal
+  impl_note: 'prod_isLimit: ∀ A B, Nonempty (IsLimit (prodFan A B)) (apex (A.V × B.V, u ↦ (A.F u.1, B.F u.2)), legs prodFst/prodSnd with maps Prod.fst/Prod.snd). hasBinaryProducts: HasBinaryProducts DynSys. hasTerminal: HasTerminal DynSys. point_isTerminal: Nonempty (IsTerminal DynSys.point), DynSys.point = (Fin 0 → ℝ, 0). dyn_isProduct / dyn_isTerminal: the design''s Dyn reading, in primitive terms: for A, B with FiniteDimensional ∧ ContDiff ℝ 1 F there are P (FiniteDimensional, C¹ field) and C¹ semiconjugacies p₁ p₂ with the universal property among C¹ semiconjugacies out of finite-dimensional C¹ systems (existence and uniqueness of the factorisation); and a finite-dimensional C¹ P receiving exactly one C¹ semiconjugacy from every finite-dimensional C¹ system.'
+  required: true
+  status: implemented
+  notes: "Remediation (SA-PASS triage): point_isTerminal, dyn_isProduct, dyn_isTerminal added to impl (the text names the terminal object and quotes the design's 'Dyn has binary products and a terminal object'). Round-4 remediation (non-blind owner, 2026-09-28): registrar fix for the SHADOW? backward failure: the claim headline is about DynSys (\"in DynSys\"), and the design-Dyn reading is the separate claim DynProducts.header.dynClosure, whose impl keeps dyn_isProduct / dyn_isTerminal. They are removed from this impl (now supporting). Impl changed: checker update needed."
+- id: DynProducts.instHasLimitPair
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 87-87
+  text: Every pair of objects of `DynSys` has a product.
+  kind: categorical
+  impl:
+  - NEP.instHasLimitDiscreteWalkingPairDynSysPair
+  supporting: []
+  impl_note: 'Anonymous instance (a theorem, HasLimit is a Prop class): ∀ A B : DynSys, HasLimit (pair
+    A B).'
+  required: true
+  status: implemented
+  notes: The instance's auto-generated name is NEP.instHasLimitDiscreteWalkingPairDynSysPair.
+- id: DynProducts.pointEq
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 109-109
+  text: The state space of `DynSys.point` has exactly one element.
+  kind: structural
+  impl:
+  - NEP.point_eq
+  supporting: []
+  impl_note: '∀ a b : DynSys.point.V, a = b (uniqueness only). ''Exactly one element'' also asserts existence,
+    which the statement does not contain (DynSys.point.V = Fin 0 → ℝ is inhabited, but no theorem says
+    so).'
+  required: true
+  status: implemented
+  notes: ''
+- id: DynProducts.prodFanIsLimit
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 64-64
+  text: The product fan is a limit cone.
+  kind: categorical
+  impl: []
+  supporting:
+  - NEP.prod_isLimit
+  impl_note: 'Docstring of the definition prodFanIsLimit : IsLimit (prodFan A B) (data). The Prop form
+    is prod_isLimit.'
+  required: false
+  status: informal
+  notes: Covered by DynProducts.prodIsLimit.
+- id: DynProducts.pointIsTerminal
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 118-118
+  text: The zero-dimensional system is terminal.
+  kind: categorical
+  impl:
+  - NEP.point_isTerminal
+  supporting: []
+  impl_note: 'point_isTerminal: Nonempty (IsTerminal DynSys.point), where DynSys.point = (Fin 0 → ℝ, 0) (the data pointIsTerminal in Prop form).'
+  required: true
+  status: implemented
+  notes: 'Remediation: status missing -> implemented by the new citable point_isTerminal. Needs a blind shadow set.'

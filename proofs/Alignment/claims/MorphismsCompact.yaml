@@ -1,0 +1,170 @@
+# SA-PASS claim registry fragment: group MorphismsCompact
+# Source: NetworkEpi/Morphisms/Compact.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: MorphismsCompact.header.models
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 12-17
+  text: '*Expanded*: the general per-reaction EB model of SIR (`s + I → I + I` at per-contact rate τ,
+    `I → R` at γ) on a configuration network `N`, state `(θ, ξ, φ_I, φ_R, pop_I, pop_R)`. *Compact* (`compactSIR`;
+    Miller 2011 with the explicit seed factor q, as in `EdgeBasedModels.jl`''s `_build_compact`): state
+    `(θ, R)` with `θ̇ = −τθ + τqψ''(θ)/ψ''(1) + γ(1 − θ)` and `Ṙ = γ(1 − qψ(θ) − R)`; `S = qψ(θ)`, `I
+    = 1 − S − R`.'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: the expanded model is ebSys N q (sirRxns τ γ); the compact model is compactSIR
+    N q τ γ on ℝ × ℝ with F (θ, R) = (−τθ + τ·phiS q θ 1 + γ(1 − θ), γ(1 − susc q θ 1 − R)), i.e. θ̇ =
+    −τθ + τqψ''(θ)/ψ''(1) + γ(1 − θ), Ṙ = γ(1 − qψ(θ) − R).'
+  required: false
+  status: informal
+  notes: Module-header description of the two models (Miller 2011 with seed factor q).
+- id: MorphismsCompact.compactWInvariant
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: '96-99,21-23'
+  text: |-
+    **The design's W is invariant (M9).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M9): "W = {τφ_R + γθ = γ} is invariant for SIR-shaped P".
+    [...]
+    along every EB SIR solution on a time interval, `τφ_R + γθ` is constant, so the design's set `W = {τφ_R + γθ = γ}` is invariant (no assumption on ψ).
+  kind: dynamical
+  impl:
+  - NEP.compact_W_invariant_any
+  supporting:
+  - NEP.compact_W_invariant
+  impl_note: ∀ N q τ γ, I convex with 0 ∈ I, x a HasDerivWithinAt solution of lift N q (sirRxns τ γ) on
+    I → ∀ t ∈ I, τ φ_R(t) + γ θ(t) = τ φ_R(0) + γ θ(0). Invariance of W = {τφ_R + γθ = γ} is the special
+    case of initial value γ (not stated separately). "SIR-shaped P" is exactly sirRxns τ γ (s + I → I
+    + I at τ, I → R at γ). No hypothesis on ψ.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: compact_W_invariant_any: any convex I (0 ∉ I allowed), constancy between any s, t ∈ I and invariance of W from any s ∈ I.'
+- id: MorphismsCompact.compactConj
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: '251-254,24-27'
+  text: |-
+    **The compact SIR EBCM is conjugate to the expanded one restricted to W' (M9).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M9): "Compact ⊂ expanded | W = {τφ_R + γθ = γ} is invariant for SIR-shaped P, and W → compact is a conjugacy | restriction".
+    [...]
+    the embedding `(θ, R) ↦ (θ, 1, φ_I, φ_R, 1 − qψ(θ) − R, R)` with `φ_R = γ(1−θ)/τ`, `φ_I = θ − qψ'(θ)/ψ'(1) − φ_R` and the projection `(θ, …, pop_R) ↦ (θ, pop_R)` form a conjugacy between the compact model and the expanded model restricted to `W' = W ∩ {ξ = 1, θ = φ_S + φ_I + φ_R, S + pop_I + pop_R = 1}` (`τ ≠ 0`).
+  kind: categorical
+  impl:
+  - NEP.compact_conj_global
+  supporting:
+  - NEP.compact_conj
+  impl_note: τ ≠ 0 → derivative relations HasDerivAt ψ (ψ' θ) θ, HasDerivAt ψ' (ψ'' θ) θ for θ ∈ Θ → IsConjOn
+    (compactSIR N q τ γ) (ebSys N q (sirRxns τ γ)) {w | w.1 ∈ Θ} (compactW N q τ γ ∩ {u | u.1 ∈ Θ}) (compactEmb
+    N q τ γ) compactProj. The design's W is replaced by W' = W ∩ {ξ = 1, θ = φ_S + φ_I + φ_R, S + pop_I
+    + pop_R = 1} (the header states this; DESIGN §L.2 amends M9 accordingly). Invariance of W' is not
+    part of this theorem (compact_solution shows that solutions from the design's initial condition stay
+    in W'). "Conjugacy" is IsConjOn (MorphismsCommon.isConjOn).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: compact_conj_global is the Θ = ℝ corollary (global derivative relations of ψ, ψ''; V = univ, U = compactW). compactEmb uses φ_S = q·1·ψ''(θ)/ψ''(1): a bridge to the text''s formula is needed.'
+- id: MorphismsCompact.compactSolution
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: '334-338,28-31'
+  text: |-
+    **Expanded solutions from the design's initial condition are compact solutions (M9).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M9): "W = {τφ_R + γθ = γ} is invariant for SIR-shaped P, and W → compact is a conjugacy"; §D.3: "Examples: the compact SIR EBCM on {τφ_R + γθ = γ}".
+    [...]
+    for `τ ≠ 0`, every expanded solution from the design's initial condition (seed factor `q = 1 − ρ`) stays in `W'` and its image `(θ, pop_R)` solves the compact model, for derivatives within the time interval and for two-sided derivatives.
+  kind: dynamical
+  impl:
+  - NEP.compact_solution_ic
+  - NEP.compact_solution_ic_at
+  supporting:
+  - NEP.compact_solution
+  impl_note: 'compact_solution_ic: ψ(1) = 1, ψ''(1) ≠ 0, τ ≠ 0, I convex with 0 ∈ I, x 0 = (1, 1, sirVec ρ 0, sirVec ρ 0), HasDerivAt ψ/ψ'' at visited θ, x solves EB SIR with seed factor 1 − ρ within I → (∀ t ∈ I, x t ∈ compactW N (1 − ρ) τ γ) ∧ the within-I derivative of compactProj ∘ x is compactSIR''s field. compact_solution_ic_at: the same for two-sided HasDerivAt x … t, with a two-sided conclusion. compact_solution (supporting): general seed q and the IC as sums.'
+  required: true
+  status: implemented
+  notes: 'Remediation: spec clarification (header bullet: ''for τ ≠ 0'', ''q = 1 − ρ'', both solution notions; §M.4 context); new theorems compact_solution_ic, compact_solution_ic_at. Text changed: re-shadow blind.'
+- id: MorphismsCompact.compactSolutionPoisson
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 511-518
+  text: |-
+    **`compact_solution` is not vacuous on Poisson networks (M9).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M9): "W = {τφ_R + γθ = γ} is invariant for SIR-shaped P, and W → compact is a conjugacy"; amended by §M.4: "For μ ≠ 0 and τ ≠ 0 the Poisson(μ) network satisfies the PGF hypotheses of `compact_solution` (ψ(1) = 1, ψ'(1) = μ, and ψ', ψ'' are the derivatives of ψ, ψ'), and a local EB SIR solution from the design's initial condition (θ, ξ, φ_I, φ_R, pop_I, pop_R) = (1, 1, 1 − q, 0, 1 − q, 0) exists on some (−ε, ε); it stays in W′ and its image (θ, pop_R) solves the compact model."
+  kind: existence
+  impl:
+  - NEP.compact_solution_poisson_spec
+  supporting:
+  - NEP.compact_solution_poisson
+  impl_note: 'compact_solution_poisson_spec (μ q τ γ) (μ ≠ 0) (τ ≠ 0): (ψ 1 = 1 ∧ ψ'' 1 = μ) ∧ (∀ θ, HasDerivAt ψ (ψ'' θ) θ) ∧ (∀ θ, HasDerivAt ψ'' (ψ'''' θ) θ) ∧ ∃ ε > 0, ∃ x, x 0 = (1, 1, sirVec (1 − q) 0, sirVec (1 − q) 0) ∧ (∀ t ∈ Ioo (−ε) ε, HasDerivAt x (lift (poisson μ) q (sirRxns τ γ) (x t)) t) ∧ (∀ t ∈ Ioo, x t ∈ compactW (poisson μ) q τ γ) ∧ (∀ t ∈ Ioo, HasDerivAt (compactProj ∘ x) (compactSIR … .F (compactProj (x t))) t).'
+  required: true
+  status: implemented
+  notes: 'Remediation: the ambiguous ''not vacuous'' is fixed by the amendment §M.4 (quoted in the new docstring); impl compact_solution_poisson -> compact_solution_poisson_spec. Text changed: re-shadow blind.'
+- id: MorphismsCompact.sirVecApply
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 51-53
+  text: |-
+    `sirVec a b` takes the value `a` at `I`.
+    [...]
+    `sirVec a b` takes the value `b` at `R`.
+  kind: algebraic-identity
+  impl:
+  - NEP.sirVec_I
+  - NEP.sirVec_R
+  supporting: []
+  impl_note: sirVec a b .I = a and sirVec a b .R = b (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCompact.hasFDerivAtCompactEmb
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 162-163
+  text: '`compactEmb` has derivative `compactD` at `w` when ψ'' and ψ'''' are the derivatives of ψ and
+    ψ'' at `θ = w.1`.'
+  kind: other
+  impl:
+  - NEP.hasFDerivAt_compactEmb
+  supporting: []
+  impl_note: HasDerivAt ψ (ψ' w.1) w.1 → HasDerivAt ψ' (ψ'' w.1) w.1 → HasFDerivAt (compactEmb N q τ γ)
+    (compactD N q τ γ w) w. No τ ≠ 0 needed (division by τ is total).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCompact.compactEmbSemiconj
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 217-219
+  text: For `τ ≠ 0`, the embedding is a local semiconjugacy from the compact model to the expanded model
+    on the set of `(θ, R)` with θ ∈ Θ, where Θ is a set on which ψ' and ψ'' are the derivatives of ψ and
+    ψ'.
+  kind: dynamical
+  impl:
+  - NEP.compactEmb_semiconj
+  supporting: []
+  impl_note: τ ≠ 0 → derivative relations on Θ → IsSemiconjOn (compactSIR N q τ γ) (ebSys N q (sirRxns
+    τ γ)) {w | w.1 ∈ Θ} (compactEmb N q τ γ).
+  required: true
+  status: implemented
+  notes: ''

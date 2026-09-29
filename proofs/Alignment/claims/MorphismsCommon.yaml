@@ -1,0 +1,396 @@
+# SA-PASS claim registry fragment: group MorphismsCommon
+# Source: NetworkEpi/Morphisms/Common.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: MorphismsCommon.header.perReactionCriterion
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 13-16
+  text: Every field in this library is a sum of per-reaction fields, and the derivative of a map is linear,
+    so a map is a semiconjugacy as soon as its derivative carries each per-reaction source field to the
+    corresponding per-reaction target field.
+  kind: dynamical
+  impl:
+  - NEP.ebSys_F_eq_sum
+  - NEP.maSys_F_eq_sum
+  - NEP.isSemiconj_of_perReaction
+  supporting:
+  - NEP.isSemiconj_of_hasFDerivAt
+  - NEP.clm_list_sum_eq
+  impl_note: 'No single theorem: the criterion is the conjunction of isSemiconj_of_hasFDerivAt (explicit
+    derivative D u with D u (A.F u) = B.F (π u) for all u gives IsSemiconj A B π) and clm_list_sum_eq
+    (a continuous linear map that carries each f r, r ∈ rs, to g r carries (rs.map f).sum to (rs.map g).sum).
+    "Every field in this library is a sum of per-reaction fields" is definitional (lift, maLift, sLift,
+    wmLift, pgfLift, pwSLift are List.sum of per-reaction fields), not a theorem.'
+  required: true
+  status: implemented
+  notes: 'Module header prose. The sentence "This is how the general-P theorems are proved" is meta and not quoted. Remediation (SA-PASS triage): re-registered to the theorems that state the text (the ebSys/maSys fields are sums of per-reaction fields; the per-reaction criterion for a semiconjugacy).'
+- id: MorphismsCommon.isSemiconjOfHasFDerivAt
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 31-32
+  text: A map with an explicit derivative `D u` at every point is a semiconjugacy if `D u` carries the
+    source field at `u` to the target field at `π u`.
+  kind: dynamical
+  impl:
+  - NEP.isSemiconj_of_hasFDerivAt
+  supporting: []
+  impl_note: 'For D : A.V → (A.V →L[ℝ] B.V): (∀ u, HasFDerivAt π (D u) u) → (∀ u, D u (A.F u) = B.F (π
+    u)) → IsSemiconj A B π. Faithful reading.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.isSemiconjOnOfHasFDerivAt
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 31-38
+  text: |-
+    Local version of `isSemiconj_of_hasFDerivAt` on a set `U`.
+    [...]
+    A map with an explicit derivative `D u` at every point is a semiconjugacy if `D u` carries the source field at `u` to the target field at `π u`.
+  kind: dynamical
+  impl:
+  - NEP.isSemiconjOn_of_hasFDerivAt
+  supporting: []
+  impl_note: (∀ u ∈ U, HasFDerivAt π (D u) u) → (∀ u ∈ U, D u (A.F u) = B.F (π u)) → IsSemiconjOn A B
+    U π. U is any set (no openness). The second fragment is the docstring of the global version that this
+    docstring refers to.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.clmListSum
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 44-44
+  text: A continuous linear map commutes with the sum of a mapped list.
+  kind: algebraic-identity
+  impl:
+  - NEP.clm_list_sum
+  supporting: []
+  impl_note: 'L ((rs.map f).sum) = (rs.map (fun r => L (f r))).sum for L : E →L[ℝ] F between real normed
+    spaces, any list rs, any f.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.clmListSumEq
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 52-54
+  text: '**The per-reaction criterion.** If a continuous linear map `L` carries each per-reaction source
+    term `f r` to the per-reaction target term `g r`, it carries the sum over the reaction list to the
+    sum.'
+  kind: algebraic-identity
+  impl:
+  - NEP.clm_list_sum_eq
+  supporting: []
+  impl_note: (∀ r ∈ rs, L (f r) = g r) → L ((rs.map f).sum) = (rs.map g).sum. The hypothesis is only for
+    members of the list.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.isConjOn
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: '77-79,17-18'
+  text: |-
+    When `V` and `U` are invariant, this is a conjugacy (an isomorphism of `DynSys`) between the restrictions of `A` to `V` and of `B` to `U`: `h` maps solutions that stay in `V` to solutions, and `g` maps solutions that stay in `U` back.
+    [...]
+    conjugacies (isomorphisms of `DynSys` between restrictions)
+  kind: categorical
+  impl: []
+  supporting:
+  - NEP.SemiconjOn.map_solution_on
+  - NEP.SemiconjOn.map_solution_within
+  impl_note: 'IsConjOn A B V U h g is a Prop-valued definition: IsSemiconjOn A B V h ∧ IsSemiconjOn B
+    A U g ∧ h maps V into U ∧ g maps U into V ∧ g ∘ h = id on V ∧ h ∘ g = id on U. No theorem builds the
+    restricted DynSys objects on invariant V, U or an isomorphism in the category DynSys from it, and
+    none states that h (resp. g) maps solutions staying in V (resp. U) to solutions for an IsConjOn pair
+    (this follows from SemiconjOn.map_solution_on/within applied to each component, which is not stated
+    for IsConjOn). IsConjOn requires neither invariance nor openness of V, U.'
+  required: false
+  status: missing
+  notes: 'Docstring of the DEFINITION IsConjOn plus the matching header phrase. Relevant to every claim
+    whose Lean statement is an IsConjOn (MorphismsWellMixed.wellmixedUnit, MorphismsPoisson.poissonIso*,
+    MorphismsCompact.compactConj): there "conjugacy" means IsConjOn, not a diffeomorphism of invariant
+    subsystems.'
+- id: MorphismsCommon.isSemiconjOnInverse
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: '85-89,18'
+  text: |-
+    **A differentiable inverse of a semiconjugacy is a semiconjugacy.** Let `h` be a local semiconjugacy on `V` from `A` to `B`, and let `g : B.V → A.V` be a global left inverse of `h` (`g ∘ h = id`) that is differentiable at every point of `U`, maps `U` into `V` and is a right inverse on `U` (`h (g v) = v` for `v ∈ U`). Then `g` is a local semiconjugacy on `U` from `B` to `A`.
+    [...]
+    the fact that a differentiable two-sided inverse of a semiconjugacy is one
+  kind: dynamical
+  impl:
+  - NEP.isSemiconjOn_inverse
+  supporting: []
+  impl_note: IsSemiconjOn A B V h → (∀ v ∈ U, DifferentiableAt ℝ g v) → (∀ v ∈ U, g v ∈ V) → (∀ u, g (h
+    u) = u) → (∀ v ∈ U, h (g v) = v) → IsSemiconjOn B A U g. The left-inverse hypothesis is global (all
+    u), as the docstring says; the header's "two-sided inverse" is this mix of a global left inverse and
+    a right inverse on U.
+  required: true
+  status: implemented
+  notes: 'The parenthetical proof hint "(Chain rule: ...)" is not quoted.'
+- id: MorphismsCommon.isConjOnOfInverse
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 106-107
+  text: 'A conjugacy with `V = univ` built from a global semiconjugacy `h` and a differentiable inverse
+    `g` on `U`: `IsConjOn A B univ U h g`.'
+  kind: categorical
+  impl:
+  - NEP.isConjOn_of_inverse
+  supporting: []
+  impl_note: IsSemiconj A B h → (∀ v ∈ U, DifferentiableAt ℝ g v) → (∀ u, h u ∈ U) → (∀ u, g (h u) = u)
+    → (∀ v ∈ U, h (g v) = v) → IsConjOn A B univ U h g. The text leaves these hypotheses implicit in "a
+    differentiable inverse g on U".
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.ebCoordinateApply
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 160-166
+  text: |-
+    `ebTheta` is the θ-coordinate.
+    [...]
+    `ebXi` is the ξ-coordinate.
+    [...]
+    `ebPhi` is the φ-coordinate.
+    [...]
+    `ebPop` is the pop-coordinate.
+  kind: algebraic-identity
+  impl:
+  - NEP.ebTheta_apply
+  - NEP.ebXi_apply
+  - NEP.ebPhi_apply
+  - NEP.ebPop_apply
+  supporting: []
+  impl_note: 'ebTheta u = u.1, ebXi u = u.2.1, ebPhi u = u.2.2.1, ebPop u = u.2.2.2 for u : EB σ = ℝ ×
+    ℝ × (σ → ℝ) × (σ → ℝ) (all rfl).'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.hasFDerivAtEbCoordinates
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 169-169
+  text: The coordinate projections are their own derivatives.
+  kind: other
+  impl:
+  - NEP.hasFDerivAt_ebCoordinates_any
+  supporting:
+  - NEP.hasFDerivAt_ebTheta
+  - NEP.hasFDerivAt_ebXi
+  - NEP.hasFDerivAt_ebPhi
+  - NEP.hasFDerivAt_ebPop
+  impl_note: 'For finite σ and every u: HasFDerivAt (fun u => u.1) ebTheta u, and likewise for u.2.1/ebXi,
+    u.2.2.1/ebPhi, u.2.2.2/ebPop. The three other lemmas have the docstring "See `hasFDerivAt_ebTheta`."'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorems that state the text (no Fintype σ).'
+- id: MorphismsCommon.suscDApply
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 201-201
+  text: '`suscD N q u v = q (v_ξ ψ(θ) + ξ ψ''(θ) v_θ)` with `(θ, ξ) = (u.1, u.2.1)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.suscD_apply_left
+  supporting:
+  - NEP.suscD_apply
+  impl_note: suscD N q u v = q * (v.2.1 * N.ψ u.1 + u.2.1 * (N.ψ' u.1 * v.1)). Faithful.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to suscD_apply_left (left-associated ξ ψ''(θ) v_θ, as written).'
+- id: MorphismsCommon.hasFDerivAtSusc
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 213-214
+  text: '`S = qξψ(θ)` has derivative `suscD N q u` at `u` when `ψ''(θ)` is the derivative of `ψ` at `θ
+    = u.1`.'
+  kind: other
+  impl:
+  - NEP.hasFDerivAt_susc_any
+  supporting:
+  - NEP.hasFDerivAt_susc
+  impl_note: HasDerivAt N.ψ (N.ψ' u.1) u.1 → HasFDerivAt (fun u => N.susc q u.1 u.2.1) (suscD N q u) u,
+    finite σ.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorems that state the text (no Fintype σ).'
+- id: MorphismsCommon.dropLApply
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 267-267
+  text: '`dropL` is `EB.drop`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.dropL_apply
+  supporting: []
+  impl_note: dropL u = EB.drop u for every u (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.inclLApply
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 275-275
+  text: '`inclL (θ, φ, pop) = (θ, 0, φ, pop)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.inclL_apply
+  supporting: []
+  impl_note: inclL w = (w.1, 0, w.2.1, w.2.2) (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.dropIncl
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 278-278
+  text: '`EB.drop` is a left inverse of `EB1.incl`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.drop_incl
+  supporting: []
+  impl_note: EB.drop (EB1.incl w) = w for every w (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.inclDrop
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 281-281
+  text: On `ξ = 1`, `EB1.incl` is a left inverse of `EB.drop`.
+  kind: algebraic-identity
+  impl:
+  - NEP.incl_drop
+  supporting: []
+  impl_note: u.2.1 = 1 → EB1.incl (EB.drop u) = u.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.hasFDerivAtIncl
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 288-288
+  text: '`EB1.incl` is affine with derivative `inclL`.'
+  kind: other
+  impl:
+  - NEP.incl_affine
+  - NEP.hasFDerivAt_incl_any
+  supporting:
+  - NEP.hasFDerivAt_incl
+  - NEP.incl_eq_inclL_add
+  impl_note: HasFDerivAt EB1.incl inclL w at every w (finite σ). "Affine" is not stated separately; it
+    is the constant derivative (EB1.incl w = (0, 1, 0, 0) + inclL w is used in the proof only).
+  required: true
+  status: implemented
+  notes: "Remediation (SA-PASS triage): re-registered to the theorems that state the text ('affine': incl = inclL + const; derivative without Fintype σ). Round-4 remediation (non-blind owner, 2026-09-28): backward failed because incl_eq_inclL_add names the constant (0, 1, 0, 0), stronger than \"affine\". New exact-statement theorem incl_affine (∃ c, ∀ w, EB1.incl w = inclL w + c) replaces it in the impl; incl_eq_inclL_add is supporting. Impl changed: checker update needed."
+- id: MorphismsCommon.ebSys1Incl
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 328-330
+  text: '**For an exit-free model, the EB model on `(θ, φ, pop)` is the restriction of the EB model to
+    the invariant slice `ξ = 1`**: `(θ, φ, pop) ↦ (θ, 1, φ, pop)` is a semiconjugacy from `ebSys1` to
+    `ebSys` (the ξ-component of the EB field vanishes without exits).'
+  kind: dynamical
+  impl:
+  - NEP.ebSys1_incl
+  - NEP.lift_ξ_eq_zero
+  - NEP.ebSys_xi_slice_invariant
+  supporting: []
+  impl_note: (∀ r ∈ rs, r.isExit = false) → IsSemiconj (ebSys1 N q rs) (ebSys N q rs) EB1.incl, for finite
+    σ with decidable equality, any N (no derivative relations) and q. ebSys1 is defined for every model
+    by F w = EB.drop (lift N q rs (EB1.incl w)); the invariance of the slice ξ = 1 is expressed by the
+    semiconjugacy (ξ-component of lift is 0 without exits), not by a separate invariance statement.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorems that state the text (the parenthetical ''the ξ-component of the EB field vanishes without exits'' is lift_ξ_eq_zero; ''invariant slice ξ = 1'' is ebSys_xi_slice_invariant).'
+- id: MorphismsCommon.ebSys1Drop
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 341-342
+  text: The chart `(θ, ξ, φ, pop) ↦ (θ, φ, pop)` is a local semiconjugacy on `{ξ = 1}` from `ebSys` to
+    `ebSys1` (for every T_EB model).
+  kind: dynamical
+  impl:
+  - NEP.ebSys1_drop
+  supporting: []
+  impl_note: IsSemiconjOn (ebSys N q rs) (ebSys1 N q rs) {u | u.2.1 = 1} EB.drop for every rs (exits allowed).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsCommon.header.ebSys1
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 21-22
+  text: the reduced EB system `ebSys1` on `ξ = 1` in coordinates `(θ, φ, pop)`, which is the EB model
+    of an exit-free T_EB model in the design's coordinates
+  kind: dynamical
+  impl:
+  - NEP.ebSys1_F
+  - NEP.ebSys1_conj
+  supporting:
+  - NEP.ebSys1_incl
+  - NEP.ebSys1_drop
+  impl_note: 'Conjunction of ebSys1_incl (exit-free: the slice inclusion is a global semiconjugacy ebSys1
+    → ebSys) and ebSys1_drop (every model: the chart is a local semiconjugacy ebSys → ebSys1 on {ξ = 1}).
+    "is the EB model ... in the design''s coordinates" is expressed only through these two maps (drop
+    ∘ incl = id is drop_incl, not in the impl).'
+  required: true
+  status: implemented
+  notes: 'Module header prose. Remediation (SA-PASS triage): re-registered to the theorems that state the text (ebSys1_F: the field formula; ebSys1_conj: exit-free conjugacy IsConjOn).'
+- id: MorphismsCommon.maLiftFlatMap
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 399-399
+  text: The mass-action field of `rs.flatMap g` is the sum over `r ∈ rs` of the fields of `g r`.
+  kind: algebraic-identity
+  impl:
+  - NEP.maLift_flatMap
+  supporting: []
+  impl_note: 'maLift (rs.flatMap g) v = (rs.map fun r => maLift (g r) v).sum for g : ρ → List (NRxn σ).'
+  required: true
+  status: implemented
+  notes: ''

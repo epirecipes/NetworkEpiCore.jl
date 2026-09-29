@@ -1,0 +1,132 @@
+# Citable Lean theorems of the NetworkEpi library (DESIGN_NetworkEpiCore.md §D.7, "Gate").
+# One fully qualified theorem name per line; lines starting with '#' are comments.
+# Vignettes and docs cite ONLY names listed here. scripts/axiom_gate.sh checks every name:
+# present in the build, a theorem, declared in NetworkEpi.*, a docstring that quotes the design
+# ("Design statement"), and #print axioms within {propext, Classical.choice, Quot.sound}.
+# Owner: WP13. WP28 (Morphisms/**, Closure/**) appends its theorems through a reviewed change.
+#
+# The initial list of DESIGN §G.2 WP13:
+NEP.lift_append
+NEP.lift_map
+NEP.rempala
+#
+# Added by WP13 (L1, L2, L3 and the SIR bridge of M3):
+NEP.NRxn.ebAdmissible_iff_type
+NEP.NRxn.not_ebAdmissible_resus
+NEP.NRxn.exists_not_ebAdmissible
+NEP.invariant_incl
+NEP.ebField_map
+NEP.lift_glue
+NEP.conservation
+NEP.maLift_append
+NEP.maLift_map
+NEP.maLift_glue
+NEP.rempala_lift
+#
+# Added by WP13 in the review fix round (solutions on a time interval; non-vacuity of
+# conservation; EB models are objects of Dyn):
+NEP.SemiconjOn.map_solution_within
+#
+# Stretch goals in WP13's paths (L1b products; the F2 witness of L3):
+NEP.prod_isLimit
+NEP.hasBinaryProducts
+NEP.hasTerminal
+#
+# Added by WP28 (L4a-L4g and L5: NetworkEpi/Morphisms/**, NetworkEpi/Closure/**, aggregated by
+# NetworkEpi/Morphisms/All.lean). PENDING REVIEW: the modules are not yet imported by
+# NetworkEpi.lean, so they are not yet part of the trusted library and the names below are
+# commented out (the gate would report them MISSING). To activate, in one change reviewed by
+# the WP13 owner: add `import NetworkEpi.Morphisms.All` to NetworkEpi.lean, then run
+#   sed -i '' 's/^//' CITABLE.txt
+# WP28 checked that the gate passes in that configuration (63 names, 19 trusted modules).
+NEP.rempala_general
+NEP.rempala_general_solution
+NEP.rempala_quotient
+NEP.rempala_general_sir
+NEP.pt_iff_const_closure
+NEP.pt_iff_closureK
+NEP.wellmixed_unit
+NEP.wellmixed_unit_semiconj
+NEP.wellmixed_unit_solution
+NEP.ma_eq_stoich
+NEP.poisson_iso
+NEP.poisson_iso_semiconj
+NEP.poisson_iso_solution
+NEP.poissonD_sir_field
+NEP.eb_to_pws
+NEP.eb_to_pws_const
+NEP.spectralRadius_vecMulVec
+NEP.spectralRadius_fin_two
+#
+# Added by the SA-PASS remediation pass (DESIGN §M): theorems that state the design text's form
+# (stronger, instance-minimal or text-form restatements; the earlier names above stay citable and
+# are now 'supporting' in the claim registry). Superseded names that are the impl of no claim and
+# are cited nowhere were removed on 2026-09-28 (lean-followups): rempala_solution, contDiff_lift,
+# conservation_local, rempala_natural, pt_closure_at_one, poisson_closureK, wellmixed_unit_quotient,
+# wellmixed_unit_Iic, poisson_iso_natural, poisson_iso_seir, eb_to_pws_poisson, compact_W_invariant,
+# compact_solution, r0_single_entry, compact_solution_poisson, rempala_seir_field (they stay theorems of
+# the library and 'supporting' entries of their claims). The last eight superseded names
+# (pwS_glue_not_strict, poisson_iso_sir, eb_to_pws_sir, eb_to_pws_seir, eb_to_pws_pt, compact_conj,
+# multiplex_r0, multiplex_r0_eq_sum_iff) were removed in the round-4 remediation (2026-09-28) after
+# the vignettes and docs moved to the claims' impl names.
+NEP.pt_constants_at_one
+NEP.poisson_isPT
+NEP.dyn_isProduct
+NEP.dyn_isTerminal
+NEP.point_isTerminal
+NEP.compact_W_invariant_any
+NEP.compact_conj_global
+NEP.compact_solution_ic
+NEP.compact_solution_ic_at
+NEP.compact_solution_poisson_spec
+NEP.r0_single_entry_rank
+NEP.multiplex_r0_of_entries
+NEP.multiplex_r0_eq_sum_iff_of_entries
+NEP.eb_to_pws_sir_global
+NEP.eb_to_pws_seir_global
+NEP.eb_to_pws_pt_any
+NEP.eb_to_pws_pt_closure_one
+NEP.eb_to_pws_poisson_any
+NEP.pws_ebField_of_mul
+NEP.poisson_iso_solution_at
+NEP.poisson_iso_natural_min
+NEP.poisson_iso_sir_iso
+NEP.poisson_iso_seir_iso
+NEP.rempala_general_solution_at
+NEP.rempala_natural_min
+NEP.rempala_seir_field_eqns
+NEP.wellmixed_unit_submersion
+NEP.wellmixed_unit_Iic_image
+NEP.wellmixed_unit_solution_at
+NEP.wellmixed_unit1_solution_at
+NEP.wellmixed_unit_inv_solution_at
+NEP.conservation_invariant
+NEP.pwS_glue_not_strict_all
+NEP.contDiff_poisMap_dyn
+NEP.rempala_lift_xi
+NEP.ebSys_mem_dyn
+NEP.conservation_local_within
+#
+# Round-4 SA-PASS remediation (2026-09-28, DESIGN §M.9). Stronger theorems whose statement is more
+# general than the claim text are replaced here by exact-statement theorems (the stronger ones stay
+# theorems of the library and 'supporting' entries of their claims): Semiconj.map_solution ->
+# Semiconj.map_solution_global / _open; SemiconjOn.map_solution_on -> SemiconjOn.map_solution_on_global
+# / _open; dyn_prod_closed, dyn_point_closed -> *_of_dyn; eb_to_pws_solution{,_at} -> *_global;
+# pwsDomain_poisson_spec -> pwsDomain_poisson_of_ne; rempala_quotient_sir -> rempala_quotient_sir_spec;
+# rempala_solution_xi -> rempala_solution_any_xi0. Theorems that close a forward gap are added.
+NEP.Semiconj.map_solution_global
+NEP.Semiconj.map_solution_open
+NEP.SemiconjOn.map_solution_on_global
+NEP.SemiconjOn.map_solution_on_open
+NEP.dyn_prod_closed_of_dyn
+NEP.dyn_point_closed_of_dyn
+NEP.r0_single_entry_rank_one
+NEP.eb_to_pws_solution_at_global
+NEP.eb_to_pws_solution_global
+NEP.pwsDomain_poisson_of_ne
+NEP.wellmixed_unit_Iic_preimage
+NEP.wellmixed_unit1_solution
+NEP.wellmixed_unit_inv_solution
+NEP.rempala_quotient_sir_spec
+NEP.rempala_solution_any_xi0
+NEP.pwS_glue_not_strict_witness

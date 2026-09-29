@@ -1,0 +1,208 @@
+# SA-PASS claim registry fragment: group SemanticsPoissonSIR
+# Source module: NetworkEpi.Semantics.PoissonSIR (NetworkEpi/Semantics/PoissonSIR.lean; paths relative to proofs/). Trusted library NetworkEpi.* (namespace NEP).
+# Registrar: claim registrar 1/2 (non-blind). Merged into Alignment/claims.yaml by scripts/sa_merge_claims.py.
+#
+# Conventions
+#   id      <Group>.<lowerCamelTheoremName> for a theorem docstring (namespace prefix only where two
+#           theorems share a last component); '.b', '.c' for further claims of the same docstring;
+#           <Group>.header.<slug> for module-header prose/tables; <Group>.<lowerCamelDefName> for a
+#           claim made in the docstring of a definition or instance.
+#   text    VERBATIM (whitespace-normalised) quote; fragments separated by a line '[...]'. Lean comment
+#           delimiters are not part of the text. For a citable theorem the text is the bold title plus the
+#           full 'Design statement' paragraph. 'Lean statement:' paragraphs are NOT quoted (they transcribe
+#           the Lean statement and would leak it to blind shadow authors). 'Scope:' sentences are
+#           registered separately only when they assert mathematics.
+#   status  implemented -> impl lists trusted theorems; required: true
+#           missing     -> checkable mathematical claim that no trusted theorem states
+#           informal    -> definitional / interpretive / meta prose, Mathlib background facts, or a
+#                          summary of a claim registered elsewhere (see supporting + notes)
+#   Merged claims: where several theorems of one module quote overlapping design statements that
+#           name each other, they form ONE claim whose impl lists all of them (each citable name is the
+#           impl of exactly one required claim).
+#   impl_note / notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: SemanticsPoissonSIR.header.designRow
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 11-14
+  text: 'DESIGN_NetworkEpiCore.md §D.5, row **M3** ("Rempała quotient"): "EB_{Pois μ}(P) → MA(E_μ P),
+    E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR:
+    MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence**", with Lean evidence "**[L]** `NEP.rempala`
+    (SIR)".'
+  kind: categorical
+  impl: []
+  supporting:
+  - NEP.rempala
+  impl_note: Design quote for the module (M3 row); the same quote is registered with SemanticsPoissonSIR.rempala.
+  required: false
+  status: informal
+  notes: Cross-reference.
+- id: SemanticsPoissonSIR.header.portScope
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 16-20
+  text: 'This module ports the SIR case of `DynSysSketch.lean` and ties it to the general EB lift of `NetworkEpi.Semantics.EB`:
+    `ebPoisSIR_lift` shows that the two-dimensional system `ebPoisSIR` is the `(θ, φ_I)` part of `ebSys
+    (CNet.poisson μ) q (sirRxns τ γ)` on `ξ = 1`, and `rempala_lift` composes the two maps. The general-P
+    quotient (L4c) belongs to `NetworkEpi/Morphisms` (WP28).'
+  kind: structural
+  impl: []
+  supporting:
+  - NEP.ebPoisSIR_lift
+  - NEP.rempala_lift
+  impl_note: Summary of ebPoisSIR_lift and rempala_lift (registered separately); 'ports the SIR case of
+    DynSysSketch.lean' is provenance.
+  required: false
+  status: informal
+  notes: Summary.
+- id: SemanticsPoissonSIR.hasFDerivAtPoisMap
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 46-46
+  text: 'The derivative of Rempała''s map: `Dπ(θ, φ)(dθ, dφ) = (qμe^{μ(θ−1)} dθ, dφ)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.hasFDerivAt_poisMap_qμ
+  supporting:
+  - NEP.hasFDerivAt_poisMap
+  impl_note: 'HasFDerivAt (poisMap μ q) (((q * (exp(μ(u.1 − 1)) * μ)) • fst).prod snd) u for every u :
+    ℝ × ℝ.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: scalar q * μ * exp(μ(θ−1)) in the order written.'
+- id: SemanticsPoissonSIR.rempala
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 69-85
+  text: |-
+    **Rempała's theorem for SIR as a semiconjugacy (M3, SIR case).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "**Rempała quotient** ("back to mass action on the same species") | EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence** | natural semiconjugacy (surjective submersion) | **[L]** `NEP.rempala` (SIR)".
+    [...]
+    The design's "surjective submersion" holds for `μ ≠ 0` and `q > 0`, onto the mass-action states with `S > 0` (`rempala_quotient_sir`); it fails for `μ = 0` or `q = 0`.
+  kind: dynamical
+  impl:
+  - NEP.rempala
+  - NEP.rempala_quotient_sir_spec
+  supporting:
+  - NEP.rempala_quotient_sir
+  impl_note: 'rempala: ∀ μ τ γ q, IsSemiconj (ebPoisSIR μ τ γ q) (maSIR (μτ) (γ+τ)) (poisMap μ q), poisMap (θ, φ) = (q e^{μ(θ−1)}, φ). rempala_quotient_sir (μ q) (μ ≠ 0): (q ≠ 0 → ∀ u, Surjective (fderiv ℝ (poisMap μ q) u)) ∧ (0 < q → ∀ S I, 0 < S → ∃ u, poisMap μ q u = (S, I)).'
+  required: true
+  status: implemented
+  notes: "Remediation: the quoted Kind column 'surjective submersion' is now stated (rempala_quotient_sir) and the provisos (μ ≠ 0, q > 0, onto S > 0) are added to the docstring's Scope sentence, quoted here. Text changed: the existing shadows S3/S4 already carry these provisos; the checker must re-sync sa_claim text. Round-4 remediation (non-blind owner, 2026-09-28): forward 3/5/6 and backward failed: rempala_quotient_sir states the submersion for q ≠ 0 (stronger than q > 0) and states no failure at μ = 0 or q = 0. New trusted theorem rempala_quotient_sir_spec (submersion and onto S > 0 for μ ≠ 0, q > 0; not a surjective submersion onto S > 0 for μ = 0, nor for q = 0) replaces it in the impl; rempala_quotient_sir is supporting. CITABLE: rempala_quotient_sir replaced by rempala_quotient_sir_spec. Impl changed: checker update needed."
+- id: SemanticsPoissonSIR.contDiffPoisMap
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 166-167
+  text: Rempała's map is C^∞, so `rempalaHom` is also a morphism of the design's category **Dyn** (whose
+    morphisms are C¹).
+  kind: structural
+  impl:
+  - NEP.contDiff_poisMap_dyn
+  supporting:
+  - NEP.contDiff_poisMap
+  impl_note: 'ContDiff ℝ ⊤ (poisMap μ q). In current Mathlib ⊤ : WithTop ℕ∞ is ω (analytic), which is
+    stronger than C^∞. ''so rempalaHom is also a morphism of the design''s Dyn'' is a consequence with
+    no Lean Dyn; it is not stated.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: contDiff_poisMap_dyn: ContDiff ℝ ∞ (↑⊤ : WithTop ℕ∞) poisMap ∧ ContDiff 1 of rempalaHom''s map ∧ ebPoisSIR and maSIR (μτ) (γ+τ) are Dyn objects (FiniteDimensional ∧ ContDiff 1).'
+- id: SemanticsPoissonSIR.poissonHasDerivAtPsi
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 214-214
+  text: On the Poisson network, `ψ'` is the derivative of `ψ` everywhere.
+  kind: dynamical
+  impl:
+  - NEP.CNet.poisson_hasDerivAt_ψ
+  supporting: []
+  impl_note: ∀ μ x, HasDerivAt (CNet.poisson μ).ψ ((CNet.poisson μ).ψ' x) x.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsPoissonSIR.poissonHasDerivAtPsiPrime
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 221-221
+  text: On the Poisson network, `ψ''` is the derivative of `ψ'` everywhere.
+  kind: dynamical
+  impl:
+  - NEP.CNet.poisson_hasDerivAt_ψ'
+  supporting: []
+  impl_note: ∀ μ x, HasDerivAt (CNet.poisson μ).ψ' ((CNet.poisson μ).ψ'' x) x.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsPoissonSIR.sirChartLApply
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 246-246
+  text: '`sirChartL` is `sirChart`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.sirChartL_apply
+  supporting: []
+  impl_note: ∀ u, sirChartL u = sirChart u (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsPoissonSIR.ebPoisSIRLift
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 249-252
+  text: '**`ebPoisSIR` is the SIR EBCM of the general lift.** For `μ ≠ 0`, the chart `(θ, ξ, φ, pop) ↦
+    (θ, φ_I)` is a local semiconjugacy on `{ξ = 1}` from the general EB model `ebSys (CNet.poisson μ)
+    q (sirRxns τ γ)` (the per-reaction lift of `s + I → I + I` at τ and `I → R` at γ on a Poisson(μ) network)
+    to `ebPoisSIR μ τ γ q`.'
+  kind: dynamical
+  impl:
+  - NEP.ebPoisSIR_lift
+  supporting: []
+  impl_note: μ ≠ 0 → IsSemiconjOn (ebSys (CNet.poisson μ) q (sirRxns τ γ)) (ebPoisSIR μ τ γ q) {u | u.2.1
+    = 1} sirChart, with sirChart (θ, ξ, φ, pop) = (θ, φ I).
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsPoissonSIR.rempalaLift
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 386-397
+  text: |-
+    **Rempała's quotient from the general SIR lift, with the design's map `(qξe^{μ(θ−1)}, φ_I)`, for `μ ≠ 0` (M3, SIR case).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence**".
+    [...]
+    On the slice `ξ = 1` the map is `(q e^{μ(θ−1)}, φ_I)` (`NEP.rempala_lift`).
+  kind: dynamical
+  impl:
+  - NEP.rempala_lift_xi
+  - NEP.rempala_lift
+  supporting: []
+  impl_note: 'rempala_lift_xi (μ τ γ q) (μ ≠ 0): IsSemiconj (ebSys (poisson μ) q (sirRxns τ γ)) (maSIR (μτ) (γ+τ)) (fun u => (q * u.2.1 * exp (μ * (u.1 − 1)), u.2.2.1 .I)) (global, any ξ). rempala_lift (μ ≠ 0): IsSemiconjOn … {u | u.2.1 = 1} (poisMap μ q ∘ sirChart), map (q e^{μ(θ−1)}, φ_I).'
+  required: true
+  status: implemented
+  notes: 'Remediation: the text is re-cited from the new theorem rempala_lift_xi (in NetworkEpi.Morphisms.Rempala), whose title quotes μ ≠ 0 and the ξ-dependent map; impl [rempala_lift_xi, rempala_lift]. Text changed: re-shadow blind.'
+- id: SemanticsPoissonSIR.rempalaSolution
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 403-415
+  text: |-
+    **Rempała's theorem on trajectories with the design's map `(qξe^{μ(θ−1)}, φ_I)`, for `μ ≠ 0` (M3, SIR).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P) [...] π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence**"; §D.3: "semiconjugacies map solution curves to solution curves".
+    [...]
+    No condition on `ξ(0)` is needed.
+  kind: dynamical
+  impl:
+  - NEP.rempala_solution_any_xi0
+  supporting:
+  - NEP.rempala_solution_xi
+  - NEP.rempala_solution
+  impl_note: 'rempala_solution_xi (μ τ γ q) (μ ≠ 0) {I} {x : ℝ → EB SIRSp}: ((∀ t ∈ I, HasDerivWithinAt x (lift (poisson μ) q (sirRxns τ γ) (x t)) I t) → ∀ t ∈ I, HasDerivWithinAt (t ↦ (q ξ(t) e^{μ(θ(t)−1)}, φ_I(t))) (maSIR (μτ) (γ+τ)).F(…) I t) ∧ (the same for HasDerivAt). Any set I; no ξ(0) hypothesis. rempala_solution (supporting): convex I ∋ 0, ξ(0) = 1, map q e^{μ(θ−1)}.'
+  required: true
+  status: implemented
+  notes: "Remediation: the old shadow S1 misread the text (2-D ebPoisSIR solutions); the claim is re-cited from the new theorem rempala_solution_xi (general EB lift, ξ-dependent map, any I, both solution notions). Text changed: re-shadow blind on the general EB lift. Round-4 remediation (non-blind owner, 2026-09-28): backward failed: rempala_solution_xi also has a two-sided conjunct (not in the text), and the shadows split ξ(0) = 1 / ξ(0) ≠ 1 (joining them needs excluded middle). New exact-statement theorem rempala_solution_any_xi0 (the within-I statement, as one conjunct for ξ(0) = 1 and one for ξ(0) ≠ 1) is the impl; rempala_solution_xi is supporting. CITABLE: rempala_solution_xi replaced by rempala_solution_any_xi0. Impl changed: checker update needed."

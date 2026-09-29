@@ -1,0 +1,312 @@
+# SA-PASS claim registry fragment: group DynBasic
+# Source module: NetworkEpi.Dyn.Basic (NetworkEpi/Dyn/Basic.lean; paths relative to proofs/). Trusted library NetworkEpi.* (namespace NEP).
+# Registrar: claim registrar 1/2 (non-blind). Merged into Alignment/claims.yaml by scripts/sa_merge_claims.py.
+#
+# Conventions
+#   id      <Group>.<lowerCamelTheoremName> for a theorem docstring (namespace prefix only where two
+#           theorems share a last component); '.b', '.c' for further claims of the same docstring;
+#           <Group>.header.<slug> for module-header prose/tables; <Group>.<lowerCamelDefName> for a
+#           claim made in the docstring of a definition or instance.
+#   text    VERBATIM (whitespace-normalised) quote; fragments separated by a line '[...]'. Lean comment
+#           delimiters are not part of the text. For a citable theorem the text is the bold title plus the
+#           full 'Design statement' paragraph. 'Lean statement:' paragraphs are NOT quoted (they transcribe
+#           the Lean statement and would leak it to blind shadow authors). 'Scope:' sentences are
+#           registered separately only when they assert mathematics.
+#   status  implemented -> impl lists trusted theorems; required: true
+#           missing     -> checkable mathematical claim that no trusted theorem states
+#           informal    -> definitional / interpretive / meta prose, Mathlib background facts, or a
+#                          summary of a claim registered elsewhere (see supporting + notes)
+#   Merged claims: where several theorems of one module quote overlapping design statements that
+#           name each other, they form ONE claim whose impl lists all of them (each citable name is the
+#           impl of exactly one required claim).
+#   impl_note / notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: DynBasic.header.dynDesign
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 17-19
+  text: 'The design (§D.3) says: "Objects of **Dyn** are (V, F): V a finite-dimensional real normed space,
+    F: V → V a C¹ vector field. Morphisms (V, F) → (W, G) are C¹ maps π with Dπ(u)·F(u) = G(π(u)) (semiconjugacies).
+    Identity and composition come from the chain rule."'
+  kind: categorical
+  impl: []
+  supporting: []
+  impl_note: The design's definition of Dyn (finite-dimensional V, C¹ field, C¹ semiconjugacies). There
+    is no Lean definition of Dyn. 'Identity and composition come from the chain rule' corresponds to the
+    definitions Semiconj.id and Semiconj.comp (data whose proof fields use the chain rule), not to a theorem.
+  required: false
+  status: informal
+  notes: Definitional design quote; the Lean counterpart is the generalised category DynSys.
+- id: DynBasic.header.dynSysGeneral
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 21-24
+  text: 'The Lean category `DynSys` is deliberately *more general*: `V` is any real normed space (not
+    necessarily finite-dimensional), `F` is any function `V → V` (no regularity), and a morphism is a
+    map that is differentiable everywhere (not necessarily C¹) and satisfies `fderiv ℝ π u (F u) = G (π
+    u)` for every `u`.'
+  kind: categorical
+  impl: []
+  supporting: []
+  impl_note: 'Describes the definitions DynSys (V : Type with NormedAddCommGroup, NormedSpace ℝ; F : V
+    → V) and Semiconj (π, diff : Differentiable ℝ π, comm : ∀ u, fderiv ℝ π u (A.F u) = B.F (π u)). No
+    theorem.'
+  required: false
+  status: informal
+  notes: Definitional.
+- id: DynBasic.header.dynSubcategory
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 24-26
+  text: The design's **Dyn** is therefore a subcategory of `DynSys` (same composition and identities),
+    and every theorem below about all objects or all morphisms of `DynSys` holds in particular for **Dyn**.
+  kind: categorical
+  impl: []
+  supporting: []
+  impl_note: No Lean definition of Dyn (finite-dimensional, C¹ objects and morphisms) and no statement
+    that it is a subcategory of DynSys (same composition/identities). The second half is a meta-logical
+    consequence that no theorem states.
+  required: false
+  status: missing
+  notes: NetworkEpi.Dyn.Products' header adds that Dyn is NOT a full subcategory of DynSys (DynProducts.header.notFull).
+- id: DynBasic.header.solutionDefs
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 28-31
+  text: 'A *solution* of `(V, F)` on a set of times `I` is a curve `x : ℝ → V` with `HasDerivAt x (F (x
+    t)) t` for every `t ∈ I` (`map_solution`, `map_solution_on`), or, on a time interval that may contain
+    its end points (for example a forward solution on `[0, T)`), with `HasDerivWithinAt x (F (x t)) I
+    t` for every `t ∈ I` (`map_solution_within`).'
+  kind: dynamical
+  impl: []
+  supporting: []
+  impl_note: Definition of 'solution on I' used in the hypotheses of map_solution, map_solution_on (HasDerivAt
+    at each t ∈ I) and map_solution_within (HasDerivWithinAt x (F (x t)) I t at each t ∈ I). No Lean definition
+    of 'solution'; the hypothesis is spelled out in each theorem.
+  required: false
+  status: informal
+  notes: Definitional.
+- id: DynBasic.header.withinWeaker
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 31-32
+  text: 'The second notion is weaker: `HasDerivAt` at `t` implies `HasDerivWithinAt` within any `I` at
+    `t`.'
+  kind: dynamical
+  impl: []
+  supporting: []
+  impl_note: Mathlib fact (HasDerivAt.hasDerivWithinAt); no trusted theorem restates it.
+  required: false
+  status: informal
+  notes: Background fact about Mathlib notions, not a claim about NetworkEpi definitions.
+- id: DynBasic.header.globalSolutions
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 33-33
+  text: Global solutions (`I = ℝ`) need not exist.
+  kind: existence
+  impl: []
+  supporting: []
+  impl_note: No Lean statement that some DynSys (or some EB model) has no global solution. Evidence is
+    numerical only (EB SEIR on Poisson(5) blows up backward at t ≈ −7.33; see NetworkEpi.Semantics.EB/Solutions
+    prose).
+  required: false
+  status: missing
+  notes: ''
+- id: DynBasic.semiconjIsSemiconj
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 67-67
+  text: A bundled semiconjugacy satisfies `IsSemiconj`.
+  kind: structural
+  impl:
+  - NEP.Semiconj.isSemiconj
+  supporting: []
+  impl_note: 'For m : Semiconj A B, IsSemiconj A B m.π (IsSemiconj = Differentiable ℝ π ∧ ∀ u, fderiv
+    ℝ π u (A.F u) = B.F (π u)); immediate from the structure fields.'
+  required: true
+  status: implemented
+  notes: ''
+- id: DynBasic.semiconjOnIsSemiconjOn
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 184-184
+  text: A bundled local semiconjugacy satisfies `IsSemiconjOn`.
+  kind: structural
+  impl:
+  - NEP.SemiconjOn.isSemiconjOn
+  supporting: []
+  impl_note: 'For m : SemiconjOn A B U, IsSemiconjOn A B U m.π (differentiable at each u ∈ U and the identity
+    on U).'
+  required: true
+  status: implemented
+  notes: ''
+- id: DynBasic.homEqSemiconj
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 98-98
+  text: The morphisms of `DynSys` are exactly the semiconjugacies.
+  kind: categorical
+  impl:
+  - NEP.hom_eq_semiconj
+  supporting: []
+  impl_note: (A ⟶ B) = Semiconj A B as types (rfl), for the instance dynCategory.
+  required: true
+  status: implemented
+  notes: ''
+- id: DynBasic.idPi
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 101-101
+  text: In `DynSys` the identity morphism is the identity map.
+  kind: categorical
+  impl:
+  - NEP.id_π
+  supporting: []
+  impl_note: Semiconj.π (𝟙 A) = id (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: DynBasic.compPi
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 104-104
+  text: In `DynSys` composition of morphisms is composition of the underlying maps.
+  kind: categorical
+  impl:
+  - NEP.comp_π
+  supporting: []
+  impl_note: 'Semiconj.π (f ≫ g) = Semiconj.π g ∘ Semiconj.π f for f : A ⟶ B, g : B ⟶ C (rfl).'
+  required: true
+  status: implemented
+  notes: ''
+- id: DynBasic.mapSolution
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: '109-112,87-89'
+  text: |-
+    **Semiconjugacies map solutions to solutions.** Design statement (DESIGN_NetworkEpiCore.md §D.3): "[L] `instance : Category DynSys` and `Semiconj.map_solution` (semiconjugacies map solution curves to solution curves)".
+    [...]
+    **The category `DynSys`** (DESIGN §D.3: "[L] `instance : Category DynSys`"). Objects are `DynSys`, morphisms `A ⟶ B` are `Semiconj A B`, the identity is `id` and composition is composition of maps (`comp_π`, `id_π`).
+  kind: dynamical
+  impl:
+  - NEP.Semiconj.map_solution_global
+  - NEP.Semiconj.map_solution_open
+  - NEP.hom_eq_semiconj
+  - NEP.id_π
+  - NEP.comp_π
+  supporting:
+  - NEP.Semiconj.map_solution
+  impl_note: 'Semiconj.map_solution: for m : Semiconj A B, any set of times I : Set ℝ and x : ℝ → A.V
+    with HasDerivAt x (A.F (x t)) t for every t ∈ I, HasDerivAt (m.π ∘ x) (B.F (m.π (x t))) t for every
+    t ∈ I (I = univ gives global solutions; I is an arbitrary set, no interval required). ''Solution curve''
+    is read pointwise via HasDerivAt. The ''[L] instance : Category DynSys'' part: the instance dynCategory
+    is a definition; its content is stated by hom_eq_semiconj ((A ⟶ B) = Semiconj A B), id_π (π of 𝟙 A
+    is id) and comp_π (π of f ≫ g is g.π ∘ f.π). The category laws hold by rfl inside the instance and
+    are not separate theorems. DynSys generalises the design''s Dyn (any real normed space, any F, morphisms
+    differentiable rather than C¹), so the statement is about DynSys, not about a formalised Dyn.'
+  required: true
+  status: implemented
+  notes: "Citable: NEP.Semiconj.map_solution. Merged claim: the design statement of map_solution bundles the category instance, so the instance docstring (lines 87-89) and the three theorems describing the instance are part of this claim. Round-4 remediation (non-blind owner, 2026-09-28): backward failed because Semiconj.map_solution (pointwise on ANY set I) is stronger than S1 (global) and S2 (open interval). New exact-statement corollaries Semiconj.map_solution_global and Semiconj.map_solution_open are the impl; the stronger theorem is supporting. CITABLE: NEP.Semiconj.map_solution replaced by the two corollaries. Impl changed: checker update needed (text unchanged, shadows unchanged)."
+- id: DynBasic.semiconjMapSolutionWithin
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 125-127
+  text: 'Semiconjugacies map solutions within a set of times to solutions within it: if `x''(t) = F(x(t))`
+    within `I` (`HasDerivWithinAt`) at every `t ∈ I`, then `(π ∘ x)''(t) = G(π(x(t)))` within `I` at every
+    `t ∈ I`.'
+  kind: dynamical
+  impl:
+  - NEP.Semiconj.map_solution_within
+  supporting: []
+  impl_note: 'For m : Semiconj A B, I : Set ℝ, x with HasDerivWithinAt x (A.F (x t)) I t for every t ∈
+    I: HasDerivWithinAt (m.π ∘ x) (B.F (m.π (x t))) I t for every t ∈ I.'
+  required: true
+  status: implemented
+  notes: ''
+- id: DynBasic.mapSolutionOn
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 212-216
+  text: |-
+    **Local semiconjugacies map solutions that stay in `U` to solutions.** Design statement (DESIGN_NetworkEpiCore.md §D.3): "**Local version `SemiconjOn U`.** The identity holds on an open set U, and solutions that stay in U are mapped. This is needed for maps that divide by ψ(θ) or ψ'(θ)."
+  kind: dynamical
+  impl:
+  - NEP.SemiconjOn.map_solution_on_global
+  - NEP.SemiconjOn.map_solution_on_open
+  supporting:
+  - NEP.SemiconjOn.map_solution_on
+  impl_note: 'For m : SemiconjOn A B U (π differentiable at each u ∈ U, fderiv ℝ π u (A.F u) = B.F (π
+    u) for u ∈ U), any I : Set ℝ and x with HasDerivAt x (A.F (x t)) t and x t ∈ U for every t ∈ I: HasDerivAt
+    (m.π ∘ x) (B.F (m.π (x t))) t for every t ∈ I. U is NOT required to be open (the design says ''an
+    open set U''; the SemiconjOn docstring explains that pointwise differentiability on U replaces openness),
+    so the Lean notion is more general. ''This is needed for maps that divide by ψ(θ) or ψ''(θ)'' is motivation,
+    not formalised.'
+  required: true
+  status: implemented
+  notes: "Citable: NEP.SemiconjOn.map_solution_on. The same design statement is quoted by DynBasic.semiconjOnMapSolutionWithin. Round-4 remediation (non-blind owner, 2026-09-28): backward failed (impl pointwise on any set I is stronger than S1/S2). New exact-statement corollaries SemiconjOn.map_solution_on_global / _open are the impl; SemiconjOn.map_solution_on is supporting. CITABLE: NEP.SemiconjOn.map_solution_on replaced by the two corollaries. Impl changed: checker update needed."
+- id: DynBasic.semiconjOnMapSolutionWithin
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 229-234
+  text: |-
+    **Local semiconjugacies map solutions within a set of times `I` that stay in `U` to solutions within `I`.** Design statement (DESIGN_NetworkEpiCore.md §D.3): "**Local version `SemiconjOn U`.** The identity holds on an open set U, and solutions that stay in U are mapped. This is needed for maps that divide by ψ(θ) or ψ'(θ)."
+  kind: dynamical
+  impl:
+  - NEP.SemiconjOn.map_solution_within
+  supporting: []
+  impl_note: As SemiconjOn.map_solution_on but with HasDerivWithinAt x (A.F (x t)) I t (one-sided at end
+    points of I in I) in hypothesis and conclusion; x t ∈ U for every t ∈ I. U need not be open.
+  required: true
+  status: implemented
+  notes: "Citable: NEP.SemiconjOn.map_solution_within. Same design statement as DynBasic.mapSolutionOn. Re-anchored 2026-09-28 (SA-PASS_SKILL §7): the bold title changed in the source from '... solutions on a time interval that stay in `U` to solutions' to '... solutions within a set of times `I` that stay in `U` to solutions within `I`'. Substantive change: the sa_claim text in Checks/DynBasic.lean must be updated to this text (text_mismatch until then) and the shadows re-derived BLIND (the current S1 restricts to convex I, i.e. the old 'time interval' reading). The 'Lean statement:' paragraph and the SemiconjOn 'openness' sentence were removed from the text (this fragment's convention: they are not quoted). Round-4 remediation (non-blind owner, 2026-09-28): sa_claim text in Checks/DynBasic.lean updated to this registry text (fixes text_mismatch). The text now says \"within a set of times I\" (the old shadow assumed a convex time interval): re-shadow BLIND, then update the checkers."
+- id: DynBasic.hasFDerivAtRestrictIncl
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 298-298
+  text: The chart `w ↦ p₀ + w` has derivative the inclusion `W →L[ℝ] V` at every point.
+  kind: structural
+  impl:
+  - NEP.DynSys.hasFDerivAt_restrictIncl
+  supporting: []
+  impl_note: 'HasFDerivAt (A.restrictIncl p₀ W) W.subtypeL w for every w : W (restrictIncl p₀ W w = p₀
+    + w).'
+  required: true
+  status: implemented
+  notes: ''
+- id: DynBasic.invariantIncl
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 303-306
+  text: '**The inclusion of an invariant subsystem is a semiconjugacy (a restriction).** Design statement
+    (DESIGN_NetworkEpiCore.md §D.3): "The inclusion of an invariant subsystem is a restriction. "Model
+    A is exact for initial conditions in W" is a morphism *out of* (W, F|_W)."'
+  kind: categorical
+  impl:
+  - NEP.invariant_incl
+  supporting: []
+  impl_note: 'For A : DynSys, p₀ : A.V, a linear subspace W : Submodule ℝ A.V and hW : ∀ w ∈ W, A.F (p₀
+    + w) ∈ W (F tangent to the affine subspace p₀ + W): IsSemiconj (A.restrict p₀ W hW) A (A.restrictIncl
+    p₀ W), where restrict has state space W and field w ↦ F(p₀ + w) and restrictIncl is w ↦ p₀ + w. ''Invariant
+    subsystem'' is read as an affine subspace to which F is tangent (no general invariant set or submanifold).
+    The quoted interpretation (''Model A is exact for initial conditions in W is a morphism out of (W,
+    F|_W)'') is not formalised beyond the existence of this morphism into A.'
+  required: true
+  status: implemented
+  notes: 'Citable: NEP.invariant_incl.'

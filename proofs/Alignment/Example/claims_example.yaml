@@ -1,0 +1,43 @@
+# Claim registry for the worked example (ids EXAMPLE.*). Same format as Alignment/claims/<Group>.yaml.
+- id: EXAMPLE.admissibleType
+  group: Example
+  source: {file: NetworkEpi/Syntax/Rxn.lean, lines: '131-132'}
+  text: "EB-admissibility is membership of the reaction's type in T_EB: \"the sub-theory with no arrow into Sus\" (DESIGN §B.2)."
+  kind: equivalence
+  impl: [NEP.NRxn.ebAdmissible_iff_type]
+  supporting: []
+  impl_note: >-
+    States r.EBAdmissible ↔ r.type.inTEB = true for every T_net reaction r; TNet.inTEB is true
+    exactly on contact, exit, progress and remove (a reviewed bridge).
+  required: true
+  status: implemented
+  notes: Worked example with a reviewed bridge; a weak pass (shadows written by the checker author).
+- id: EXAMPLE.notAdmissible
+  group: Example
+  source: {file: NetworkEpi/Syntax/Rxn.lean, lines: '151-165'}
+  text: |
+    Resusceptibility `X → s` (§B.2 type `:resus`, e.g. SIS `I → S`) is not EB-admissible
+    [...]
+    A node contact `X + J → Y + J` with a node-species recipient (§B.2 type `:node_contact`) is not
+    EB-admissible.
+  kind: structural
+  impl: [NEP.NRxn.not_ebAdmissible_resus, NEP.NRxn.not_ebAdmissible_nodeContact]
+  supporting: []
+  impl_note: >-
+    The conjunction of the two theorems states ¬ (NRxn.resus X a).EBAdmissible and
+    ¬ (NRxn.nodeContact X J Y τ).EBAdmissible for all arguments.
+  required: true
+  status: implemented
+  notes: Worked example with two implementation theorems (T̂ is their conjunction).
+- id: EXAMPLE.roundTrip
+  group: Example
+  source: {file: NetworkEpi/Syntax/Rxn.lean, lines: '146-146'}
+  text: "An EB-admissible T_net reaction comes from T_EB syntax."
+  kind: existence
+  impl: [NEP.NRxn.eq_toNRxn_of_ebAdmissible]
+  supporting: []
+  impl_note: >-
+    For every r : NRxn σ with r.EBAdmissible there is r' : Rxn σ with r = r'.toNRxn.
+  required: true
+  status: implemented
+  notes: Worked example with a satisfiability witness (@[sa_witness]) for the shared hypothesis.

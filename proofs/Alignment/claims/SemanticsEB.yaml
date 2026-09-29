@@ -1,0 +1,743 @@
+# SA-PASS claim registry fragment: group SemanticsEB
+# Source module: NetworkEpi.Semantics.EB (NetworkEpi/Semantics/EB.lean; paths relative to proofs/). Trusted library NetworkEpi.* (namespace NEP).
+# Registrar: claim registrar 1/2 (non-blind). Merged into Alignment/claims.yaml by scripts/sa_merge_claims.py.
+#
+# Conventions
+#   id      <Group>.<lowerCamelTheoremName> for a theorem docstring (namespace prefix only where two
+#           theorems share a last component); '.b', '.c' for further claims of the same docstring;
+#           <Group>.header.<slug> for module-header prose/tables; <Group>.<lowerCamelDefName> for a
+#           claim made in the docstring of a definition or instance.
+#   text    VERBATIM (whitespace-normalised) quote; fragments separated by a line '[...]'. Lean comment
+#           delimiters are not part of the text. For a citable theorem the text is the bold title plus the
+#           full 'Design statement' paragraph. 'Lean statement:' paragraphs are NOT quoted (they transcribe
+#           the Lean statement and would leak it to blind shadow authors). 'Scope:' sentences are
+#           registered separately only when they assert mathematics.
+#   status  implemented -> impl lists trusted theorems; required: true
+#           missing     -> checkable mathematical claim that no trusted theorem states
+#           informal    -> definitional / interpretive / meta prose, Mathlib background facts, or a
+#                          summary of a claim registered elsewhere (see supporting + notes)
+#   Merged claims: where several theorems of one module quote overlapping design statements that
+#           name each other, they form ONE claim whose impl lists all of them (each citable name is the
+#           impl of exactly one required claim).
+#   impl_note / notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: SemanticsEB.header.coordinates
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 19-25
+  text: 'One susceptible species `s` (implicit) on an untyped, single-layer configuration network with
+    degree PGF ψ. The state `u : EB σ` is `(θ, ξ, φ, pop)`: * `θ`: the probability that a random edge
+    has not transmitted to the test node; * `ξ`: the exit survival factor (ξ ≡ 1 if there are no exits);
+    * `φ X` (for node species `X : σ`): the probability that a random edge has not transmitted and its
+    partner is in `X`; * `pop X`: the fraction of nodes in `X`.'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: EB σ := ℝ × ℝ × (σ → ℝ) × (σ → ℝ) = (θ, ξ, φ, pop); the probabilistic readings
+    of the coordinates are interpretation, not formalised.'
+  required: false
+  status: informal
+  notes: Definitional.
+- id: SemanticsEB.header.observables
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 27-29
+  text: The seed factor `q = 1 − Σ_X ρ_X` is a parameter. The susceptible observables are `S = qξψ(θ)`
+    (`CNet.susc`) and `φ_S = qξψ'(θ)/ψ'(1)` (`CNet.phiS`). The design's cumulative incidence accumulator
+    `cum` is not a state variable here.
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: CNet.susc N q θ ξ = qξψ(θ), CNet.phiS N q θ ξ = qξψ''(θ)/ψ''(1); q is a free
+    real parameter (the relation q = 1 − Σρ is not imposed).'
+  required: false
+  status: informal
+  notes: Definitional.
+- id: SemanticsEB.header.fieldTable
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 34-41,44-45
+  text: |-
+    contact r = (s + J → X + J, τ_r): θ̇ += −τ_r φ_J
+    φ̇_J += −τ_r φ_J
+    φ̇_X += +τ_r φ_J · qξ ψ''(θ)/ψ'(1)
+    pop_X' += +τ_r φ_J · qξ ψ'(θ)
+    transition t = (X → Y | ∅, a): φ̇_X −= a φ_X; φ̇_Y += a φ_X; pop_X' −= a pop_X; pop_Y' += a pop_X
+    (Y = ∅: no gains)
+    exit e = (s → Y, ν_e): ξ̇ += −ν_e ξ; φ̇_Y += ν_e φ_S; pop_Y' += ν_e S
+    initial condition: θ(0) = 1, ξ(0) = 1, φ_X(0) = pop_X(0) = ρ_X
+    [...]
+    `ebField N q r u` is exactly this contribution of reaction `r` at state `u`, and `lift N q rs u` is the sum of the contributions of the reactions in the list `rs`.
+  kind: structural
+  impl:
+  - NEP.ebField_contact_table
+  - NEP.ebField_exit_eq
+  - NEP.ebField_remove_table
+  - NEP.ebField_progress_table
+  - NEP.lift_eq_sum
+  supporting:
+  - NEP.ebField_contact_eq
+  - NEP.ebField_remove_eq
+  - NEP.ebField_progress_eq
+  impl_note: 'The four lemmas (module NetworkEpi.Semantics.Solutions) restate ebField N q r for r = contact
+    J X τ, exit Y ν, trans X none a, trans X (some Y) a as explicit functions of u = (θ, ξ, φ, pop) built
+    from Pi.single (contact: (−τφ_J, 0, single X (τφ_J·qξψ''''(θ)/ψ''(1)) − single J (τφ_J), single X
+    (τφ_J·qξψ''(θ))); exit: (0, −νξ, single Y (ν·qξψ''(θ)/ψ''(1)), single Y (ν·qξψ(θ))); removal: (0,
+    0, −single X (aφ_X), −single X (a pop_X)); progression: gains at Y minus losses at X). The ''+=''
+    updates of the table are read as summands (with X = J both terms land on the same coordinate). NOT
+    IN IMPL: the initial-condition row (θ(0) = 1, ξ(0) = 1, φ_X(0) = pop_X(0) = ρ_X: no Lean object) and
+    ''lift N q rs u is the sum of the contributions'' (the definition of lift, no theorem).'
+  required: true
+  status: implemented
+  notes: 'The design''s §D.4 table; ψ'', ψ'''' are fields of CNet, not derivatives of ψ (no hypothesis relates them in these lemmas). Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form: the *_table theorems state the table rows in the table''s normal form (single Y b − single X b etc.), lift_eq_sum states that lift is the sum of the per-reaction fields. WEAK: the *_table forms were written after the shadows.'
+- id: SemanticsEB.header.solutionsOnInterval
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 250-256
+  text: '**Solutions on a time interval.** The results below are stated for a solution on a *time interval*:
+    a convex set `I ⊆ ℝ` of times with `0 ∈ I`, such as `(a, b)` with `a < 0 < b`, `[0, T)`, `[0, ∞)`
+    or `ℝ`. A curve `x : ℝ → EB σ` *solves the EB model of `rs` on `I`* if `HasDerivWithinAt x (lift N
+    q rs (x t)) I t` for every `t ∈ I`. At an end point of `I` that lies in `I` (for example `t = 0` for
+    `I = [0, T)`) this is a one-sided derivative. A curve with `HasDerivAt x (lift N q rs (x t)) t` at
+    every `t ∈ I` satisfies it (`HasDerivAt.hasDerivWithinAt`). Only the values of `x` on `I` matter.'
+  kind: dynamical
+  impl: []
+  supporting: []
+  impl_note: Definition of 'solves on I' used as a hypothesis by conservation, node_conservation, xi_const
+    (convex I ∋ 0). 'A curve with HasDerivAt ... satisfies it' is Mathlib's HasDerivAt.hasDerivWithinAt;
+    'only the values of x on I matter' is a property of HasDerivWithinAt, not restated.
+  required: false
+  status: informal
+  notes: Definitional + Mathlib background.
+- id: SemanticsEB.header.globalSolutions
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 258-260
+  text: Global solutions (`I = ℝ`) need not exist. For example, integrated numerically, EB SEIR on a Poisson(5)
+    network (τ = 1/6, σ = 1/3, γ = 1/4, θ(0) = ξ(0) = 1, φ_E(0) = 0, φ_I(0) = 0.01, q = 0.99) blows up
+    backward in time at t ≈ −7.33.
+  kind: existence
+  impl: []
+  supporting: []
+  impl_note: No Lean statement that this (or any) EB model has no global solution; the blow-up time is
+    a numerical result.
+  required: false
+  status: missing
+  notes: Same claim in DynBasic.header.globalSolutions and SemanticsSolutions.seirConservationLocal.b.
+- id: SemanticsEB.header.localSolutions
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 260-262
+  text: 'Such a model still has local solutions on an interval `(−ε, ε)`: `NetworkEpi.Semantics.Solutions`
+    proves that they exist for every T_EB model whose ψ, ψ'', ψ'''' are C¹ at the initial θ (`exists_local_solution`).'
+  kind: existence
+  impl: []
+  supporting:
+  - NEP.exists_local_solution
+  impl_note: Cross-reference to exists_local_solution (ψ, ψ', ψ'' C¹ at u₀.1 ⇒ ∃ ε > 0, x, x 0 = u₀, HasDerivAt
+    x (lift N q rs (x t)) t on (−ε, ε)).
+  required: false
+  status: informal
+  notes: Summary of SemanticsSolutions.existsLocalSolution (registered there).
+- id: SemanticsEB.header.forwardSolutions
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 262-264
+  text: From physical states it also has forward solutions on `[0, ∞)`, since the coordinates stay bounded;
+    that is not formalised here.
+  kind: existence
+  impl: []
+  supporting: []
+  impl_note: Forward existence on [0, ∞) from physical states (boundedness of the coordinates) is not
+    formalised (the text says so).
+  required: false
+  status: missing
+  notes: ''
+- id: SemanticsEB.header.degreeDataHypotheses
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 266-268
+  text: The degree data enter only through derivative relations at the θ values that the solution visits
+    (`∀ t ∈ I, HasDerivAt N.ψ' (N.ψ'' θ(t)) θ(t)`), so a PGF with a pole away from the visited θ values
+    (for example a negative binomial PGF, pole at `1/(1 − p) > 1`) is covered.
+  kind: other
+  impl: []
+  supporting:
+  - NEP.conservation
+  - NEP.node_conservation
+  impl_note: Describes the form of the derivative hypotheses of conservation/node_conservation (HasDerivAt
+    ψ' (ψ'' θ(t)) θ(t) only at visited θ). No PGF is formalised (CNet has three arbitrary functions),
+    so the negative-binomial remark is interpretation.
+  required: false
+  status: informal
+  notes: Meta.
+- id: SemanticsEB.liftAppend
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: '111-118,186-189,207-212,229-233'
+  text: |-
+    **H1, part 1: the EB lift is additive in the reaction list.** Design statement (DESIGN_NetworkEpiCore.md §D.4, table row EB_N, column "Strict under gluing?"): "**yes**: the per-reaction lift is additive and natural in species maps ([L] `lift_append`, `lift_map`)"; §D.6: "**H1** EB(glue(A,B)) = glue(EB A, EB B), for fixed N with s glued to s | **yes, strict** | local per-reaction fields | [L] `lift_append`, `lift_map` (contact/transition; the exit case is added in WP13)".
+    [...]
+    **Naturality of the per-reaction EB field in species maps.** Design statement (DESIGN_NetworkEpiCore.md §D.7, L3): "`lift_append`, `ebField_map`, `lift_map` (relabelling/gluing naturality with pushforward along fibres)".
+    [...]
+    **H1, part 2: the EB lift is natural in species maps (relabelling and gluing).** Design statement (DESIGN_NetworkEpiCore.md §D.4, row EB_N): "the per-reaction lift is additive and natural in species maps ([L] `lift_append`, `lift_map`)"; §D.7, L3: "`lift_map` (relabelling/gluing naturality with pushforward along fibres)"; §D.6 H1 (quoted at `lift_append`), with the exit case included.
+    [...]
+    **H1: the EB lift is strict under gluing.** Design statement (DESIGN_NetworkEpiCore.md §D.6): "**H1** EB(glue(A,B)) = glue(EB A, EB B), for fixed N with s glued to s | **yes, strict** | local per-reaction fields"; §D.3 (open systems): "composition identifies ported coordinates and **adds** vector fields".
+  kind: categorical
+  impl:
+  - NEP.lift_append
+  - NEP.ebField_map
+  - NEP.lift_map
+  - NEP.lift_glue
+  supporting: []
+  impl_note: 'lift_append: for all N (ψ, ψ'', ψ'''' arbitrary functions), q, rs rs'' : List (Rxn σ), u
+    : EB σ: lift N q (rs ++ rs'') u = lift N q rs u + lift N q rs'' u. ebField_map: for σ finite, f :
+    σ → σ'', r : Rxn σ, u : EB σ'': ebField N q (r.map f) u = pushEB f (ebField N q r (pullEB f u)). lift_map:
+    the same for lists: lift N q (rs.map (Rxn.map f)) u = pushEB f (lift N q rs (pullEB f u)). lift_glue:
+    for a cospan f : σA → σ, g : σB → σ (σA, σB finite): lift N q (A.map (Rxn.map f) ++ B.map (Rxn.map
+    g)) u = pushEB f (lift N q A (pullEB f u)) + pushEB g (lift N q B (pullEB g u)). pushEB keeps θ, ξ
+    and sums φ, pop over the fibres of f; pullEB keeps θ, ξ and precomposes φ, pop with f. ''glue(A,B)''
+    is modelled as relabelling along the cospan legs plus concatenation, and ''glue(EB A, EB B)'' as the
+    sum of the pushed-forward component fields at pulled-back states; no open system / decorated cospan
+    is formalised (''composition identifies ported coordinates and adds vector fields'' is read this way).
+    ''Natural in species maps'' is the pushforward/pullback identity, not a natural transformation of
+    functors. ''for fixed N with s glued to s'': one implicit susceptible species, shared. The exit case
+    is included (ebField covers all Rxn constructors).'
+  required: true
+  status: implemented
+  notes: 'Citable: NEP.lift_append, NEP.ebField_map, NEP.lift_map, NEP.lift_glue. Merged claim: their
+    docstrings quote overlapping design statements (§D.4 row EB_N, §D.6 H1, §D.7 L3) that name each other.'
+- id: SemanticsEB.pushSingle
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 140-140
+  text: The pushforward of `Pi.single X c` is `Pi.single (f X) c`.
+  kind: algebraic-identity
+  impl:
+  - NEP.push_single
+  supporting: []
+  impl_note: push f (Pi.single X c) = Pi.single (f X) c (σ finite, DecidableEq σ, σ').
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.pushAdd
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 147-147
+  text: The pushforward is additive.
+  kind: algebraic-identity
+  impl:
+  - NEP.push_add
+  supporting: []
+  impl_note: push f (v + w) = push f v + push f w.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.pushNeg
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 151-151
+  text: The pushforward commutes with negation.
+  kind: algebraic-identity
+  impl:
+  - NEP.push_neg
+  supporting: []
+  impl_note: push f (−v) = −push f v.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.pushSub
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 155-155
+  text: The pushforward commutes with subtraction.
+  kind: algebraic-identity
+  impl:
+  - NEP.push_sub
+  supporting: []
+  impl_note: push f (v − w) = push f v − push f w.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.pushZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 159-159
+  text: The pushforward of zero is zero.
+  kind: algebraic-identity
+  impl:
+  - NEP.push_zero
+  supporting: []
+  impl_note: push f 0 = 0.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.pushEBAdd
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 167-167
+  text: The pushforward of EB coordinates is additive.
+  kind: algebraic-identity
+  impl:
+  - NEP.pushEB_add
+  supporting: []
+  impl_note: pushEB f (u + v) = pushEB f u + pushEB f v.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.pushEBZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 173-173
+  text: The pushforward of the zero EB vector is zero.
+  kind: algebraic-identity
+  impl:
+  - NEP.pushEB_zero
+  supporting: []
+  impl_note: pushEB f 0 = 0.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.removalFluxEqZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 287-287
+  text: Without removals `X → ∅` the removal flux vanishes.
+  kind: algebraic-identity
+  impl:
+  - NEP.removalFlux_eq_zero
+  supporting: []
+  impl_note: (∀ r ∈ rs, r.isRemoval = false) → ∀ v, removalFlux rs v = 0.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.sumSingle
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 387-387
+  text: The sum over all species of `Pi.single X c` is `c`.
+  kind: algebraic-identity
+  impl:
+  - NEP.sum_single
+  supporting: []
+  impl_note: '∑ Y, (Pi.single X c : σ → ℝ) Y = c (σ finite).'
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.hasDerivWithinAtCompClm
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 410-410
+  text: Chain rule for a continuous linear map applied to a curve, within a set of times.
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_clm_comp
+  - NEP.hasDerivWithinAt_clm_comp_EB
+  supporting:
+  - NEP.hasDerivWithinAt_comp_clm
+  impl_note: 'For L : EB σ →L[ℝ] F: HasDerivWithinAt x x'' I t → HasDerivWithinAt (fun t => L (x t)) (L
+    x'') I t.'
+  required: true
+  status: implemented
+  notes: "Remediation (SA-PASS triage): re-registered to the theorem that states the text's form (general normed E, F; the text names no space). Round-4 remediation (non-blind owner, 2026-09-28): forward 1 failed for infinite σ (EB σ not normed). New trusted theorem hasDerivWithinAt_clm_comp_EB (the chain rule on EB σ for every σ, normed target; via hasDerivWithinAt_clm_comp_tvs) added to the impl. hasDerivWithinAt_clm_comp_tvs itself is not added: it is stated for every topological vector space, which S1 ∧ S2 would not imply (backward). Impl changed: checker update needed."
+- id: SemanticsEB.hasDerivWithinAtTheta
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 416-416
+  text: The θ-coordinate of a curve has, within `I`, the θ-coordinate of its derivative.
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_θ_any
+  supporting:
+  - NEP.hasDerivWithinAt_θ
+  impl_note: HasDerivWithinAt x x' I t → HasDerivWithinAt (fun t => (x t).1) x'.1 I t.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (no Fintype σ).'
+- id: SemanticsEB.hasDerivWithinAtXi
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 421-421
+  text: The ξ-coordinate of a curve has, within `I`, the ξ-coordinate of its derivative.
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_ξ_any
+  supporting:
+  - NEP.hasDerivWithinAt_ξ
+  impl_note: Same for the ξ-coordinate (.2.1).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (no Fintype σ).'
+- id: SemanticsEB.hasDerivWithinAtPhi
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 427-427
+  text: Each φ-coordinate of a curve has, within `I`, the φ-coordinate of its derivative.
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_φ_any
+  supporting:
+  - NEP.hasDerivWithinAt_φ
+  impl_note: Same for each φ X (.2.2.1 X).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (no Fintype σ).'
+- id: SemanticsEB.hasDerivWithinAtPop
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 435-435
+  text: Each pop-coordinate of a curve has, within `I`, the pop-coordinate of its derivative.
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_pop_any
+  supporting:
+  - NEP.hasDerivWithinAt_pop
+  impl_note: Same for each pop X (.2.2.2 X).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (no Fintype σ).'
+- id: SemanticsEB.hasDerivWithinAtEdgeDefect
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 443-444
+  text: Chain rule for the edge defect along a curve, within a set of times `I`, when `ψ''` is the derivative
+    of `ψ'` at the current θ.
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_edgeDefect
+  supporting: []
+  impl_note: HasDerivAt N.ψ' (N.ψ'' (x t).1) (x t).1 → HasDerivWithinAt x x' I t → HasDerivWithinAt (fun
+    t => edgeDefect N q (x t)) (edgeDefectDeriv N q (x t) x') I t, for an arbitrary direction x' (not
+    necessarily the EB field).
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.hasDerivWithinAtNodeTotal
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 460-461
+  text: Chain rule for the node total along a curve, within a set of times `I`, when `ψ'` is the derivative
+    of `ψ` at the current θ.
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_nodeTotal
+  supporting: []
+  impl_note: HasDerivAt N.ψ (N.ψ' (x t).1) (x t).1 → HasDerivWithinAt x x' I t → HasDerivWithinAt (fun
+    t => nodeTotal N q (x t)) (nodeTotalDeriv N q (x t) x') I t.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.edgeDefectDerivAdd
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 477-477
+  text: '`edgeDefectDeriv N q u` is additive in the direction.'
+  kind: algebraic-identity
+  impl:
+  - NEP.edgeDefectDeriv_add
+  supporting: []
+  impl_note: edgeDefectDeriv N q u (v + w) = edgeDefectDeriv N q u v + edgeDefectDeriv N q u w.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.nodeTotalDerivAdd
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 483-483
+  text: '`nodeTotalDeriv N q u` is additive in the direction.'
+  kind: algebraic-identity
+  impl:
+  - NEP.nodeTotalDeriv_add
+  supporting: []
+  impl_note: nodeTotalDeriv N q u (v + w) = nodeTotalDeriv N q u v + nodeTotalDeriv N q u w.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.edgeDefectDerivEbField
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 489-489
+  text: Per reaction, the edge defect changes only through removals.
+  kind: algebraic-identity
+  impl:
+  - NEP.edgeDefectDeriv_ebField_eq_zero
+  supporting:
+  - NEP.edgeDefectDeriv_ebField
+  impl_note: edgeDefectDeriv N q u (ebField N q r u) = r.removalRate u.2.2.1 for every r and u (removalRate
+    = a·φ_X for trans X none a, 0 otherwise); an algebraic identity with no hypothesis on ψ, ψ', ψ'' (edgeDefectDeriv
+    is the formal directional derivative).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (isRemoval r = false → 0). The reviewed bridge bridge_isRemoval must be registered for this claim.'
+- id: SemanticsEB.nodeTotalDerivEbField
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 512-512
+  text: Per reaction, the node total changes only through removals.
+  kind: algebraic-identity
+  impl:
+  - NEP.nodeTotalDeriv_ebField_eq_zero
+  supporting:
+  - NEP.nodeTotalDeriv_ebField
+  impl_note: nodeTotalDeriv N q u (ebField N q r u) = −r.removalRate u.2.2.2.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (isRemoval r = false → 0, no −0). Needs the isRemoval bridge.'
+- id: SemanticsEB.edgeDefectDerivLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 572-572
+  text: Along the EB field of a reaction list, the edge defect changes at the removal flux of φ.
+  kind: algebraic-identity
+  impl:
+  - NEP.edgeDefectDeriv_lift
+  supporting: []
+  impl_note: edgeDefectDeriv N q u (lift N q rs u) = removalFlux rs u.2.2.1.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.nodeTotalDerivLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 582-583
+  text: Along the EB field of a reaction list, the node total changes at minus the removal flux of pop.
+  kind: algebraic-identity
+  impl:
+  - NEP.nodeTotalDeriv_lift
+  supporting: []
+  impl_note: nodeTotalDeriv N q u (lift N q rs u) = −removalFlux rs u.2.2.2.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.hasDerivWithinAtEdgeDefectLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 594-598
+  text: '**Edge balance along EB solutions, with removals.** Let `x` solve the EB field of a T_EB reaction
+    list `rs` within a set of times `I` at the time `t` (`HasDerivWithinAt`), and let `ψ''''` be the derivative
+    of `ψ''` at `θ(t)`. Then, within `I` at `t`, `d/dt (θ − φ_S − Σ_X φ_X) = Σ_{(X → ∅, a) ∈ rs} a φ_X`.
+    Removals `X → ∅` make the partner inert: its edges keep `θ` but leave every φ class, so the defect
+    grows.'
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_edgeDefect_lift
+  supporting: []
+  impl_note: 'HasDerivAt N.ψ'' (N.ψ'''' (x t).1) (x t).1 → HasDerivWithinAt x (lift N q rs (x t)) I t
+    → HasDerivWithinAt (fun t => edgeDefect N q (x t)) (removalFlux rs (x t).2.2.1) I t, where edgeDefect
+    = θ − φ_S − Σ_X φ_X. ''so the defect grows'' needs a·φ_X ≥ 0, which is not assumed: only the rate
+    is stated.'
+  required: true
+  status: implemented
+  notes: Cited by DESIGN §J.2 ('Without the sink, ... give the defect rates').
+- id: SemanticsEB.hasDerivWithinAtNodeTotalLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 606-609
+  text: '**Node balance along EB solutions, with removals.** Let `x` solve the EB field of a T_EB reaction
+    list `rs` within a set of times `I` at the time `t`, and let `ψ''` be the derivative of `ψ` at `θ(t)`.
+    Then, within `I` at `t`, `d/dt (S + Σ_X pop_X) = −Σ_{(X → ∅, a) ∈ rs} a pop_X`, where `S = qξψ(θ)`.'
+  kind: dynamical
+  impl:
+  - NEP.hasDerivWithinAt_nodeTotal_lift
+  supporting: []
+  impl_note: HasDerivAt N.ψ (N.ψ' (x t).1) (x t).1 → HasDerivWithinAt x (lift N q rs (x t)) I t → HasDerivWithinAt
+    (fun t => nodeTotal N q (x t)) (−removalFlux rs (x t).2.2.2) I t, nodeTotal = qξψ(θ) + Σ_X pop_X.
+  required: true
+  status: implemented
+  notes: Cited by DESIGN §J.2.
+- id: SemanticsEB.hasDerivAtEdgeDefectLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 617-618
+  text: The edge balance law for two-sided derivatives (`hasDerivWithinAt_edgeDefect_lift` with `I = ℝ`).
+  kind: dynamical
+  impl:
+  - NEP.hasDerivAt_edgeDefect_lift
+  supporting: []
+  impl_note: As hasDerivWithinAt_edgeDefect_lift with HasDerivAt in hypothesis and conclusion.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.hasDerivAtNodeTotalLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 626-627
+  text: The node balance law for two-sided derivatives (`hasDerivWithinAt_nodeTotal_lift` with `I = ℝ`).
+  kind: dynamical
+  impl:
+  - NEP.hasDerivAt_nodeTotal_lift
+  supporting: []
+  impl_note: As hasDerivWithinAt_nodeTotal_lift with HasDerivAt in hypothesis and conclusion.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.constOfHasDerivWithinAtZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 636-637
+  text: 'A real function whose derivative within a convex set `I` vanishes at every point of `I` is constant
+    on `I`: `g t = g t₀` for all `t, t₀ ∈ I`.'
+  kind: dynamical
+  impl:
+  - NEP.const_of_hasDerivWithinAt_zero
+  supporting: []
+  impl_note: 'Convex ℝ I → (∀ t ∈ I, HasDerivWithinAt g 0 I t) → t₀ ∈ I → t ∈ I → g t = g t₀, for g :
+    ℝ → ℝ.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.constOfHasDerivAtZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 647-647
+  text: A real function with derivative 0 everywhere is constant.
+  kind: dynamical
+  impl:
+  - NEP.const_of_hasDerivAt_zero
+  supporting: []
+  impl_note: (∀ t, HasDerivAt g 0 t) → ∀ t, g t = g 0 (constancy expressed relative to the value at 0).
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.liftXiEqZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 657-657
+  text: Without exits the ξ-component of the EB field vanishes.
+  kind: algebraic-identity
+  impl:
+  - NEP.lift_ξ_eq_zero
+  supporting: []
+  impl_note: (∀ r ∈ rs, r.isExit = false) → ∀ u, (lift N q rs u).2.1 = 0.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsEB.xiConst
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 673-676
+  text: '**ξ is constant along EB solutions of exit-free models.** Let `I` be a time interval (a convex
+    set of times) with `0 ∈ I`, and let `x` solve the EB field of a T_EB reaction list `rs` that has no
+    exit `s → Y` on `I` (`HasDerivWithinAt x (lift N q rs (x t)) I t` for `t ∈ I`). Then `ξ(t) = ξ(0)`
+    for every `t ∈ I`. No assumption on the degree data is needed.'
+  kind: dynamical
+  impl:
+  - NEP.xi_const_any
+  supporting:
+  - NEP.xi_const
+  impl_note: 'Hypotheses: rs exit-free (r.isExit = false), Convex ℝ I, 0 ∈ I, x solves on I. Conclusion:
+    ∀ t ∈ I, (x t).2.1 = (x 0).2.1. A solution on I is spelled out as ∀ t ∈ I, HasDerivWithinAt x (lift
+    N q rs (x t)) I t.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (no Fintype σ).'
+- id: SemanticsEB.conservation
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 703-709
+  text: |-
+    **Edge conservation θ = φ_S + Σ_X φ_X is invariant along removal-free EB solutions.** Design statement (DESIGN_NetworkEpiCore.md §D.4, Evidence): "The exit terms were checked by hand. Conservation θ = φ_S + Σφ_X holds."; amended by §M.1: "For removal-free T_EB models (no `X → ∅`), θ = φ_S + Σφ_X is invariant along every solution on a time interval: if it holds at t = 0 it holds at every time of the interval. In particular, when ψ'(1) ≠ 0, it holds along solutions from the design's initial condition θ(0) = ξ(0) = 1, Σφ_X(0) = 1 − q."
+  kind: dynamical
+  impl:
+  - NEP.conservation_invariant
+  - NEP.conservation
+  supporting: []
+  impl_note: 'conservation_invariant: no hypothesis on ψ''(1); rs removal-free (isRemoval = false); I convex, 0 ∈ I; x solves the EB field within I at every t ∈ I; HasDerivAt ψ'' (ψ'''' θ(t)) θ(t) at visited θ; θ(0) = φ_S(0) + Σ_X φ_X(0) → ∀ t ∈ I, θ(t) = φ_S(t) + Σ_X φ_X(t) (φ_S = N.phiS q θ ξ = qξψ''(θ)/ψ''(1)). conservation: the same with ψ''(1) ≠ 0 and the design initial condition θ(0) = 1, ξ(0) = 1, Σ_X φ_X(0) = 1 − q in place of the relation at 0.'
+  required: true
+  status: implemented
+  notes: 'Remediation: the unqualified design sentence ''Conservation θ = φ_S + Σφ_X holds'' is ambiguous (invariance vs the design IC) and false with removals; corrected by the amendment §M.1 (DESIGN_NetworkEpiCore.md §M), quoted in conservation_invariant''s docstring. Text re-cited from that docstring; impl [conservation_invariant, conservation] (invariance reading; design-IC reading under ψ''(1) ≠ 0). Text changed: re-shadow blind.'
+- id: SemanticsEB.conservation.b
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 756-758
+  text: 'The no-removal hypothesis is necessary: with removals `hasDerivWithinAt_edgeDefect_lift` gives
+    `d/dt (θ − φ_S − Σφ) = Σ a φ_X` instead.'
+  kind: dynamical
+  impl: []
+  supporting:
+  - NEP.hasDerivWithinAt_edgeDefect_lift
+  impl_note: The derivative formula with removals is hasDerivWithinAt_edgeDefect_lift (registered separately).
+    Necessity (a model with removals and a solution along which θ ≠ φ_S + Σφ_X) is not stated by any theorem.
+  required: false
+  status: missing
+  notes: ''
+- id: SemanticsEB.conservation.c
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 753-756
+  text: 'Scope: global solutions are not required, and need not exist (numerically, EB SEIR on Poisson(5)
+    with τ = 1/6, σ = 1/3, γ = 1/4 and φ_I(0) = 0.01 blows up backward at t ≈ −7.33). Forward solutions
+    on `[0, T)` and local solutions on `(−ε, ε)` are covered, and `NEP.conservation_local` proves that
+    a local solution meeting all the hypotheses exists.'
+  kind: existence
+  impl: []
+  supporting:
+  - NEP.conservation_local
+  impl_note: 'Scope remarks: global solutions are not required (the hypothesis is on I); non-existence
+    of global solutions is numerical (see header.globalSolutions); the non-vacuity statement is conservation_local
+    (registered as SemanticsSolutions.conservationLocal).'
+  required: false
+  status: informal
+  notes: Cross-reference; the checkable parts are registered elsewhere.
+- id: SemanticsEB.nodeConservation
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 780-785
+  text: '**Node conservation S + Σ_X pop_X = 1.** Let `N` be a configuration network with `ψ(1) = 1`,
+    and let `rs` be a T_EB reaction list with no removal `X → ∅`. Let `I` be a time interval (a convex
+    set of times) with `0 ∈ I` and let `x` solve the EB field of `rs` on `I` (`HasDerivWithinAt x (lift
+    N q rs (x t)) I t` for `t ∈ I`), with `ψ''` the derivative of `ψ` at every visited `θ(t)`, `t ∈ I`,
+    and with `θ(0) = 1`, `ξ(0) = 1` and `Σ_X pop_X(0) = 1 − q`. Then `qξ(t)ψ(θ(t)) + Σ_X pop_X(t) = 1`
+    for every `t ∈ I`.'
+  kind: dynamical
+  impl:
+  - NEP.node_conservation
+  supporting: []
+  impl_note: 'Hypotheses: ψ(1) = 1; no removal; Convex ℝ I, 0 ∈ I; x solves on I; ∀ t ∈ I, HasDerivAt
+    N.ψ (N.ψ'' θ(t)) θ(t); θ(0) = 1, ξ(0) = 1, Σ_X pop_X(0) = 1 − q. Conclusion: ∀ t ∈ I, qξ(t)ψ(θ(t))
+    + Σ_X pop_X(t) = 1 (written with CNet.susc). ψ''(1) ≠ 0 not needed.'
+  required: true
+  status: implemented
+  notes: ''

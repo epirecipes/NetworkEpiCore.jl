@@ -1,0 +1,623 @@
+# SA-PASS claim registry fragment: group Docs
+# Source: README.md (proofs/README.md, the Lean library README), CITABLE.txt comments, NetworkEpi.lean and NetworkEpi/Morphisms/All.lean header prose  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+# ../README.md (the NetworkEpiCore.jl package README) was read: it makes no claim about the Lean library.
+- id: Docs.readme.trustedLibrary
+  group: Docs
+  source:
+    file: README.md
+    lines: 4-6
+  text: The **trusted library** is exactly the modules imported by `NetworkEpi.lean`. **Vignettes and
+    docs cite only theorem names listed in `CITABLE.txt`**, and every listed name passes the axiom gate.
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: 'Meta: trust is decided by Alignment/Audit.lean (reads NetworkEpi.lean) and the gate by scripts/axiom_gate.sh;
+    not a Lean theorem.'
+  required: false
+  status: informal
+  notes: CITABLE.txt lists 63 names (counted by the registrar); the gate itself was not re-run by the
+    registrar.
+- id: Docs.readme.contents.dynBasic
+  group: Docs
+  source:
+    file: README.md
+    lines: 12-12
+  text: '| `NetworkEpi/Dyn/Basic.lean` | L1, §D.3 | `DynSys` (a real normed space with a vector field),
+    `Semiconj`, `instance dynCategory : Category DynSys`, `Semiconj.map_solution`, `SemiconjOn` with `SemiconjOn.map_solution_on`
+    and `SemiconjOn.map_solution_within` (solutions on a time interval, one-sided at end points), restriction
+    to a tangent affine subspace with `invariant_incl` |'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.Semiconj.map_solution
+  - NEP.SemiconjOn.map_solution_on
+  - NEP.SemiconjOn.map_solution_within
+  - NEP.invariant_incl
+  impl_note: Row of the README "Contents" table (module, design reference, what is proved).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there.
+- id: Docs.readme.contents.dynProducts
+  group: Docs
+  source:
+    file: README.md
+    lines: 13-13
+  text: '| `NetworkEpi/Dyn/Products.lean` | L1b, §D.3 (stretch) | in `DynSys`: `(V × W, F × G)` is the
+    product (`prod_isLimit`), `hasBinaryProducts`, the zero-dimensional system is terminal (`hasTerminal`)
+    |'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.prod_isLimit
+  - NEP.hasBinaryProducts
+  - NEP.hasTerminal
+  impl_note: Row of the README "Contents" table (module, design reference, what is proved).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there.
+- id: Docs.readme.contents.syntaxRxn
+  group: Docs
+  source:
+    file: README.md
+    lines: 14-14
+  text: '| `NetworkEpi/Syntax/Rxn.lean` | L2, §B.2, §D.1 | `Rxn σ` (T_EB: contact, exit, progress, remove),
+    `NRxn σ` (adds `resus` and `nodeContact`), the typing `NRxn.type`, decidable `EBAdmissible` with `ebAdmissible_iff`
+    and `ebAdmissible_iff_type`, `Rxn.map` / `NRxn.map` (functorial, type-preserving), the rate convention
+    `scaleContacts` |'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.NRxn.ebAdmissible_iff
+  - NEP.NRxn.ebAdmissible_iff_type
+  - NEP.Rxn.map_id
+  - NEP.Rxn.map_map
+  - NEP.NRxn.map_id
+  - NEP.NRxn.map_map
+  - NEP.NRxn.type_map
+  impl_note: Row of the README "Contents" table (module, design reference, what is proved).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there. "(functorial, type-preserving)" is Rxn.map_id/map_map, NRxn.map_id/map_map and NRxn.type_map.
+- id: Docs.readme.contents.semanticsEB
+  group: Docs
+  source:
+    file: README.md
+    lines: 15-15
+  text: '| `NetworkEpi/Semantics/EB.lean` | L3, §D.4 | the per-reaction EB field `ebField`, with exits
+    and ξ, on coordinates (θ, ξ, φ, pop); `lift_append`, `ebField_map`, `lift_map`, `lift_glue` (H1, strict
+    gluing); for a solution on a time interval I ∋ 0: `conservation` (θ = φ_S + Σφ_X), `node_conservation`
+    (S + Σ pop = 1), the balance laws with removals, `xi_const` (ξ is constant without exits) |'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.lift_append
+  - NEP.ebField_map
+  - NEP.lift_map
+  - NEP.lift_glue
+  - NEP.conservation
+  - NEP.node_conservation
+  - NEP.hasDerivWithinAt_edgeDefect_lift
+  - NEP.hasDerivWithinAt_nodeTotal_lift
+  - NEP.xi_const
+  impl_note: Row of the README "Contents" table (module, design reference, what is proved).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there. conservation needs no removals (see Docs.readme.conservationRemovalFreeOnly).
+- id: Docs.readme.contents.semanticsMA
+  group: Docs
+  source:
+    file: README.md
+    lines: 16-16
+  text: '| `NetworkEpi/Semantics/MA.lean` | L3, §D.6 H1′ | the mass-action field `maField` on T_net reactions;
+    `maLift_append`, `maField_map`, `maLift_map`, `maLift_glue` |'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.maLift_append
+  - NEP.maField_map
+  - NEP.maLift_map
+  - NEP.maLift_glue
+  impl_note: Row of the README "Contents" table (module, design reference, what is proved).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there.
+- id: Docs.readme.contents.semanticsPWS
+  group: Docs
+  source:
+    file: README.md
+    lines: 17-17
+  text: '| `NetworkEpi/Semantics/PWS.lean` | L3 stretch, §D.6 F2 | the S-anchored pairwise field `pwSField`
+    (constant closure K); `pwS_glue_not_strict`, an explicit witness that PW^S is not strict under gluing
+    |'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.pwS_glue_not_strict
+  impl_note: Row of the README "Contents" table (module, design reference, what is proved).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there.
+- id: Docs.readme.contents.semanticsPoissonSIR
+  group: Docs
+  source:
+    file: README.md
+    lines: 18-18
+  text: '| `NetworkEpi/Semantics/PoissonSIR.lean` | L4c for SIR, §D.5 M3 | `rempala` (SIR EB on Poisson(μ)
+    → MA SIR(μτ, γ+τ) via (θ, φ) ↦ (qe^{μ(θ−1)}, φ)); `ebPoisSIR_lift` (the 2-D system is the general
+    lift on ξ = 1); `rempala_lift` (their composite); `rempala_solution` (every EB SIR solution on a time
+    interval I ∋ 0 with ξ(0) = 1 maps to an MA SIR solution in (S, φ_I) on I) |'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.rempala
+  - NEP.ebPoisSIR_lift
+  - NEP.rempala_lift
+  - NEP.rempala_solution
+  impl_note: Row of the README "Contents" table (module, design reference, what is proved).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there.
+- id: Docs.readme.contents.semanticsSolutions
+  group: Docs
+  source:
+    file: README.md
+    lines: 19-19
+  text: '| `NetworkEpi/Semantics/Solutions.lean` | L3, §D.3, §D.4 | `contDiffAt_lift` / `contDiff_lift`
+    (the EB field is C^n where ψ, ψ'', ψ'''' are, so EB models on Poisson networks are objects of Dyn);
+    `exists_local_solution` (Picard–Lindelöf); `conservation_local` (a solution on some (−ε, ε) from the
+    design''s initial condition exists, and θ = φ_S + Σφ_X along it); `conservation_local_poisson`; `seir_conservation_local`
+    (EB SEIR on Poisson(5), a model with no global solution) |'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.contDiffAt_lift
+  - NEP.contDiff_lift
+  - NEP.exists_local_solution
+  - NEP.conservation_local
+  - NEP.conservation_local_poisson
+  - NEP.seir_conservation_local
+  impl_note: Row of the README "Contents" table (module, design reference, what is proved).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there. The parenthetical "a model with no global solution" is not proved; it is registered as Docs.readme.seirNoGlobalSolution
+    (missing).
+- id: Docs.readme.contents.morphisms
+  group: Docs
+  source:
+    file: README.md
+    lines: 20-20
+  text: '| `NetworkEpi/Morphisms/**`, `NetworkEpi/Closure/**` | L4 (WP28) | reserved for the morphism
+    catalogue: general Rempała, PT ⇔ constant closure, WM unit, Poisson isomorphism, EB → PW^S, compact
+    ⊂ expanded |'
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: Row of the README "Contents" table.
+  required: false
+  status: informal
+  notes: 'STALE: NetworkEpi/Morphisms/** and NetworkEpi/Closure/** are no longer "reserved": they are
+    implemented and trusted (NetworkEpi.lean imports NetworkEpi.Morphisms.All; 39 of the 63 CITABLE.txt
+    names are theirs), but the Contents table has no row per module (NetworkEpi.lean''s header table has
+    them). The listed topics are covered by the Morphisms*/ClosurePT groups.'
+- id: Docs.readme.dynGeneralisation
+  group: Docs
+  source:
+    file: README.md
+    lines: 24-26
+  text: '`DynSys` is more general than the design''s **Dyn**. `V` is any real normed space, `F` is any
+    function and morphisms need only be differentiable. **Dyn** (finite-dimensional, C¹) is a subcategory,
+    so every statement about all objects or all morphisms also holds there.'
+  kind: categorical
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: DynSys (any real normed space V, any F : V → V; morphisms = differentiable
+    maps with fderiv π u (F u) = G (π u)). The subcategory inclusion of the design''s Dyn is not formalised
+    as a functor; the sentence is a meta-remark about quantifiers.'
+  required: false
+  status: informal
+  notes: Also stated in the NetworkEpi/Dyn/Basic.lean header (group DynBasic).
+- id: Docs.readme.dynClosedUnderProducts
+  group: Docs
+  source:
+    file: README.md
+    lines: 26-29
+  text: 'This does **not** cover the existence of limits: `hasBinaryProducts` and `hasTerminal` are proved
+    for `DynSys`. That Dyn is closed under these products is true (products of finite-dimensional C¹ systems
+    and pairings of C¹ maps are C¹) but not formalised.'
+  kind: categorical
+  impl: []
+  supporting:
+  - NEP.prod_isLimit
+  - NEP.hasBinaryProducts
+  - NEP.hasTerminal
+  impl_note: No theorem states that the product and terminal object of DynSys lie in the finite-dimensional
+    C¹ subcategory, or that Dyn has binary products.
+  required: false
+  status: missing
+  notes: Declared gap.
+- id: Docs.readme.contDiffLift
+  group: Docs
+  source:
+    file: README.md
+    lines: 29-30
+  text: '`contDiff_lift` shows that EB models on networks with C¹ degree data (such as Poisson) are objects
+    of Dyn.'
+  kind: dynamical
+  impl: []
+  supporting:
+  - NEP.contDiff_lift
+  impl_note: Restates the title of contDiff_lift (citable; registered in group SemanticsSolutions). Its
+    hypothesis is that the three functions ψ, ψ', ψ'' of the CNet are each C^n on ℝ, so "C¹ degree data"
+    means all three are C¹.
+  required: false
+  status: informal
+  notes: Restatement; not registered as implemented to keep contDiff_lift in exactly one required claim.
+- id: Docs.readme.timeIntervalSolutions
+  group: Docs
+  source:
+    file: README.md
+    lines: 31-36
+  text: '**Solutions live on a time interval.** `conservation`, `node_conservation`, `xi_const` and `rempala_solution`
+    take any convex set of times `I ∋ 0` (for example `(a, b)`, `[0, T)`, `[0, ∞)`) and a curve with `HasDerivWithinAt
+    x (F (x t)) I t` for `t ∈ I`. That derivative is one-sided at end points of `I`, and `HasDerivAt`
+    implies it. The degree data need derivative relations only at the visited θ values, so a negative
+    binomial PGF (pole at 1/(1 − p) > 1) is covered.'
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: Meta description of the hypotheses of conservation, node_conservation, xi_const and rempala_solution
+    (convex I ∋ 0, HasDerivWithinAt; derivative relations only at visited θ). "HasDerivAt implies it"
+    is a Mathlib fact.
+  required: false
+  status: informal
+  notes: Checked against those statements by their own claims (groups SemanticsEB, SemanticsPoissonSIR).
+- id: Docs.readme.seirNoGlobalSolution
+  group: Docs
+  source:
+    file: README.md
+    lines: 19-37
+  text: |-
+    Global solutions need not exist: numerically, EB SEIR on Poisson(5) (τ = 1/6, σ = 1/3, γ = 1/4, φ_I(0) = 0.01) blows up backward at t ≈ −7.33.
+    [...]
+    (EB SEIR on Poisson(5), a model with no global solution)
+  kind: dynamical
+  impl: []
+  supporting:
+  - NEP.seir_conservation_local
+  impl_note: Numerical claim. No theorem proves that EB SEIR on Poisson(5) has no global solution or blows
+    up backward; seir_conservation_local proves only that a local solution on some (−ε, ε) exists along
+    which θ = φ_S + Σφ_X.
+  required: false
+  status: missing
+  notes: The same numerical remark is in the docstring of seir_conservation_local (group SemanticsSolutions).
+- id: Docs.readme.hypothesesMet
+  group: Docs
+  source:
+    file: README.md
+    lines: 38-38
+  text: '`conservation_local` and `seir_conservation_local` prove that the hypotheses can be met.'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.conservation_local
+  - NEP.seir_conservation_local
+  impl_note: Meta (non-vacuity of the hypotheses of conservation); the content is the statements of conservation_local
+    (citable) and seir_conservation_local.
+  required: false
+  status: informal
+  notes: Restatement; see group SemanticsSolutions.
+- id: Docs.readme.sinkSpecies
+  group: Docs
+  source:
+    file: README.md
+    lines: 39-41
+  text: '`Rxn.exit (Y : σ)` cannot express `s → ∅`, which §B.2 allows ("Y ∉ Σ (or ∅)"). Model it with
+    an inert sink species `D`, one that occurs in no other reaction. No other coordinate of the EB field
+    depends on φ_D or pop_D, so θ, ξ, S and the other φ, pop are unchanged.'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'No theorem states that for an inert sink species D (occurring in no other reaction) the
+    coordinates other than φ_D, pop_D of the EB field (hence θ, ξ, S and the other φ, pop) do not depend
+    on φ_D, pop_D, or that the model with s → D agrees with s → ∅. "Rxn.exit (Y : σ) cannot express s
+    → ∅" holds by the type of the constructor.'
+  required: false
+  status: missing
+  notes: The same modelling remark is in the NetworkEpi/Syntax/Rxn.lean header (group SyntaxRxn).
+- id: Docs.readme.admissibilityMeta
+  group: Docs
+  source:
+    file: README.md
+    lines: 42-44
+  text: '`NRxn.ebAdmissible_iff_type`, `not_ebAdmissible_resus` and `exists_not_ebAdmissible` are statements
+    about the syntax. They hold by definition, because `EBAdmissible` and `TNet.inTEB` are parallel case
+    tables. They do not prove that no EB-type semantics exists for `X → s`.'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.NRxn.ebAdmissible_iff_type
+  - NEP.NRxn.not_ebAdmissible_resus
+  - NEP.NRxn.exists_not_ebAdmissible
+  impl_note: Meta remark about what the admissibility theorems do not prove.
+  required: false
+  status: informal
+  notes: ''
+- id: Docs.readme.syntaxScope
+  group: Docs
+  source:
+    file: README.md
+    lines: 45-47
+  text: The syntax has one implicit susceptible species `s` on an untyped, single-layer configuration
+    network (|Σ| = 1). `:sus_move` and `:sus_contact` are not represented. The EB state has no `cum` accumulator.
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: Rxn/NRxn have one implicit susceptible species; EB σ has no cum coordinate.'
+  required: false
+  status: informal
+  notes: ''
+- id: Docs.readme.edgeDefectWithRemovals
+  group: Docs
+  source:
+    file: README.md
+    lines: 48-52
+  text: |-
+    For any reaction list, `d/dt (θ − φ_S − Σφ_X) = Σ_{(X→∅,a)∈rs} a φ_X` (`hasDerivAt_edgeDefect_lift`). A removal leaves θ unchanged and lowers Σφ by aφ_X (the partner becomes inert: its edges stay in θ but leave every φ class; `ebField_removal_row`), so the rate is non-negative when the removal rates and the φ_X are non-negative (`removalFlux_nonneg`). Without removals the rate is 0 (`removalFlux_eq_zero`). 
+  kind: dynamical
+  impl:
+  - NEP.hasDerivAt_edgeDefect_lift
+  - NEP.ebField_removal_row
+  - NEP.ebField_removal_theta
+  - NEP.removalFlux_nonneg
+  - NEP.removalFlux_eq_zero
+  supporting: []
+  impl_note: 'hasDerivAt_edgeDefect_lift: for every reaction list rs (no removal hypothesis), HasDerivAt ψ'' (ψ'''' θ(t)) θ(t) → HasDerivAt x (lift N q rs (x t)) t → HasDerivAt (edgeDefect N q ∘ x) (removalFlux rs φ(t)) t, edgeDefect = θ − φ_S − Σφ_X, removalFlux rs φ = Σ_{(X → ∅, a) ∈ rs} a φ_X. ebField_removal_row: for trans X none a, the θ-component of ebField is 0, Σ_Y of the φ-components is −(a φ_X) (and of pop −(a pop_X)). removalFlux_nonneg: (∀ X a, trans X none a ∈ rs → 0 ≤ a) → (∀ X, 0 ≤ v X) → 0 ≤ removalFlux rs v. removalFlux_eq_zero: (∀ r ∈ rs, r.isRemoval = false) → removalFlux rs v = 0.'
+  required: true
+  status: implemented
+  notes: "Remediation: README wording clarified (the '≥ 0' needs non-negative rates and φ_X; 'with removals' is a contrast, not a hypothesis: the identity holds for every list). Text changed: re-shadow blind. removalFlux_eq_zero needs the reviewed isRemoval bridge registered for this claim. Round-4 remediation (non-blind owner, 2026-09-28): forward 2 failed because ebField_removal_row assumes [Fintype σ]. New trusted theorem ebField_removal_theta (θ-component of a removal is 0, any σ with DecidableEq) added to the impl; the old theorem is kept. Impl changed: checker update needed."
+- id: Docs.readme.conservationRemovalFreeOnly
+  group: Docs
+  source:
+    file: README.md
+    lines: 48-54
+  text: |-
+    `conservation` needs **no removals `X → ∅`**.
+    [...]
+    The design's unqualified "Conservation θ = φ_S + Σφ_X holds" (§D.4) is true for removal-free models only.
+  kind: dynamical
+  impl: []
+  supporting:
+  - NEP.conservation
+  - NEP.hasDerivAt_edgeDefect_lift
+  impl_note: The removal-free half is conservation (citable; group SemanticsEB; hypothesis ∀ r ∈ rs, r.isRemoval
+    = false). No theorem shows that conservation fails for some model with removals (hasDerivAt_edgeDefect_lift
+    gives the defect rate Σ a φ_X, but no solution with nonzero removal flux is exhibited).
+  required: false
+  status: missing
+  notes: The "only" direction is the gap.
+- id: Docs.readme.rempalaSirCase
+  group: Docs
+  source:
+    file: README.md
+    lines: 55-55
+  text: '`rempala` is the SIR case of M3. Naturality in P and the general quotient are WP28''s (L4c).'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.rempala
+  - NEP.rempala_general
+  - NEP.rempala_natural
+  - NEP.rempala_quotient
+  impl_note: Meta/ownership remark.
+  required: false
+  status: informal
+  notes: 'STALE: WP28 has delivered the general quotient and naturality (rempala_general, rempala_natural,
+    rempala_quotient; group MorphismsRempala).'
+- id: Docs.readme.liftLawsArbitraryPsi
+  group: Docs
+  source:
+    file: README.md
+    lines: 56-57
+  text: The lift laws hold for arbitrary functions ψ, ψ', ψ''. Only `conservation`, `node_conservation`
+    and the Poisson bridge use derivative relations.
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: 'Meta remark about hypotheses: lift_append, lift_map, lift_glue, ebField_map take no derivative
+    relations (consistent).'
+  required: false
+  status: informal
+  notes: 'STALE second sentence: besides conservation, node_conservation and the Poisson bridge, derivative
+    relations or regularity are also assumed by contDiffAt_lift/contDiff_lift/exists_local_solution (Solutions)
+    and by eb_to_pws*, compact_conj, compact_solution, pt_* (Morphisms, Closure).'
+- id: Docs.readme.citableDocstrings
+  group: Docs
+  source:
+    file: README.md
+    lines: 106-110
+  text: 'Each citable theorem''s docstring has two parts: - **Design statement**: a verbatim quote from
+    `DESIGN_NetworkEpiCore.md` (§ given). - **Lean statement**: a precise natural-language restatement
+    of what the Lean theorem says, including hypotheses and scope.'
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: 'Meta: docstring format of citable theorems (checked by the axiom gate for "Design statement").'
+  required: false
+  status: informal
+  notes: 'Registrar 2/2 check (groups Morphisms*, ClosurePT): every quoted segment of every "Design statement"
+    occurs verbatim (whitespace-normalised) in DESIGN_NetworkEpiCore.md, or in src/analysis/ngm.jl for
+    the one quote attributed to it.'
+- id: Docs.citable.pendingReview
+  group: Docs
+  source:
+    file: CITABLE.txt
+    lines: 36-40
+  text: 'PENDING REVIEW: the modules are not yet imported by # NetworkEpi.lean, so they are not yet part
+    of the trusted library and the names below are # commented out (the gate would report them MISSING).
+    To activate, in one change reviewed by # the WP13 owner: add `import NetworkEpi.Morphisms.All` to
+    NetworkEpi.lean, then run # sed -i '''' ''s/^//'' CITABLE.txt'
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: Meta/process comment.
+  required: false
+  status: informal
+  notes: 'STALE: NetworkEpi.lean now imports NetworkEpi.Morphisms.All and the WP28 names below are no
+    longer commented out (DESIGN §L.4). The quoted activation command "sed -i '''' ''s/^//'' CITABLE.txt"
+    is a no-op as written (it presumably was s/^# //).'
+- id: Docs.citable.gateConfiguration
+  group: Docs
+  source:
+    file: CITABLE.txt
+    lines: 41-41
+  text: WP28 checked that the gate passes in that configuration (63 names, 19 trusted modules).
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: 'Meta. Counted by the registrar: CITABLE.txt has 63 names; the trusted library has 19 modules
+    (the root NetworkEpi, its 9 direct imports including NetworkEpi.Morphisms.All, and the 9 modules that
+    imports).'
+  required: false
+  status: informal
+  notes: Consistent with DESIGN §L.4 ("63 citable names"). The gate was not re-run by the registrar.
+- id: Docs.root.trustedLibrary
+  group: Docs
+  source:
+    file: NetworkEpi.lean
+    lines: 14-15
+  text: The trusted library is exactly the modules imported by this file (and their `NetworkEpi.*` imports);
+    the SA-PASS audit (`Alignment/Audit.lean`) reads this file from disk.
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: 'Meta: the audit reads NetworkEpi.lean from disk to decide trust.'
+  required: false
+  status: informal
+  notes: ''
+- id: Docs.root.moduleTableWP13
+  group: Docs
+  source:
+    file: NetworkEpi.lean
+    lines: 19-26
+  text: '| `NetworkEpi.Dyn.Basic` | L1 (§D.3) | `DynSys`, `Semiconj`, `instance : Category DynSys`, `Semiconj.map_solution`,
+    `SemiconjOn`, `SemiconjOn.map_solution_on`, `SemiconjOn.map_solution_within`, `invariant_incl` | |
+    `NetworkEpi.Dyn.Products` | L1b (§D.3, stretch) | `prod_isLimit`, `hasBinaryProducts`, `hasTerminal`
+    | | `NetworkEpi.Syntax.Rxn` | L2 (§B.2, §D.1) | `Rxn σ` (T_EB), `NRxn σ` (T_net), typing, `Rxn.map`,
+    decidable `EBAdmissible` | | `NetworkEpi.Semantics.EB` | L3 (§D.4) | `ebField` (with exits and ξ),
+    `lift_append`, `ebField_map`, `lift_map`, `lift_glue`; on a time interval: `conservation`, `node_conservation`,
+    `xi_const` | | `NetworkEpi.Semantics.MA` | L3 (§D.4, §D.6 H1′) | `maField`, `maLift_append`, `maLift_map`,
+    `maLift_glue` | | `NetworkEpi.Semantics.PWS` | L3 stretch (§D.4, §D.6 F2) | `pwSField`, `pwS_glue_not_strict`
+    (PW^S is lax under gluing) | | `NetworkEpi.Semantics.PoissonSIR` | L4c for SIR (§D.5 M3) | `rempala`,
+    `ebPoisSIR_lift`, `rempala_lift`, `rempala_solution` | | `NetworkEpi.Semantics.Solutions` | L3 (§D.3,
+    §D.4) | `contDiff_lift` (EB models are objects of Dyn), `exists_local_solution`, `conservation_local`,
+    `seir_conservation_local` |'
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: Header table rows for the WP13 modules (Dyn, Syntax, Semantics).
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there. Every backticked declaration name was checked to exist.
+- id: Docs.root.moduleTableWP28
+  group: Docs
+  source:
+    file: NetworkEpi.lean
+    lines: 27-35
+  text: '| `NetworkEpi.Morphisms.Common` | §D.3, §D.5 | per-reaction criterion `clm_list_sum_eq`, `IsConjOn`,
+    `isSemiconjOn_inverse`, EB coordinate maps, `suscD`, the reduced EB model `ebSys1` on ξ = 1 | | `NetworkEpi.Morphisms.Rempala`
+    | L4c, M3 | `rempala_general` (every T_EB model), `rempala_general_solution`, `rempala_natural`, `rempala_quotient`,
+    `rempala_general_sir`, `rempala_seir_field` | | `NetworkEpi.Closure.PT` | L4f (§D.7 "L4d `Closure/PT`"),
+    M8 | `pt_iff_const_closure`, `pt_iff_closureK`, `pt_closure_at_one`, `poisson_closureK` | | `NetworkEpi.Morphisms.WellMixed`
+    | L4a, M1 | `wellmixed_unit` (conjugacy, exit-free), `wellmixed_unit_semiconj` (with exits), `wellmixed_unit_quotient`,
+    `wellmixed_unit_Iic`, `wellmixed_unit_solution` | | `NetworkEpi.Morphisms.Stoich` | §D.7 (multiset
+    stoichiometry) | mass action `sSys` for multiset reactions; `ma_eq_stoich` (agrees with `maSys`) |
+    | `NetworkEpi.Morphisms.Poisson` | L4b, M2 | `poisson_iso` (conjugacy, exit-free), `poisson_iso_semiconj`
+    (with exits), `poisson_iso_solution`, `poisson_iso_natural`, `poisson_iso_sir`, `poisson_iso_seir`,
+    `poissonD_sir_field` | | `NetworkEpi.Morphisms.Pairwise` | L4e, M6 (+ M8) | `eb_to_pws` (every ψ,
+    every T_EB model), `eb_to_pws_solution`, `eb_to_pws_sir`, `eb_to_pws_seir`, `eb_to_pws_const`, `eb_to_pws_pt`,
+    `eb_to_pws_poisson` | | `NetworkEpi.Morphisms.Compact` | L4g, M9 | `compact_W_invariant`, `compact_conj`,
+    `compact_solution`, `compact_solution_poisson` | | `NetworkEpi.Morphisms.NGM` | L5 (stretch) | `spectralRadius_vecMulVec`,
+    `r0_single_entry`, `spectralRadius_fin_two`, `multiplex_r0`, `multiplex_r0_eq_sum_iff` |'
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: Header table rows for the WP28 modules (Morphisms, Closure). The parentheticals restate the
+    citable claims, e.g. "(conjugacy, exit-free)" = MorphismsWellMixed.wellmixedUnit / MorphismsPoisson.poissonIso,
+    "(every ψ, every T_EB model)" = MorphismsPairwise.ebToPws, "(agrees with maSys)" = MorphismsStoich.maEqStoich.
+  required: false
+  status: informal
+  notes: 'Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there. Every backticked declaration name was checked to exist. The PT row calls the module "L4f (§D.7
+    "L4d `Closure/PT`")": the design table numbers it L4d.'
+- id: Docs.all.aggregator
+  group: Docs
+  source:
+    file: NetworkEpi/Morphisms/All.lean
+    lines: 14-16
+  text: Aggregator for the modules of WP28 (DESIGN_NetworkEpiCore.md §D.5, §D.7). A single `import NetworkEpi.Morphisms.All`
+    in `NetworkEpi.lean` makes all of them part of the trusted library.
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: 'Meta: NetworkEpi.lean imports NetworkEpi.Morphisms.All, so these modules are trusted (verified
+    on disk).'
+  required: false
+  status: informal
+  notes: ''
+- id: Docs.all.moduleTable
+  group: Docs
+  source:
+    file: NetworkEpi/Morphisms/All.lean
+    lines: 20-28
+  text: '| `NetworkEpi.Morphisms.Common` | §D.3, §D.5 | per-reaction criterion `clm_list_sum_eq`, `IsConjOn`,
+    `isSemiconjOn_inverse`, EB coordinate maps, `suscD`, the reduced EB model `ebSys1` on ξ = 1 | | `NetworkEpi.Morphisms.Rempala`
+    | L4c, M3 | `rempala_general` (every T_EB model), `rempala_general_solution`, `rempala_natural`, `rempala_quotient`,
+    `rempala_general_sir`, `rempala_seir_field` | | `NetworkEpi.Closure.PT` | L4f (§D.7 "L4d `Closure/PT`"),
+    M8 | `pt_iff_const_closure`, `pt_iff_closureK`, `pt_closure_at_one`, `poisson_closureK` | | `NetworkEpi.Morphisms.WellMixed`
+    | L4a, M1 | `wellmixed_unit` (conjugacy, exit-free), `wellmixed_unit_semiconj` (with exits), `wellmixed_unit_quotient`,
+    `wellmixed_unit_Iic`, `wellmixed_unit_solution` | | `NetworkEpi.Morphisms.Stoich` | §D.7 (multiset
+    stoichiometry) | mass action `sSys` for multiset reactions; `ma_eq_stoich` (agrees with `maSys`) |
+    | `NetworkEpi.Morphisms.Poisson` | L4b, M2 | `poisson_iso` (conjugacy, exit-free), `poisson_iso_semiconj`
+    (with exits), `poisson_iso_solution`, `poisson_iso_natural`, `poisson_iso_sir`, `poisson_iso_seir`,
+    `poissonD_sir_field` | | `NetworkEpi.Morphisms.Pairwise` | L4e, M6 (+ M8) | `eb_to_pws` (every ψ,
+    every T_EB model), `eb_to_pws_solution`, `eb_to_pws_sir`, `eb_to_pws_seir`, `eb_to_pws_const`, `eb_to_pws_pt`,
+    `eb_to_pws_poisson` | | `NetworkEpi.Morphisms.Compact` | L4g, M9 | `compact_W_invariant`, `compact_conj`,
+    `compact_solution`, `compact_solution_poisson` | | `NetworkEpi.Morphisms.NGM` | L5 (stretch) | `spectralRadius_vecMulVec`,
+    `r0_single_entry`, `spectralRadius_fin_two`, `multiplex_r0`, `multiplex_r0_eq_sum_iff` |'
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: Header table of NetworkEpi/Morphisms/All.lean; identical in content to NetworkEpi.lean lines
+    27-35.
+  required: false
+  status: informal
+  notes: Index entry that restates results registered in their module groups; SA-PASS checks those claims
+    there. Every backticked declaration name was checked to exist.

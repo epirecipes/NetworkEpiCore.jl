@@ -1,0 +1,2182 @@
+# GENERATED blind extract (id, group, source, text only). This is the ONLY registry
+# file blind shadow authors may read.
+- id: ClosurePT.header.intervals
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 23-25
+  text: Intervals are convex sets with nonempty interior (for example `(0, 1]`, `[a, b]` with `a < b`,
+    or an open interval), and derivatives are taken within I, so one-sided derivatives at end points suffice.
+    The exponent `ψ^κ` is the real power `Real.rpow`, defined since ψ > 0.
+- id: ClosurePT.ptIffConstClosure
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 65-71,79,16
+  text: |-
+    **Poisson type ⇔ constant closure (M8), both directions.** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "PT ⇔ constant closure | On an interval I with ψ > 0: K_ψ ≡ κ ⇔ ψ' = αψ^κ. Proof of ⇒: d/dx(ψ'ψ^{−κ}) = ψ^{−κ−1}(ψψ'' − κψ'²) = 0. So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT"; §D.7, L4d `Closure/PT`: "`(∀ x ∈ I, ψ x * ψ'' x = κ * ψ' x ^ 2) ↔ ∃ α, ∀ x ∈ I, ψ' x = α * ψ x ^ κ` (with ψ > 0 on I; `is_const_of_deriv_eq_zero`)".
+    [...]
+    an analytic statement about ψ on I
+    [...]
+    (both directions, product form of the design's §D.7 table)
+- id: ClosurePT.ptIffClosureK
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 110-113,17
+  text: |-
+    **PT ⇔ K_ψ ≡ κ in ratio form (M8).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "On an interval I with ψ > 0: K_ψ ≡ κ ⇔ ψ' = αψ^κ"; M6: "K_ψ = ψψ''/ψ'²".
+    [...]
+    (the ratio form `K_ψ = ψψ''/ψ'² ≡ κ`, where ψ' ≠ 0)
+- id: ClosurePT.ptClosureAtOne
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 154-158,18-20
+  text: |-
+    **The PT constants at θ = 1 (M8), with `α = ψ'(1)` unconditional.** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT"; §C.1: "closure_constant(d) # K_ψ(1) = ψ''(1)/ψ'(1)² (NBM's heterogeneous constant closure)".
+    [...]
+    if moreover `1 ∈ I` and `ψ(1) = 1`, the constants are `α = ψ'(1)` and `κ = ψ''(1)/ψ'(1)²` (the value of NBM's constant closure, `closure_constant(d)`); the value of κ, and `K_ψ(1)` itself, need `ψ'(1) ≠ 0`
+- id: ClosurePT.ptOnlyExactConstant
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 138-139
+  text: So the only constant closure that a PT degree distribution makes exact is `K_ψ(1) = ψ''(1)/ψ'(1)²`.
+- id: ClosurePT.poissonClosureK
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 182-185,21
+  text: |-
+    **The Poisson PGF is of Poisson type with κ = 1 (M8, Poisson instance).** Design statement (DESIGN_NetworkEpiCore.md §0): "**Poisson type (PT).** A degree PGF ψ is PT if ψ' = αψ^κ. This covers Poisson (κ = 1)".
+    [...]
+    the Poisson PGF is PT with `α = μ`, `κ = 1`.
+- id: ClosurePT.hasDerivWithinAtPtQuotient
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 37-38
+  text: 'The derivative of `ψ''ψ^{−κ}` within `I`, when ψ > 0 at `x`: `ψ''''ψ^{−κ} − κψ''²ψ^{−κ−1} = ψ^{−κ−1}(ψψ''''
+    − κψ''²)`.'
+- id: Docs.readme.trustedLibrary
+  group: Docs
+  source:
+    file: README.md
+    lines: 4-6
+  text: The **trusted library** is exactly the modules imported by `NetworkEpi.lean`. **Vignettes and
+    docs cite only theorem names listed in `CITABLE.txt`**, and every listed name passes the axiom gate.
+- id: Docs.readme.contents.dynBasic
+  group: Docs
+  source:
+    file: README.md
+    lines: 12-12
+  text: '| `NetworkEpi/Dyn/Basic.lean` | L1, §D.3 | `DynSys` (a real normed space with a vector field),
+    `Semiconj`, `instance dynCategory : Category DynSys`, `Semiconj.map_solution`, `SemiconjOn` with `SemiconjOn.map_solution_on`
+    and `SemiconjOn.map_solution_within` (solutions on a time interval, one-sided at end points), restriction
+    to a tangent affine subspace with `invariant_incl` |'
+- id: Docs.readme.contents.dynProducts
+  group: Docs
+  source:
+    file: README.md
+    lines: 13-13
+  text: '| `NetworkEpi/Dyn/Products.lean` | L1b, §D.3 (stretch) | in `DynSys`: `(V × W, F × G)` is the
+    product (`prod_isLimit`), `hasBinaryProducts`, the zero-dimensional system is terminal (`hasTerminal`)
+    |'
+- id: Docs.readme.contents.syntaxRxn
+  group: Docs
+  source:
+    file: README.md
+    lines: 14-14
+  text: '| `NetworkEpi/Syntax/Rxn.lean` | L2, §B.2, §D.1 | `Rxn σ` (T_EB: contact, exit, progress, remove),
+    `NRxn σ` (adds `resus` and `nodeContact`), the typing `NRxn.type`, decidable `EBAdmissible` with `ebAdmissible_iff`
+    and `ebAdmissible_iff_type`, `Rxn.map` / `NRxn.map` (functorial, type-preserving), the rate convention
+    `scaleContacts` |'
+- id: Docs.readme.contents.semanticsEB
+  group: Docs
+  source:
+    file: README.md
+    lines: 15-15
+  text: '| `NetworkEpi/Semantics/EB.lean` | L3, §D.4 | the per-reaction EB field `ebField`, with exits
+    and ξ, on coordinates (θ, ξ, φ, pop); `lift_append`, `ebField_map`, `lift_map`, `lift_glue` (H1, strict
+    gluing); for a solution on a time interval I ∋ 0: `conservation` (θ = φ_S + Σφ_X), `node_conservation`
+    (S + Σ pop = 1), the balance laws with removals, `xi_const` (ξ is constant without exits) |'
+- id: Docs.readme.contents.semanticsMA
+  group: Docs
+  source:
+    file: README.md
+    lines: 16-16
+  text: '| `NetworkEpi/Semantics/MA.lean` | L3, §D.6 H1′ | the mass-action field `maField` on T_net reactions;
+    `maLift_append`, `maField_map`, `maLift_map`, `maLift_glue` |'
+- id: Docs.readme.contents.semanticsPWS
+  group: Docs
+  source:
+    file: README.md
+    lines: 17-17
+  text: '| `NetworkEpi/Semantics/PWS.lean` | L3 stretch, §D.6 F2 | the S-anchored pairwise field `pwSField`
+    (constant closure K); `pwS_glue_not_strict`, an explicit witness that PW^S is not strict under gluing
+    |'
+- id: Docs.readme.contents.semanticsPoissonSIR
+  group: Docs
+  source:
+    file: README.md
+    lines: 18-18
+  text: '| `NetworkEpi/Semantics/PoissonSIR.lean` | L4c for SIR, §D.5 M3 | `rempala` (SIR EB on Poisson(μ)
+    → MA SIR(μτ, γ+τ) via (θ, φ) ↦ (qe^{μ(θ−1)}, φ)); `ebPoisSIR_lift` (the 2-D system is the general
+    lift on ξ = 1); `rempala_lift` (their composite); `rempala_solution` (every EB SIR solution on a time
+    interval I ∋ 0 with ξ(0) = 1 maps to an MA SIR solution in (S, φ_I) on I) |'
+- id: Docs.readme.contents.semanticsSolutions
+  group: Docs
+  source:
+    file: README.md
+    lines: 19-19
+  text: '| `NetworkEpi/Semantics/Solutions.lean` | L3, §D.3, §D.4 | `contDiffAt_lift` / `contDiff_lift`
+    (the EB field is C^n where ψ, ψ'', ψ'''' are, so EB models on Poisson networks are objects of Dyn);
+    `exists_local_solution` (Picard–Lindelöf); `conservation_local` (a solution on some (−ε, ε) from the
+    design''s initial condition exists, and θ = φ_S + Σφ_X along it); `conservation_local_poisson`; `seir_conservation_local`
+    (EB SEIR on Poisson(5), a model with no global solution) |'
+- id: Docs.readme.contents.morphisms
+  group: Docs
+  source:
+    file: README.md
+    lines: 20-20
+  text: '| `NetworkEpi/Morphisms/**`, `NetworkEpi/Closure/**` | L4 (WP28) | reserved for the morphism
+    catalogue: general Rempała, PT ⇔ constant closure, WM unit, Poisson isomorphism, EB → PW^S, compact
+    ⊂ expanded |'
+- id: Docs.readme.dynGeneralisation
+  group: Docs
+  source:
+    file: README.md
+    lines: 24-26
+  text: '`DynSys` is more general than the design''s **Dyn**. `V` is any real normed space, `F` is any
+    function and morphisms need only be differentiable. **Dyn** (finite-dimensional, C¹) is a subcategory,
+    so every statement about all objects or all morphisms also holds there.'
+- id: Docs.readme.dynClosedUnderProducts
+  group: Docs
+  source:
+    file: README.md
+    lines: 26-29
+  text: 'This does **not** cover the existence of limits: `hasBinaryProducts` and `hasTerminal` are proved
+    for `DynSys`. That Dyn is closed under these products is true (products of finite-dimensional C¹ systems
+    and pairings of C¹ maps are C¹) but not formalised.'
+- id: Docs.readme.contDiffLift
+  group: Docs
+  source:
+    file: README.md
+    lines: 29-30
+  text: '`contDiff_lift` shows that EB models on networks with C¹ degree data (such as Poisson) are objects
+    of Dyn.'
+- id: Docs.readme.timeIntervalSolutions
+  group: Docs
+  source:
+    file: README.md
+    lines: 31-36
+  text: '**Solutions live on a time interval.** `conservation`, `node_conservation`, `xi_const` and `rempala_solution`
+    take any convex set of times `I ∋ 0` (for example `(a, b)`, `[0, T)`, `[0, ∞)`) and a curve with `HasDerivWithinAt
+    x (F (x t)) I t` for `t ∈ I`. That derivative is one-sided at end points of `I`, and `HasDerivAt`
+    implies it. The degree data need derivative relations only at the visited θ values, so a negative
+    binomial PGF (pole at 1/(1 − p) > 1) is covered.'
+- id: Docs.readme.seirNoGlobalSolution
+  group: Docs
+  source:
+    file: README.md
+    lines: 19-37
+  text: |-
+    Global solutions need not exist: numerically, EB SEIR on Poisson(5) (τ = 1/6, σ = 1/3, γ = 1/4, φ_I(0) = 0.01) blows up backward at t ≈ −7.33.
+    [...]
+    (EB SEIR on Poisson(5), a model with no global solution)
+- id: Docs.readme.hypothesesMet
+  group: Docs
+  source:
+    file: README.md
+    lines: 38-38
+  text: '`conservation_local` and `seir_conservation_local` prove that the hypotheses can be met.'
+- id: Docs.readme.sinkSpecies
+  group: Docs
+  source:
+    file: README.md
+    lines: 39-41
+  text: '`Rxn.exit (Y : σ)` cannot express `s → ∅`, which §B.2 allows ("Y ∉ Σ (or ∅)"). Model it with
+    an inert sink species `D`, one that occurs in no other reaction. No other coordinate of the EB field
+    depends on φ_D or pop_D, so θ, ξ, S and the other φ, pop are unchanged.'
+- id: Docs.readme.admissibilityMeta
+  group: Docs
+  source:
+    file: README.md
+    lines: 42-44
+  text: '`NRxn.ebAdmissible_iff_type`, `not_ebAdmissible_resus` and `exists_not_ebAdmissible` are statements
+    about the syntax. They hold by definition, because `EBAdmissible` and `TNet.inTEB` are parallel case
+    tables. They do not prove that no EB-type semantics exists for `X → s`.'
+- id: Docs.readme.syntaxScope
+  group: Docs
+  source:
+    file: README.md
+    lines: 45-47
+  text: The syntax has one implicit susceptible species `s` on an untyped, single-layer configuration
+    network (|Σ| = 1). `:sus_move` and `:sus_contact` are not represented. The EB state has no `cum` accumulator.
+- id: Docs.readme.edgeDefectWithRemovals
+  group: Docs
+  source:
+    file: README.md
+    lines: 48-52
+  text: 'For any reaction list, `d/dt (θ − φ_S − Σφ_X) = Σ_{(X→∅,a)∈rs} a φ_X` (`hasDerivAt_edgeDefect_lift`).
+    A removal leaves θ unchanged and lowers Σφ by aφ_X (the partner becomes inert: its edges stay in θ
+    but leave every φ class; `ebField_removal_row`), so the rate is non-negative when the removal rates
+    and the φ_X are non-negative (`removalFlux_nonneg`). Without removals the rate is 0 (`removalFlux_eq_zero`). '
+- id: Docs.readme.conservationRemovalFreeOnly
+  group: Docs
+  source:
+    file: README.md
+    lines: 48-54
+  text: |-
+    `conservation` needs **no removals `X → ∅`**.
+    [...]
+    The design's unqualified "Conservation θ = φ_S + Σφ_X holds" (§D.4) is true for removal-free models only.
+- id: Docs.readme.rempalaSirCase
+  group: Docs
+  source:
+    file: README.md
+    lines: 55-55
+  text: '`rempala` is the SIR case of M3. Naturality in P and the general quotient are WP28''s (L4c).'
+- id: Docs.readme.liftLawsArbitraryPsi
+  group: Docs
+  source:
+    file: README.md
+    lines: 56-57
+  text: The lift laws hold for arbitrary functions ψ, ψ', ψ''. Only `conservation`, `node_conservation`
+    and the Poisson bridge use derivative relations.
+- id: Docs.readme.citableDocstrings
+  group: Docs
+  source:
+    file: README.md
+    lines: 106-110
+  text: 'Each citable theorem''s docstring has two parts: - **Design statement**: a verbatim quote from
+    `DESIGN_NetworkEpiCore.md` (§ given). - **Lean statement**: a precise natural-language restatement
+    of what the Lean theorem says, including hypotheses and scope.'
+- id: Docs.citable.pendingReview
+  group: Docs
+  source:
+    file: CITABLE.txt
+    lines: 36-40
+  text: 'PENDING REVIEW: the modules are not yet imported by # NetworkEpi.lean, so they are not yet part
+    of the trusted library and the names below are # commented out (the gate would report them MISSING).
+    To activate, in one change reviewed by # the WP13 owner: add `import NetworkEpi.Morphisms.All` to
+    NetworkEpi.lean, then run # sed -i '''' ''s/^//'' CITABLE.txt'
+- id: Docs.citable.gateConfiguration
+  group: Docs
+  source:
+    file: CITABLE.txt
+    lines: 41-41
+  text: WP28 checked that the gate passes in that configuration (63 names, 19 trusted modules).
+- id: Docs.root.trustedLibrary
+  group: Docs
+  source:
+    file: NetworkEpi.lean
+    lines: 14-15
+  text: The trusted library is exactly the modules imported by this file (and their `NetworkEpi.*` imports);
+    the SA-PASS audit (`Alignment/Audit.lean`) reads this file from disk.
+- id: Docs.root.moduleTableWP13
+  group: Docs
+  source:
+    file: NetworkEpi.lean
+    lines: 19-26
+  text: '| `NetworkEpi.Dyn.Basic` | L1 (§D.3) | `DynSys`, `Semiconj`, `instance : Category DynSys`, `Semiconj.map_solution`,
+    `SemiconjOn`, `SemiconjOn.map_solution_on`, `SemiconjOn.map_solution_within`, `invariant_incl` | |
+    `NetworkEpi.Dyn.Products` | L1b (§D.3, stretch) | `prod_isLimit`, `hasBinaryProducts`, `hasTerminal`
+    | | `NetworkEpi.Syntax.Rxn` | L2 (§B.2, §D.1) | `Rxn σ` (T_EB), `NRxn σ` (T_net), typing, `Rxn.map`,
+    decidable `EBAdmissible` | | `NetworkEpi.Semantics.EB` | L3 (§D.4) | `ebField` (with exits and ξ),
+    `lift_append`, `ebField_map`, `lift_map`, `lift_glue`; on a time interval: `conservation`, `node_conservation`,
+    `xi_const` | | `NetworkEpi.Semantics.MA` | L3 (§D.4, §D.6 H1′) | `maField`, `maLift_append`, `maLift_map`,
+    `maLift_glue` | | `NetworkEpi.Semantics.PWS` | L3 stretch (§D.4, §D.6 F2) | `pwSField`, `pwS_glue_not_strict`
+    (PW^S is lax under gluing) | | `NetworkEpi.Semantics.PoissonSIR` | L4c for SIR (§D.5 M3) | `rempala`,
+    `ebPoisSIR_lift`, `rempala_lift`, `rempala_solution` | | `NetworkEpi.Semantics.Solutions` | L3 (§D.3,
+    §D.4) | `contDiff_lift` (EB models are objects of Dyn), `exists_local_solution`, `conservation_local`,
+    `seir_conservation_local` |'
+- id: Docs.root.moduleTableWP28
+  group: Docs
+  source:
+    file: NetworkEpi.lean
+    lines: 27-35
+  text: '| `NetworkEpi.Morphisms.Common` | §D.3, §D.5 | per-reaction criterion `clm_list_sum_eq`, `IsConjOn`,
+    `isSemiconjOn_inverse`, EB coordinate maps, `suscD`, the reduced EB model `ebSys1` on ξ = 1 | | `NetworkEpi.Morphisms.Rempala`
+    | L4c, M3 | `rempala_general` (every T_EB model), `rempala_general_solution`, `rempala_natural`, `rempala_quotient`,
+    `rempala_general_sir`, `rempala_seir_field` | | `NetworkEpi.Closure.PT` | L4f (§D.7 "L4d `Closure/PT`"),
+    M8 | `pt_iff_const_closure`, `pt_iff_closureK`, `pt_closure_at_one`, `poisson_closureK` | | `NetworkEpi.Morphisms.WellMixed`
+    | L4a, M1 | `wellmixed_unit` (conjugacy, exit-free), `wellmixed_unit_semiconj` (with exits), `wellmixed_unit_quotient`,
+    `wellmixed_unit_Iic`, `wellmixed_unit_solution` | | `NetworkEpi.Morphisms.Stoich` | §D.7 (multiset
+    stoichiometry) | mass action `sSys` for multiset reactions; `ma_eq_stoich` (agrees with `maSys`) |
+    | `NetworkEpi.Morphisms.Poisson` | L4b, M2 | `poisson_iso` (conjugacy, exit-free), `poisson_iso_semiconj`
+    (with exits), `poisson_iso_solution`, `poisson_iso_natural`, `poisson_iso_sir`, `poisson_iso_seir`,
+    `poissonD_sir_field` | | `NetworkEpi.Morphisms.Pairwise` | L4e, M6 (+ M8) | `eb_to_pws` (every ψ,
+    every T_EB model), `eb_to_pws_solution`, `eb_to_pws_sir`, `eb_to_pws_seir`, `eb_to_pws_const`, `eb_to_pws_pt`,
+    `eb_to_pws_poisson` | | `NetworkEpi.Morphisms.Compact` | L4g, M9 | `compact_W_invariant`, `compact_conj`,
+    `compact_solution`, `compact_solution_poisson` | | `NetworkEpi.Morphisms.NGM` | L5 (stretch) | `spectralRadius_vecMulVec`,
+    `r0_single_entry`, `spectralRadius_fin_two`, `multiplex_r0`, `multiplex_r0_eq_sum_iff` |'
+- id: Docs.all.aggregator
+  group: Docs
+  source:
+    file: NetworkEpi/Morphisms/All.lean
+    lines: 14-16
+  text: Aggregator for the modules of WP28 (DESIGN_NetworkEpiCore.md §D.5, §D.7). A single `import NetworkEpi.Morphisms.All`
+    in `NetworkEpi.lean` makes all of them part of the trusted library.
+- id: Docs.all.moduleTable
+  group: Docs
+  source:
+    file: NetworkEpi/Morphisms/All.lean
+    lines: 20-28
+  text: '| `NetworkEpi.Morphisms.Common` | §D.3, §D.5 | per-reaction criterion `clm_list_sum_eq`, `IsConjOn`,
+    `isSemiconjOn_inverse`, EB coordinate maps, `suscD`, the reduced EB model `ebSys1` on ξ = 1 | | `NetworkEpi.Morphisms.Rempala`
+    | L4c, M3 | `rempala_general` (every T_EB model), `rempala_general_solution`, `rempala_natural`, `rempala_quotient`,
+    `rempala_general_sir`, `rempala_seir_field` | | `NetworkEpi.Closure.PT` | L4f (§D.7 "L4d `Closure/PT`"),
+    M8 | `pt_iff_const_closure`, `pt_iff_closureK`, `pt_closure_at_one`, `poisson_closureK` | | `NetworkEpi.Morphisms.WellMixed`
+    | L4a, M1 | `wellmixed_unit` (conjugacy, exit-free), `wellmixed_unit_semiconj` (with exits), `wellmixed_unit_quotient`,
+    `wellmixed_unit_Iic`, `wellmixed_unit_solution` | | `NetworkEpi.Morphisms.Stoich` | §D.7 (multiset
+    stoichiometry) | mass action `sSys` for multiset reactions; `ma_eq_stoich` (agrees with `maSys`) |
+    | `NetworkEpi.Morphisms.Poisson` | L4b, M2 | `poisson_iso` (conjugacy, exit-free), `poisson_iso_semiconj`
+    (with exits), `poisson_iso_solution`, `poisson_iso_natural`, `poisson_iso_sir`, `poisson_iso_seir`,
+    `poissonD_sir_field` | | `NetworkEpi.Morphisms.Pairwise` | L4e, M6 (+ M8) | `eb_to_pws` (every ψ,
+    every T_EB model), `eb_to_pws_solution`, `eb_to_pws_sir`, `eb_to_pws_seir`, `eb_to_pws_const`, `eb_to_pws_pt`,
+    `eb_to_pws_poisson` | | `NetworkEpi.Morphisms.Compact` | L4g, M9 | `compact_W_invariant`, `compact_conj`,
+    `compact_solution`, `compact_solution_poisson` | | `NetworkEpi.Morphisms.NGM` | L5 (stretch) | `spectralRadius_vecMulVec`,
+    `r0_single_entry`, `spectralRadius_fin_two`, `multiplex_r0`, `multiplex_r0_eq_sum_iff` |'
+- id: DynBasic.header.dynDesign
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 17-19
+  text: 'The design (§D.3) says: "Objects of **Dyn** are (V, F): V a finite-dimensional real normed space,
+    F: V → V a C¹ vector field. Morphisms (V, F) → (W, G) are C¹ maps π with Dπ(u)·F(u) = G(π(u)) (semiconjugacies).
+    Identity and composition come from the chain rule."'
+- id: DynBasic.header.dynSysGeneral
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 21-24
+  text: 'The Lean category `DynSys` is deliberately *more general*: `V` is any real normed space (not
+    necessarily finite-dimensional), `F` is any function `V → V` (no regularity), and a morphism is a
+    map that is differentiable everywhere (not necessarily C¹) and satisfies `fderiv ℝ π u (F u) = G (π
+    u)` for every `u`.'
+- id: DynBasic.header.dynSubcategory
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 24-26
+  text: The design's **Dyn** is therefore a subcategory of `DynSys` (same composition and identities),
+    and every theorem below about all objects or all morphisms of `DynSys` holds in particular for **Dyn**.
+- id: DynBasic.header.solutionDefs
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 28-31
+  text: 'A *solution* of `(V, F)` on a set of times `I` is a curve `x : ℝ → V` with `HasDerivAt x (F (x
+    t)) t` for every `t ∈ I` (`map_solution`, `map_solution_on`), or, on a time interval that may contain
+    its end points (for example a forward solution on `[0, T)`), with `HasDerivWithinAt x (F (x t)) I
+    t` for every `t ∈ I` (`map_solution_within`).'
+- id: DynBasic.header.withinWeaker
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 31-32
+  text: 'The second notion is weaker: `HasDerivAt` at `t` implies `HasDerivWithinAt` within any `I` at
+    `t`.'
+- id: DynBasic.header.globalSolutions
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 33-33
+  text: Global solutions (`I = ℝ`) need not exist.
+- id: DynBasic.semiconjIsSemiconj
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 67-67
+  text: A bundled semiconjugacy satisfies `IsSemiconj`.
+- id: DynBasic.semiconjOnIsSemiconjOn
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 184-184
+  text: A bundled local semiconjugacy satisfies `IsSemiconjOn`.
+- id: DynBasic.homEqSemiconj
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 98-98
+  text: The morphisms of `DynSys` are exactly the semiconjugacies.
+- id: DynBasic.idPi
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 101-101
+  text: In `DynSys` the identity morphism is the identity map.
+- id: DynBasic.compPi
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 104-104
+  text: In `DynSys` composition of morphisms is composition of the underlying maps.
+- id: DynBasic.mapSolution
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 109-112,87-89
+  text: |-
+    **Semiconjugacies map solutions to solutions.** Design statement (DESIGN_NetworkEpiCore.md §D.3): "[L] `instance : Category DynSys` and `Semiconj.map_solution` (semiconjugacies map solution curves to solution curves)".
+    [...]
+    **The category `DynSys`** (DESIGN §D.3: "[L] `instance : Category DynSys`"). Objects are `DynSys`, morphisms `A ⟶ B` are `Semiconj A B`, the identity is `id` and composition is composition of maps (`comp_π`, `id_π`).
+- id: DynBasic.semiconjMapSolutionWithin
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 125-127
+  text: 'Semiconjugacies map solutions within a set of times to solutions within it: if `x''(t) = F(x(t))`
+    within `I` (`HasDerivWithinAt`) at every `t ∈ I`, then `(π ∘ x)''(t) = G(π(x(t)))` within `I` at every
+    `t ∈ I`.'
+- id: DynBasic.mapSolutionOn
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 212-216
+  text: '**Local semiconjugacies map solutions that stay in `U` to solutions.** Design statement (DESIGN_NetworkEpiCore.md
+    §D.3): "**Local version `SemiconjOn U`.** The identity holds on an open set U, and solutions that
+    stay in U are mapped. This is needed for maps that divide by ψ(θ) or ψ''(θ)."'
+- id: DynBasic.semiconjOnMapSolutionWithin
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 229-234
+  text: '**Local semiconjugacies map solutions within a set of times `I` that stay in `U` to solutions
+    within `I`.** Design statement (DESIGN_NetworkEpiCore.md §D.3): "**Local version `SemiconjOn U`.**
+    The identity holds on an open set U, and solutions that stay in U are mapped. This is needed for maps
+    that divide by ψ(θ) or ψ''(θ)."'
+- id: DynBasic.hasFDerivAtRestrictIncl
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 298-298
+  text: The chart `w ↦ p₀ + w` has derivative the inclusion `W →L[ℝ] V` at every point.
+- id: DynBasic.invariantIncl
+  group: DynBasic
+  source:
+    file: NetworkEpi/Dyn/Basic.lean
+    lines: 303-306
+  text: '**The inclusion of an invariant subsystem is a semiconjugacy (a restriction).** Design statement
+    (DESIGN_NetworkEpiCore.md §D.3): "The inclusion of an invariant subsystem is a restriction. "Model
+    A is exact for initial conditions in W" is a morphism *out of* (W, F|_W)."'
+- id: DynProducts.header.construction
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 15-16
+  text: The product of `(V, F)` and `(W, G)` is `(V × W, F × G)` with the two coordinate projections;
+    the terminal object is the zero-dimensional system `(Fin 0 → ℝ, 0)`.
+- id: DynProducts.header.dynClosure
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 18-26
+  text: '**Scope: `DynSys`, and the closure of the design''s Dyn.** `prod_isLimit`, `hasBinaryProducts`,
+    `point_isTerminal` and `hasTerminal` are limits in `DynSys` (see `NetworkEpi.Dyn.Basic`). Because
+    Dyn is not a full subcategory of `DynSys`, they do not by themselves imply that Dyn has these limits.
+    The same constructions stay in the design''s **Dyn** (finite-dimensional, C¹): a product of finite-dimensional
+    spaces with C¹ fields is finite-dimensional with a C¹ field, the projections are C¹, the pairing of
+    two C¹ maps is C¹, `Fin 0 → ℝ` is finite-dimensional with the C¹ field 0, and the maps to it are C¹
+    (`dyn_prod_closed`, `dyn_point_closed`). Uniqueness of the factorisation is inherited from `DynSys`,
+    so Dyn has binary products and a terminal object, computed as in `DynSys`.'
+- id: DynProducts.header.notFull
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 19-21
+  text: Because Dyn is not a full subcategory of `DynSys`, they do not by themselves imply that Dyn has
+    these limits.
+- id: DynProducts.prodIsLimit
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 74-78,91,125
+  text: |-
+    **`(V × W, F × G)` is the categorical product of `(V, F)` and `(W, G)` in `DynSys`.** Design statement (DESIGN_NetworkEpiCore.md §D.3): "**Products.** Dyn has binary products and a terminal object (Lean stretch L1b)"; §D.7: "L1b `NEP/Dyn/Products` | cartesian structure | `HasBinaryProducts DynSys`, terminal object".
+    [...]
+    **`DynSys` has binary products.**
+    [...]
+    **`DynSys` has a terminal object**, the zero-dimensional system `(Fin 0 → ℝ, 0)`.
+- id: DynProducts.instHasLimitPair
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 87-87
+  text: Every pair of objects of `DynSys` has a product.
+- id: DynProducts.pointEq
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 109-109
+  text: The state space of `DynSys.point` has exactly one element.
+- id: DynProducts.prodFanIsLimit
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 64-64
+  text: The product fan is a limit cone.
+- id: DynProducts.pointIsTerminal
+  group: DynProducts
+  source:
+    file: NetworkEpi/Dyn/Products.lean
+    lines: 118-118
+  text: The zero-dimensional system is terminal.
+- id: MorphismsCommon.header.perReactionCriterion
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 13-16
+  text: Every field in this library is a sum of per-reaction fields, and the derivative of a map is linear,
+    so a map is a semiconjugacy as soon as its derivative carries each per-reaction source field to the
+    corresponding per-reaction target field.
+- id: MorphismsCommon.isSemiconjOfHasFDerivAt
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 31-32
+  text: A map with an explicit derivative `D u` at every point is a semiconjugacy if `D u` carries the
+    source field at `u` to the target field at `π u`.
+- id: MorphismsCommon.isSemiconjOnOfHasFDerivAt
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 31-38
+  text: |-
+    Local version of `isSemiconj_of_hasFDerivAt` on a set `U`.
+    [...]
+    A map with an explicit derivative `D u` at every point is a semiconjugacy if `D u` carries the source field at `u` to the target field at `π u`.
+- id: MorphismsCommon.clmListSum
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 44-44
+  text: A continuous linear map commutes with the sum of a mapped list.
+- id: MorphismsCommon.clmListSumEq
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 52-54
+  text: '**The per-reaction criterion.** If a continuous linear map `L` carries each per-reaction source
+    term `f r` to the per-reaction target term `g r`, it carries the sum over the reaction list to the
+    sum.'
+- id: MorphismsCommon.isConjOn
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 77-79,17-18
+  text: |-
+    When `V` and `U` are invariant, this is a conjugacy (an isomorphism of `DynSys`) between the restrictions of `A` to `V` and of `B` to `U`: `h` maps solutions that stay in `V` to solutions, and `g` maps solutions that stay in `U` back.
+    [...]
+    conjugacies (isomorphisms of `DynSys` between restrictions)
+- id: MorphismsCommon.isSemiconjOnInverse
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 85-89,18
+  text: |-
+    **A differentiable inverse of a semiconjugacy is a semiconjugacy.** Let `h` be a local semiconjugacy on `V` from `A` to `B`, and let `g : B.V → A.V` be a global left inverse of `h` (`g ∘ h = id`) that is differentiable at every point of `U`, maps `U` into `V` and is a right inverse on `U` (`h (g v) = v` for `v ∈ U`). Then `g` is a local semiconjugacy on `U` from `B` to `A`.
+    [...]
+    the fact that a differentiable two-sided inverse of a semiconjugacy is one
+- id: MorphismsCommon.isConjOnOfInverse
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 106-107
+  text: 'A conjugacy with `V = univ` built from a global semiconjugacy `h` and a differentiable inverse
+    `g` on `U`: `IsConjOn A B univ U h g`.'
+- id: MorphismsCommon.ebCoordinateApply
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 160-166
+  text: |-
+    `ebTheta` is the θ-coordinate.
+    [...]
+    `ebXi` is the ξ-coordinate.
+    [...]
+    `ebPhi` is the φ-coordinate.
+    [...]
+    `ebPop` is the pop-coordinate.
+- id: MorphismsCommon.hasFDerivAtEbCoordinates
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 169-169
+  text: The coordinate projections are their own derivatives.
+- id: MorphismsCommon.suscDApply
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 201-201
+  text: '`suscD N q u v = q (v_ξ ψ(θ) + ξ ψ''(θ) v_θ)` with `(θ, ξ) = (u.1, u.2.1)`.'
+- id: MorphismsCommon.hasFDerivAtSusc
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 213-214
+  text: '`S = qξψ(θ)` has derivative `suscD N q u` at `u` when `ψ''(θ)` is the derivative of `ψ` at `θ
+    = u.1`.'
+- id: MorphismsCommon.dropLApply
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 267-267
+  text: '`dropL` is `EB.drop`.'
+- id: MorphismsCommon.inclLApply
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 275-275
+  text: '`inclL (θ, φ, pop) = (θ, 0, φ, pop)`.'
+- id: MorphismsCommon.dropIncl
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 278-278
+  text: '`EB.drop` is a left inverse of `EB1.incl`.'
+- id: MorphismsCommon.inclDrop
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 281-281
+  text: On `ξ = 1`, `EB1.incl` is a left inverse of `EB.drop`.
+- id: MorphismsCommon.hasFDerivAtIncl
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 288-288
+  text: '`EB1.incl` is affine with derivative `inclL`.'
+- id: MorphismsCommon.ebSys1Incl
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 328-330
+  text: '**For an exit-free model, the EB model on `(θ, φ, pop)` is the restriction of the EB model to
+    the invariant slice `ξ = 1`**: `(θ, φ, pop) ↦ (θ, 1, φ, pop)` is a semiconjugacy from `ebSys1` to
+    `ebSys` (the ξ-component of the EB field vanishes without exits).'
+- id: MorphismsCommon.ebSys1Drop
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 341-342
+  text: The chart `(θ, ξ, φ, pop) ↦ (θ, φ, pop)` is a local semiconjugacy on `{ξ = 1}` from `ebSys` to
+    `ebSys1` (for every T_EB model).
+- id: MorphismsCommon.header.ebSys1
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 21-22
+  text: the reduced EB system `ebSys1` on `ξ = 1` in coordinates `(θ, φ, pop)`, which is the EB model
+    of an exit-free T_EB model in the design's coordinates
+- id: MorphismsCommon.maLiftFlatMap
+  group: MorphismsCommon
+  source:
+    file: NetworkEpi/Morphisms/Common.lean
+    lines: 399-399
+  text: The mass-action field of `rs.flatMap g` is the sum over `r ∈ rs` of the fields of `g r`.
+- id: MorphismsCompact.header.models
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 12-17
+  text: '*Expanded*: the general per-reaction EB model of SIR (`s + I → I + I` at per-contact rate τ,
+    `I → R` at γ) on a configuration network `N`, state `(θ, ξ, φ_I, φ_R, pop_I, pop_R)`. *Compact* (`compactSIR`;
+    Miller 2011 with the explicit seed factor q, as in `EdgeBasedModels.jl`''s `_build_compact`): state
+    `(θ, R)` with `θ̇ = −τθ + τqψ''(θ)/ψ''(1) + γ(1 − θ)` and `Ṙ = γ(1 − qψ(θ) − R)`; `S = qψ(θ)`, `I
+    = 1 − S − R`.'
+- id: MorphismsCompact.compactWInvariant
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 96-99,21-23
+  text: |-
+    **The design's W is invariant (M9).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M9): "W = {τφ_R + γθ = γ} is invariant for SIR-shaped P".
+    [...]
+    along every EB SIR solution on a time interval, `τφ_R + γθ` is constant, so the design's set `W = {τφ_R + γθ = γ}` is invariant (no assumption on ψ).
+- id: MorphismsCompact.compactConj
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 251-254,24-27
+  text: |-
+    **The compact SIR EBCM is conjugate to the expanded one restricted to W' (M9).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M9): "Compact ⊂ expanded | W = {τφ_R + γθ = γ} is invariant for SIR-shaped P, and W → compact is a conjugacy | restriction".
+    [...]
+    the embedding `(θ, R) ↦ (θ, 1, φ_I, φ_R, 1 − qψ(θ) − R, R)` with `φ_R = γ(1−θ)/τ`, `φ_I = θ − qψ'(θ)/ψ'(1) − φ_R` and the projection `(θ, …, pop_R) ↦ (θ, pop_R)` form a conjugacy between the compact model and the expanded model restricted to `W' = W ∩ {ξ = 1, θ = φ_S + φ_I + φ_R, S + pop_I + pop_R = 1}` (`τ ≠ 0`).
+- id: MorphismsCompact.compactSolution
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 334-338,28-31
+  text: |-
+    **Expanded solutions from the design's initial condition are compact solutions (M9).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M9): "W = {τφ_R + γθ = γ} is invariant for SIR-shaped P, and W → compact is a conjugacy"; §D.3: "Examples: the compact SIR EBCM on {τφ_R + γθ = γ}".
+    [...]
+    for `τ ≠ 0`, every expanded solution from the design's initial condition (seed factor `q = 1 − ρ`) stays in `W'` and its image `(θ, pop_R)` solves the compact model, for derivatives within the time interval and for two-sided derivatives.
+- id: MorphismsCompact.compactSolutionPoisson
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 511-518
+  text: '**`compact_solution` is not vacuous on Poisson networks (M9).** Design statement (DESIGN_NetworkEpiCore.md
+    §D.5, M9): "W = {τφ_R + γθ = γ} is invariant for SIR-shaped P, and W → compact is a conjugacy"; amended
+    by §M.4: "For μ ≠ 0 and τ ≠ 0 the Poisson(μ) network satisfies the PGF hypotheses of `compact_solution`
+    (ψ(1) = 1, ψ''(1) = μ, and ψ'', ψ'''' are the derivatives of ψ, ψ''), and a local EB SIR solution
+    from the design''s initial condition (θ, ξ, φ_I, φ_R, pop_I, pop_R) = (1, 1, 1 − q, 0, 1 − q, 0) exists
+    on some (−ε, ε); it stays in W′ and its image (θ, pop_R) solves the compact model."'
+- id: MorphismsCompact.sirVecApply
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 51-53
+  text: |-
+    `sirVec a b` takes the value `a` at `I`.
+    [...]
+    `sirVec a b` takes the value `b` at `R`.
+- id: MorphismsCompact.hasFDerivAtCompactEmb
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 162-163
+  text: '`compactEmb` has derivative `compactD` at `w` when ψ'' and ψ'''' are the derivatives of ψ and
+    ψ'' at `θ = w.1`.'
+- id: MorphismsCompact.compactEmbSemiconj
+  group: MorphismsCompact
+  source:
+    file: NetworkEpi/Morphisms/Compact.lean
+    lines: 217-219
+  text: For `τ ≠ 0`, the embedding is a local semiconjugacy from the compact model to the expanded model
+    on the set of `(θ, R)` with θ ∈ Θ, where Θ is a set on which ψ' and ψ'' are the derivatives of ψ and
+    ψ'.
+- id: MorphismsNGM.header.r0Definition
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 18-19
+  text: 'R₀ is the spectral radius `spectralRadius ℝ K` (Mathlib: the supremum of `‖λ‖₊` over the real
+    spectrum of `K`, an extended non-negative real) of a next-generation matrix `K`.'
+- id: MorphismsNGM.header.ngmDerivation
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 37-39
+  text: These are statements about given matrices. That these matrices are the next-generation matrices
+    of the EB models (the linearisation of the EB field at the disease-free state, the per-edge transmissibilities
+    `T`) is not formalised here.
+- id: MorphismsNGM.spectralRadiusVecMulVec
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 94-97,23-24
+  text: |-
+    **The spectral radius of a rank-one matrix (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "L5 (stretch) | R₀ | rank-one NGM for a single entry state".
+    [...]
+    a rank-one matrix `u vᵀ` (`u ≠ 0`) has real spectrum inside `{0, v·u}` containing `v·u`, so its spectral radius is `|v·u|`.
+- id: MorphismsNGM.r0SingleEntry
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 130-136,25-27
+  text: |-
+    **R₀ for a single entry state: the next-generation matrix `e_E (wᵀV⁻¹)` has rank at most one (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "L5 (stretch) | R₀ | rank-one NGM for a single entry state; 2-layer multiplex R₀ = ρ(K)"; amended by §M.2: "for a single entry state E the next-generation matrix K = F V⁻¹ = e_E (wᵀV⁻¹) has rank at most one (rank one unless wᵀV⁻¹ = 0), and R₀ = ρ(K) = |(wᵀV⁻¹)_E|".
+    [...]
+    if every new infection enters one state `E` (`F = e_E wᵀ`), the next-generation matrix `K = F V⁻¹ = e_E (wᵀV⁻¹)` has rank at most one and `R₀ = ρ(K) = |(wᵀV⁻¹)_E|`
+- id: MorphismsNGM.spectralRadiusFinTwo
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 199-201,30-31
+  text: |-
+    **The spectral radius of a non-negative 2 × 2 matrix (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "2-layer multiplex R₀ = ρ(K)".
+    [...]
+    for a 2 × 2 matrix `[[a, b], [c, d]]` with `a, d ≥ 0` and `bc ≥ 0` (for example a non-negative NGM), `ρ = (a + d + √((a − d)² + 4bc))/2`.
+- id: MorphismsNGM.multiplexR0
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 253-256,30-31,32-34
+  text: |-
+    **The two-layer multiplex R₀ = ρ(K) (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "L5 (stretch) | R₀ | rank-one NGM for a single entry state; 2-layer multiplex R₀ = ρ(K)"; §C.3, `MultiplexNetwork`: "R₀ = ρ(K)".
+    [...]
+    with `a, d ≥ 0` and `bc ≥ 0` (for example a non-negative NGM), `ρ = (a + d + √((a − d)² + 4bc))/2`.
+    [...]
+    for the two-layer multiplex NGM `K = [[T₁e₁, T₁k₁], [T₂k₂, T₂e₂]]` (as in `ngm.jl`: `M_ℓℓ = κ_ex,ℓ`, `M_mℓ = ⟨k_ℓ⟩`), `R₀ = ρ(K)` has the closed form above
+- id: MorphismsNGM.multiplexR0EqSumIff
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 273-277,32-33,34-35
+  text: |-
+    **The multiplex R₀ is the sum of the layer R₀s only in a degenerate case (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "2-layer multiplex R₀ = ρ(K)"; `NetworkEpiCore.jl/src/analysis/ngm.jl`: "R₀ = ρ(K), **not** the sum of the layer R₀s (verified issue E12)".
+    [...]
+    for the two-layer multiplex NGM `K = [[T₁e₁, T₁k₁], [T₂k₂, T₂e₂]]` (as in `ngm.jl`: `M_ℓℓ = κ_ex,ℓ`, `M_mℓ = ⟨k_ℓ⟩`),
+    [...]
+    it equals the sum `T₁e₁ + T₂e₂` of the layer R₀s iff `T₁T₂k₁k₂ = T₁T₂e₁e₂`.
+- id: MorphismsNGM.memSpectrumIffDet
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 55-55
+  text: '`r` is in the real spectrum of `K` iff `det(r·1 − K) = 0`.'
+- id: MorphismsNGM.spectrumVecMulVecSubset
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 60-60
+  text: The real spectrum of the rank-one matrix `u vᵀ` lies in `{0, v·u}`.
+- id: MorphismsNGM.memSpectrumVecMulVec
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 85-85
+  text: '`v·u` is in the real spectrum of `u vᵀ` when `u ≠ 0` (`u` is an eigenvector).'
+- id: MorphismsNGM.spectrumFinTwo
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 182-183
+  text: 'The real spectrum of a 2 × 2 matrix with non-negative discriminant `D = (a − d)² + 4bc`: the
+    two roots `(a + d ± √D)/2` of `λ² − (a + d)λ + (ad − bc)`.'
+- id: MorphismsNGM.spectralRadiusFinTwoEqTraceIff
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 225-226
+  text: 'For real `a, d ≥ 0`, `bc ≥ 0`: the spectral radius of `[[a, b], [c, d]]` is the trace `a + d`
+    iff `bc = ad` (the determinant vanishes).'
+- id: MorphismsPairwise.header.target
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 17-23
+  text: 'The state is `(θ, w)` with `w = ([s], [ss], [sZ], [Z]) : PWS σ`. The PW^S part is the per-reaction
+    field `pwSField K` of `NetworkEpi.Semantics.PWS` (checked there against the design''s `check_pwS_general.py`
+    and `check_exit_pws.py`), evaluated at the degree-dependent closure `K = K_ψ(θ) = ψ(θ)ψ''''(θ)/ψ''(θ)²`.
+    The auxiliary θ evolves by `θ̇ = −(ψ(θ)/ψ''(θ)) Σ_contacts τ_r [s J_r]/[s]`. On the image of π^PW,
+    `[s] = qξψ(θ)`, so this is the design''s `θ̇ = −Σ_r τ_r [s J_r]/(qξψ''(θ))` written in the coordinates
+    of the target (ξ is not a coordinate of PW^S, so the target must not refer to it).'
+- id: MorphismsPairwise.header.notFreeScalar
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 37-39
+  text: '**Not** the free-scalar identity: the legacy "pointwise pairwise identity" (§D.7 "Never cited")
+    is a statement about free scalars; here the derivatives of ψ enter only through the `HasDerivAt` hypotheses,
+    and the statement is a semiconjugacy of vector fields.'
+- id: MorphismsPairwise.ebToPws
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 224-232,251-251,27-30
+  text: |-
+    **EB → S-anchored pairwise with the PGF closure, for every ψ and every T_EB model (M6).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M6): "**EB → S-anchored pairwise** | π^PW(θ, ξ, φ, pop) = (θ, [s] = qξψ(θ), [sX] = qξψ'(θ)φ_X, [ss] = q²ξ²ψ'(θ)²/ψ'(1), [X] = pop_X) onto PW^S with closure [Z s J] = K_ψ(θ)[Zs][sJ]/[s], K_ψ = ψψ''/ψ'². It holds **for every C² ψ and every T_EB model**, on U = {ψ ≠ 0, ψ' ≠ 0} (the DSA closure, Kiss, Kenah & Rempała 2023) | natural semiconjugacy"; §A.4: "`PGFClosure()`: the S-anchored subsystem with closure K_ψ(θ) = ψ(θ)ψ''(θ)/ψ'(θ)² and an auxiliary θ, where θ̇ = −Σ_r τ_r [s J_r]/(qξψ'(θ)). It is exact against EB for every ψ (M6)".
+    [...]
+    No condition on ψ'(1) is needed.
+    [...]
+    for every T_EB reaction list (contacts, exits, progressions, removals), every configuration network and every set Θ of θ values at which ψ' and ψ'' are the derivatives of ψ and ψ', π^PW is a local semiconjugacy from EB to `pgfSys` on `U = {θ ∈ Θ, ψ(θ) ≠ 0, ψ'(θ) ≠ 0, ξ ≠ 0}` (for `q ≠ 0`).
+- id: MorphismsPairwise.ebToPwsSolution
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 262-267,31-31
+  text: |-
+    **EB → PW^S on trajectories (M6).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M6): "π^PW(θ, ξ, φ, pop) = (θ, [s] = qξψ(θ), [sX] = qξψ'(θ)φ_X, [ss] = q²ξ²ψ'(θ)²/ψ'(1), [X] = pop_X) onto PW^S with closure [Z s J] = K_ψ(θ)[Zs][sJ]/[s], K_ψ = ψψ''/ψ'². It holds **for every C² ψ and every T_EB model**, on U = {ψ ≠ 0, ψ' ≠ 0}"; §D.3: "solutions that stay in U are mapped".
+    [...]
+    EB solutions that stay in `U` map to PGF-closure solutions.
+- id: MorphismsPairwise.ebToPwsSir
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 284-288
+  text: '**EB → PW^S for SIR (M6, SIR instance).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M6):
+    "It holds **for every C² ψ and every T_EB model**, on U = {ψ ≠ 0, ψ'' ≠ 0}"; §D.7, L4e: "SIR and SEIR
+    with generic C² ψ via `HasDerivAt` hypotheses".'
+- id: MorphismsPairwise.ebToPwsSeir
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 300-304
+  text: '**EB → PW^S for SEIR (M6, SEIR instance).** Design statement (DESIGN_NetworkEpiCore.md §D.5,
+    M6): "It holds **for every C² ψ and every T_EB model**, on U = {ψ ≠ 0, ψ'' ≠ 0}"; §D.7, L4e: "SIR
+    and SEIR with generic C² ψ via `HasDerivAt` hypotheses".'
+- id: MorphismsPairwise.ebToPwsConst
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 325-329,337-337,33-34
+  text: |-
+    **The constant-closure pairwise model is exact when K_ψ is constant (M6 with M8).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT"; M6: "onto PW^S with closure [Z s J] = K_ψ(θ)[Zs][sJ]/[s], K_ψ = ψψ''/ψ'²".
+    [...]
+    this is the "if" direction of the design's "exact iff PT"
+    [...]
+    if `K_ψ ≡ κ` on Θ, the PW^S part alone, with the **constant** closure κ, is the image of EB: the constant-closure pairwise model is exact.
+- id: MorphismsPairwise.constClosureOnlyIf
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 327-339
+  text: |-
+    So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT
+    [...]
+    The "only if" direction for trajectories (that a non-constant K_ψ makes the constant closure inexact along some solution) is not formalised.
+- id: MorphismsPairwise.ebToPwsPt
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 355-371
+  text: |-
+    **For a Poisson-type degree distribution the constant closure is exact (M8 ⇒ M6).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "PT ⇔ constant closure | On an interval I with ψ > 0: K_ψ ≡ κ ⇔ ψ' = αψ^κ [...] So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT"; §C.3: "heterogeneous pairwise with constant K = closure_constant(d) (exact iff PT, M8)".
+    [...]
+    the "if" direction of "exact iff PT"
+- id: MorphismsPairwise.ebToPwsPoisson
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 392-395
+  text: '**On a Poisson network the constant closure K = 1 is exact (M6, M8, Poisson instance).** Design
+    statement (DESIGN_NetworkEpiCore.md §D.5, M8): "So NBM''s constant closure ⟨k(k−1)⟩/⟨k⟩² is exact
+    **iff** the degree distribution is PT"; §0: "This covers Poisson (κ = 1)".'
+- id: MorphismsPairwise.hasFDerivAtPwImage
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 109-110
+  text: π^PW has derivative `pwD N q u` at every state whose θ is a point where ψ' and ψ'' are the derivatives
+    of ψ and ψ'.
+- id: MorphismsPairwise.pwsEbField
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 156-158
+  text: '**Per-reaction identity behind M6.** At a state with `ψ(θ) ≠ 0`, `ψ''(θ) ≠ 0` and `qξ ≠ 0`, the
+    derivative of π^PW carries the EB field of each T_EB reaction `r` to the PGF-closure field of `r`
+    at the image point.'
+- id: MorphismsPairwise.pwsDomainPoisson
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 383-384
+  text: 'The domain of M6 on a Poisson(μ) network with `μ ≠ 0` is `{ξ ≠ 0}`: ψ > 0 and ψ'' ≠ 0 everywhere.'
+- id: MorphismsPoisson.header.construction
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 13-24
+  text: 'The species of `D_μ P` (`DSp σ = Option (σ ⊕ σ)`) are `S` (`none`), an *edge copy* `Φ_X` (`some
+    (inl X)`) and a *node copy* `X` (`some (inr X)`) of every node species `X`. `D_μ` acts reaction by
+    reaction (`Rxn.poissonD`), with multiset stoichiometry (`NetworkEpi.Morphisms.Stoich`): | T_EB reaction
+    of P | reactions of D_μ P | |---|---| | contact `s + J → X + J` at τ | `S + Φ_J → Φ_X + X + Φ_J` at
+    `μτ`, and `Φ_J → ∅` at `τ` | | exit `s → Y` at ν | `S → Φ_Y + Y` at ν | | transition `X → Y` at a
+    | `Φ_X → Φ_Y` and `X → Y`, both at a | | removal `X → ∅` at a | `Φ_X → ∅` and `X → ∅`, both at a |
+    The map is `poissonMap μ q (θ, ξ, φ, pop) = (S = qξe^{μ(θ−1)}, Φ = φ, X = pop)`.'
+- id: MorphismsPoisson.header.exitsNotConjugacy
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 38-41,238
+  text: |-
+    **With exits** the EB coordinates contain both θ and ξ, and the map `(θ, ξ) ↦ qξe^{μ(θ−1)}` has one-dimensional fibres, so `poisson_iso_semiconj` is a semiconjugacy but not a conjugacy; the design's "iso" is the exit-free statement `poisson_iso` (as in M1, whose exit case the design calls a quotient).
+    [...]
+    with exits this is a semiconjugacy, not a conjugacy (θ and ξ enter only through S)
+- id: MorphismsPoisson.poissonIsoSemiconj
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 222-227,28-29
+  text: |-
+    **The Poisson map is a semiconjugacy for every T_EB model (M2, with exits).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M2): "Poisson isomorphism | EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ = φ, X = pop), natural in P. D_μ: contacts S + Φ_J → Φ_X + X + Φ_J at rate μτ; Φ_J → ∅ at τ; transitions on both copies"; §J.10: "**Exits in D_μ** (§D.5 M2) are `s → Φ_Y + Y`".
+    [...]
+    for every T_EB model (exits allowed) and `μ ≠ 0`, `poissonMap` is a global semiconjugacy from EB on Poisson(μ) to MA(D_μ P).
+- id: MorphismsPoisson.poissonIso
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 253-258,30-32
+  text: |-
+    **The Poisson isomorphism for exit-free models (M2).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M2): "Poisson isomorphism | EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ = φ, X = pop), natural in P. D_μ: contacts S + Φ_J → Φ_X + X + Φ_J at rate μτ; Φ_J → ∅ at τ; transitions on both copies | natural iso onto S > 0".
+    [...]
+    for every **exit-free** T_EB model, `μ ≠ 0` and `q > 0`, the EB model in the design's coordinates `(θ, φ, pop)` is conjugate to MA(D_μ P) restricted to the open set `S > 0`, with inverse `(S, Φ, X) ↦ (1 + log(S/q)/μ, Φ, X)`.
+- id: MorphismsPoisson.poissonIsoSolution
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 308-323
+  text: |-
+    **The Poisson isomorphism on trajectories (M2).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M2): "EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ = φ, X = pop)"; §D.3: "semiconjugacies map solution curves to solution curves".
+    [...]
+    Scope: the Poisson(μ) network is taken with `μ ≠ 0`, as in the design, whose Poisson degree distributions have mean μ > 0 (for `μ = 0` the PGF has `ψ' ≡ 0` and the network has no edges). Solutions are mapped on any set of times `I`, both for derivatives within `I` (this theorem) and for two-sided derivatives at every `t ∈ I` (`poisson_iso_solution_at`), as amended by §M.5 and §M.10.
+- id: MorphismsPoisson.poissonIsoNatural
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 371-374,383,384,33-34
+  text: |-
+    **The Poisson isomorphism is natural in P (M2).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M2): "EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ = φ, X = pop), natural in P".
+    [...]
+    naturality with respect to the species maps of the syntax (relabelling and gluing),
+    [...]
+    it is not stated as a natural transformation of functors into `DynSys`.
+    [...]
+    `D_μ` commutes with relabelling species, and the map commutes with the pullback and pushforward of coordinates along species maps.
+- id: MorphismsPoisson.poissonDSirField
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 446-449
+  text: '**The mass-action equations of `D_μ(SIR)` (M2, SIR).** Design statement (DESIGN_NetworkEpiCore.md
+    §D.5, M2): "D_μ: contacts S + Φ_J → Φ_X + X + Φ_J at rate μτ; Φ_J → ∅ at τ; transitions on both copies".'
+- id: MorphismsPoisson.poissonIsoSir
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 473-477
+  text: '**The Poisson isomorphism for SIR (M2, SIR instance).** Design statement (DESIGN_NetworkEpiCore.md
+    §D.5, M2): "Poisson isomorphism | EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ =
+    φ, X = pop) [...] | natural iso onto S > 0"; §D.7, L4b: "SIR/SEIR concrete first".'
+- id: MorphismsPoisson.poissonIsoSeir
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 489-493
+  text: '**The Poisson isomorphism for SEIR (M2, SEIR instance).** Design statement (DESIGN_NetworkEpiCore.md
+    §D.5, M2): "Poisson isomorphism | EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ =
+    φ, X = pop) [...] | natural iso onto S > 0"; §D.7, L4b: "SIR/SEIR concrete first".'
+- id: MorphismsPoisson.poissonDLNone
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 81-81
+  text: 'The `S`-component of `poissonDL`: `q (v_ξ e^{μ(θ−1)} + ξ μ e^{μ(θ−1)} v_θ)`.'
+- id: MorphismsPoisson.poissonDLInl
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 88-88
+  text: The `Φ_X`-component of `poissonDL` is `v_{φ_X}`.
+- id: MorphismsPoisson.poissonDLInr
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 92-92
+  text: The node-copy `X`-component of `poissonDL` is `v_{pop_X}`.
+- id: MorphismsPoisson.hasFDerivAtPoissonMap
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 96-96
+  text: '`poissonMap μ q` has derivative `poissonDL μ q u` at every `u`.'
+- id: MorphismsPoisson.poissonEbField
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 132-134
+  text: '**Per-reaction identity behind M2.** On the Poisson(μ) network with `μ ≠ 0`, the derivative of
+    `poissonMap` carries the EB field of each T_EB reaction `r` to the multiset mass-action field of `D_μ
+    r` at the image point.'
+- id: MorphismsPoisson.rxnPoissonDMap
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 360-360
+  text: '`D_μ` commutes with relabelling the node species of one reaction.'
+- id: MorphismsPoisson.sirRxnsNoExit
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 434-434
+  text: SIR has no exits.
+- id: MorphismsPoisson.seirRxnsNoExit
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 440-440
+  text: SEIR has no exits.
+- id: MorphismsRempala.header.construction
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 14-23
+  text: '`E_μ` acts reaction by reaction (`Rxn.rempala`): | T_EB reaction of P | reactions of E_μ P (T_net,
+    mass action) | |---|---| | contact `s + J → X + J` at τ | contact `S + J → X + J` at `μτ`, and removal
+    `J → ∅` at `τ` | | exit `s → Y` at ν | exit `S → Y` at ν | | transition `X → Y` / `X → ∅` at a | the
+    same transition | The map is `rempalaMap μ q (θ, ξ, φ, pop) = (qξe^{μ(θ−1)}, φ)`: the MA species `X`
+    carries the EB edge probability `φ_X`, not the node fraction `pop_X`.'
+- id: MorphismsRempala.rempalaGeneral
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 134-140,151-152,27-30
+  text: |-
+    **Rempała's quotient for every T_EB model (M3, general P).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "**Rempała quotient** ("back to mass action on the same species") | EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence** | natural semiconjugacy (surjective submersion)"; §J.10: "**Exits in D_μ** (§D.5 M2) are `s → Φ_Y + Y`; in E_μ they stay `S → V`."
+    [...]
+    the MA coordinate `x_X` is the EB edge probability `φ_X`, not the node fraction `pop_X`, which the map forgets.
+    [...]
+    for every T_EB reaction list `P` (contacts, exits, progressions, removals; any number of infectors and entry states) and every `μ ≠ 0`, `rempalaMap μ q` is a global semiconjugacy from the EB model of `P` on a Poisson(μ) configuration network to the mass-action model of `E_μ P`.
+- id: MorphismsRempala.rempalaGeneralSolution
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 163-167,173,31-33
+  text: |-
+    **Rempała's quotient on trajectories (M3, general P).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ)"; §D.3: "semiconjugacies map solution curves to solution curves".
+    [...]
+    No condition on `ξ(0)` is needed.
+    [...]
+    EB solutions on any set of times I (for example a time interval) map to MA solutions, both for derivatives within I and for two-sided derivatives at every time of I.
+- id: MorphismsRempala.rempalaNatural
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 222-225,225-226,236-237,34-35
+  text: |-
+    **Rempała's quotient is natural in P (M3).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ) [...] | natural semiconjugacy (surjective submersion)".
+    [...]
+    this is naturality with respect to the species maps of the syntax (relabelling and gluing, DESIGN §D.1); it is not stated as a natural transformation of functors into `DynSys`.
+    [...]
+    `E_μ` commutes with relabelling species, and the map commutes with the pushforward and pullback of coordinates along species maps.
+- id: MorphismsRempala.rempalaQuotient
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 305-307,308,36-37
+  text: |-
+    **Rempała's map is a surjective submersion (M3).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ) [...] | natural semiconjugacy (surjective submersion)".
+    [...]
+    for `q ≠ 0` the map and its derivative at every point are surjective (a surjective submersion, i.e. a quotient).
+- id: MorphismsRempala.rempalaGeneralSir
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 367-369,369-371,378-379,38-40
+  text: |-
+    **Rempała's theorem for SIR from the general quotient, without `ξ = 1` (M3, SIR).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P) [...] π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence**".
+    [...]
+    it holds at every state, not only on `ξ = 1`.
+    [...]
+    for SIR, composing with the projection `(S, x) ↦ (S, x_I)` gives mass-action SIR with `β = μτ`, `ρ = γ + τ`, the SIR case `NEP.rempala`, now without the restriction `ξ = 1`.
+- id: MorphismsRempala.rempalaSeirField
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 460-463
+  text: '**Rempała''s quotient for SEIR: the mass-action equations of `E_μ(SEIR)` (M3, SEIR).** Design
+    statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r →
+    ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ)".'
+- id: MorphismsRempala.rempalaSeirConsequence
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 468-470
+  text: 'With `rempala_general`, EB SEIR on Poisson(μ) maps to this system by `(θ, ξ, φ, pop) ↦ (qξe^{μ(θ−1)},
+    φ)`: mass-action SEIR with `β = μτ` and removal rate `γ + τ` from I, whose E and I are the edge probabilities
+    `φ_E`, `φ_I`.'
+- id: MorphismsRempala.rempalaDApply
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 68-68
+  text: '`rempalaD μ q u v = (q (v_ξ e^{μ(θ−1)} + ξ μ e^{μ(θ−1)} v_θ), v_φ)`.'
+- id: MorphismsRempala.hasFDerivAtRempalaMap
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 76-76
+  text: '`rempalaMap μ q` has derivative `rempalaD μ q u` at every `u`.'
+- id: MorphismsRempala.rempalaEbField
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 104-106
+  text: '**Per-reaction identity behind M3.** On the Poisson(μ) network with `μ ≠ 0`, the derivative of
+    Rempała''s map carries the EB field of each T_EB reaction `r` to the mass-action field of `E_μ r`
+    at the image point.'
+- id: MorphismsRempala.rxnRempalaMap
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 207-207
+  text: '`E_μ` commutes with relabelling the node species of one reaction.'
+- id: MorphismsRempala.rempalaMapPull
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 214-214
+  text: 'The pullback of Rempała''s map: `π(θ, ξ, φ ∘ f, pop ∘ f) = pullMA f (π(θ, ξ, φ, pop))`.'
+- id: MorphismsRempala.rempalaMapPush
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 218-218
+  text: 'The pushforward of Rempała''s map: `π(pushEB f u) = pushMA f (π u)`.'
+- id: MorphismsRempala.rempalaMapSurjective
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 273-274
+  text: 'For `q ≠ 0` Rempała''s map is surjective: `(S, x)` is the image of `(1, S/q, x, 0)` (θ = 1, ξ
+    = S/q, φ = x).'
+- id: MorphismsRempala.rempalaDSurjective
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 293-294
+  text: For `q ≠ 0` the derivative of Rempała's map is surjective at every point (the map is a submersion).
+- id: MorphismsRempala.rempalaSirProj
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 347-347
+  text: '`E_μ` of SIR, projected to `(S, x_I)`, is mass-action SIR with `β = μτ` and `ρ = γ + τ`.'
+- id: MorphismsStoich.header.multisetMassAction
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 8-13
+  text: 'The Poisson isomorphism M2 lands in mass action of the network `D_μ P`, whose contacts `S + Φ_J
+    → Φ_X + X + Φ_J` have **two** products. They are not reactions of the single-product syntax `NRxn
+    σ`, so this module defines mass action for general Petri-net reactions: a reaction `r : SRxn ι` over
+    a finite species type `ι` has an input multiset `inp`, an output multiset `out` and a rate constant
+    `k`; its flux at `x : ι → ℝ` is `k · Π_{i ∈ inp} x_i` (mass action) and its field is `flux · (out
+    − inp)` (the stoichiometric vector).'
+- id: MorphismsStoich.maEqStoich
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 173-176,182-183,15-17
+  text: |-
+    **The multiset mass-action semantics agrees with `maField`.** Design statement (DESIGN_NetworkEpiCore.md §D.4, row MA): "**MA** | Open(Petri) | x_X | total"; §D.7, "Honest feasibility": "The hard parts are [...] the multiset stoichiometry for D_μ".
+    [...]
+    So `sSys` extends the library's mass-action semantics to reactions with several products.
+    [...]
+    every T_net reaction `NRxn σ` is a multiset reaction over `Option σ` (`none` is the susceptible species) with the same mass-action field.
+- id: MorphismsStoich.sLiftAppend
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 53-53
+  text: The multiset mass-action field is additive in the reaction list.
+- id: MorphismsStoich.sLiftFlatMap
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 58-59
+  text: The multiset mass-action field of `rs.flatMap g` is the sum over `r ∈ rs` of the fields of `g
+    r`.
+- id: MorphismsStoich.maToSLApply
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 94-94
+  text: '`maToSL` is `maToS`.'
+- id: MorphismsStoich.maFieldToSRxn
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 102-102
+  text: Per reaction, the `NRxn` mass-action field is the multiset mass-action field.
+- id: MorphismsWellMixed.header.model
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 15-23
+  text: 'Contacts are fleeting, so a stub meets a uniformly random node: the edge probabilities `φ_X`
+    of a configuration network are replaced by the node fractions `x_X`. The state is `(θ, ξ, x)` and
+    the per-reaction field (`wmField`) is, with `S = qξe^{κ(θ−1)}`: ``` contact s + J → X + J (τ): θ̇
+    += −τ x_J; x_X'' += κτ x_J S exit s → Y (ν): ξ̇ += −ν ξ; x_Y'' += ν S transition X → Y | ∅ (a): x_X''
+    −= a x_X; x_Y'' += a x_X (no gain for ∅) ```'
+- id: MorphismsWellMixed.wellmixedUnitSemiconj
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 143-147,27-28
+  text: |-
+    **The well-mixed unit as a semiconjugacy, with or without exits (M1).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "With exits, (θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x) is a quotient semiconjugacy"; §C.3, `WellMixed(κ)`: "(θ, ξ; x_X): θ̇ = −Σ_r τ_r x_{J_r}, S = qξe^{κ(θ−1)}, x_X gains κτ_r x_{J_r}S; conjugate to MA(c_κ P) (M1)".
+    [...]
+    for every T_EB model (exits allowed) and all κ, q, `(θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x)` is a global semiconjugacy onto MA(c_κ P);
+- id: MorphismsWellMixed.wellmixedUnitQuotient
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 165-168,29
+  text: |-
+    **The well-mixed map with exits is a quotient (M1).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "With exits, (θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x) is a quotient semiconjugacy".
+    [...]
+    for `q ≠ 0` it is a surjective submersion.
+- id: MorphismsWellMixed.wellmixedUnit
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 257-260,261,30-31
+  text: |-
+    **The well-mixed unit (M1): a conjugacy for exit-free models.** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "Well-mixed unit | EB_{WM(κ)}(P) on (θ; x) with S = q e^{κ(θ−1)} is conjugate to MA(c_κ P) on S ∈ (0, q], for every exit-free T_EB model P [...] | natural iso (quotient with exits)".
+    [...]
+    for exit-free P, `κ ≠ 0` and `q > 0`, the model on `(θ; x)` is conjugate to MA(c_κ P) restricted to `S > 0` (inverse `(S, x) ↦ (1 + log(S/q)/κ, x)`)
+- id: MorphismsWellMixed.wellmixedUnitIic
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 308-311,31-32
+  text: |-
+    **The half-space θ ≤ 1 corresponds to S ∈ (0, q] (M1).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "EB_{WM(κ)}(P) on (θ; x) with S = q e^{κ(θ−1)} is conjugate to MA(c_κ P) on S ∈ (0, q]".
+    [...]
+    for `κ > 0` the half-space `θ ≤ 1` corresponds to `S ∈ (0, q]`
+- id: MorphismsWellMixed.wellmixedUnitSolution
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 376-379,379-380,34-37
+  text: |-
+    **The well-mixed unit on trajectories (M1).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "EB_{WM(κ)}(P) on (θ; x) with S = q e^{κ(θ−1)} is conjugate to MA(c_κ P) [...]. With exits, (θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x) is a quotient semiconjugacy"; §D.3: "semiconjugacies map solution curves to solution curves".
+    [...]
+    solutions are mapped: `(θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x)` (exits allowed) and, for exit-free P, `(θ, x) ↦ (q e^{κ(θ−1)}, x)` map EB solutions to solutions of MA(c_κ P); for exit-free P, `κ ≠ 0` and `q > 0` the inverse maps MA solutions that stay in `S > 0` (which contains `S ∈ (0, q]`) back to solutions on `(θ; x)`.
+- id: MorphismsWellMixed.wellmixedUnitNaturality
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 273-274
+  text: 'Naturality in P is not proved separately: the conjugacy is the same formula for every exit-free
+    P.'
+- id: MorphismsWellMixed.wmDApply
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 89-89
+  text: '`wmD κ q u v = (q e^{κ(θ−1)} v_ξ + qξκ e^{κ(θ−1)} v_θ, v_x)`.'
+- id: MorphismsWellMixed.hasFDerivAtWmMap
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 94-94
+  text: '`wmMap κ q` has derivative `wmD κ q u` at every `u`.'
+- id: MorphismsWellMixed.wmFieldEq
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 114-115
+  text: '**Per-reaction identity behind M1.** The derivative of `wmMap` carries the well-mixed EB field
+    of each T_EB reaction `r` to the mass-action field of `c_κ r`.'
+- id: MorphismsWellMixed.wmLiftXiEqZero
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 219-219
+  text: Without exits the ξ-component of the well-mixed field vanishes.
+- id: MorphismsWellMixed.wmSys1Incl
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 234-235
+  text: For an exit-free model, `(θ, x) ↦ (θ, 1, x)` is a semiconjugacy from `wmSys1` to `wmSys` (the
+    model on `(θ; x)` is the restriction to the invariant slice ξ = 1).
+- id: SemanticsEB.header.coordinates
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 19-25
+  text: 'One susceptible species `s` (implicit) on an untyped, single-layer configuration network with
+    degree PGF ψ. The state `u : EB σ` is `(θ, ξ, φ, pop)`: * `θ`: the probability that a random edge
+    has not transmitted to the test node; * `ξ`: the exit survival factor (ξ ≡ 1 if there are no exits);
+    * `φ X` (for node species `X : σ`): the probability that a random edge has not transmitted and its
+    partner is in `X`; * `pop X`: the fraction of nodes in `X`.'
+- id: SemanticsEB.header.observables
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 27-29
+  text: The seed factor `q = 1 − Σ_X ρ_X` is a parameter. The susceptible observables are `S = qξψ(θ)`
+    (`CNet.susc`) and `φ_S = qξψ'(θ)/ψ'(1)` (`CNet.phiS`). The design's cumulative incidence accumulator
+    `cum` is not a state variable here.
+- id: SemanticsEB.header.fieldTable
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 34-41,44-45
+  text: |-
+    contact r = (s + J → X + J, τ_r): θ̇ += −τ_r φ_J
+    φ̇_J += −τ_r φ_J
+    φ̇_X += +τ_r φ_J · qξ ψ''(θ)/ψ'(1)
+    pop_X' += +τ_r φ_J · qξ ψ'(θ)
+    transition t = (X → Y | ∅, a): φ̇_X −= a φ_X; φ̇_Y += a φ_X; pop_X' −= a pop_X; pop_Y' += a pop_X
+    (Y = ∅: no gains)
+    exit e = (s → Y, ν_e): ξ̇ += −ν_e ξ; φ̇_Y += ν_e φ_S; pop_Y' += ν_e S
+    initial condition: θ(0) = 1, ξ(0) = 1, φ_X(0) = pop_X(0) = ρ_X
+    [...]
+    `ebField N q r u` is exactly this contribution of reaction `r` at state `u`, and `lift N q rs u` is the sum of the contributions of the reactions in the list `rs`.
+- id: SemanticsEB.header.solutionsOnInterval
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 250-256
+  text: '**Solutions on a time interval.** The results below are stated for a solution on a *time interval*:
+    a convex set `I ⊆ ℝ` of times with `0 ∈ I`, such as `(a, b)` with `a < 0 < b`, `[0, T)`, `[0, ∞)`
+    or `ℝ`. A curve `x : ℝ → EB σ` *solves the EB model of `rs` on `I`* if `HasDerivWithinAt x (lift N
+    q rs (x t)) I t` for every `t ∈ I`. At an end point of `I` that lies in `I` (for example `t = 0` for
+    `I = [0, T)`) this is a one-sided derivative. A curve with `HasDerivAt x (lift N q rs (x t)) t` at
+    every `t ∈ I` satisfies it (`HasDerivAt.hasDerivWithinAt`). Only the values of `x` on `I` matter.'
+- id: SemanticsEB.header.globalSolutions
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 258-260
+  text: Global solutions (`I = ℝ`) need not exist. For example, integrated numerically, EB SEIR on a Poisson(5)
+    network (τ = 1/6, σ = 1/3, γ = 1/4, θ(0) = ξ(0) = 1, φ_E(0) = 0, φ_I(0) = 0.01, q = 0.99) blows up
+    backward in time at t ≈ −7.33.
+- id: SemanticsEB.header.localSolutions
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 260-262
+  text: 'Such a model still has local solutions on an interval `(−ε, ε)`: `NetworkEpi.Semantics.Solutions`
+    proves that they exist for every T_EB model whose ψ, ψ'', ψ'''' are C¹ at the initial θ (`exists_local_solution`).'
+- id: SemanticsEB.header.forwardSolutions
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 262-264
+  text: From physical states it also has forward solutions on `[0, ∞)`, since the coordinates stay bounded;
+    that is not formalised here.
+- id: SemanticsEB.header.degreeDataHypotheses
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 266-268
+  text: The degree data enter only through derivative relations at the θ values that the solution visits
+    (`∀ t ∈ I, HasDerivAt N.ψ' (N.ψ'' θ(t)) θ(t)`), so a PGF with a pole away from the visited θ values
+    (for example a negative binomial PGF, pole at `1/(1 − p) > 1`) is covered.
+- id: SemanticsEB.liftAppend
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 111-118,186-189,207-212,229-233
+  text: |-
+    **H1, part 1: the EB lift is additive in the reaction list.** Design statement (DESIGN_NetworkEpiCore.md §D.4, table row EB_N, column "Strict under gluing?"): "**yes**: the per-reaction lift is additive and natural in species maps ([L] `lift_append`, `lift_map`)"; §D.6: "**H1** EB(glue(A,B)) = glue(EB A, EB B), for fixed N with s glued to s | **yes, strict** | local per-reaction fields | [L] `lift_append`, `lift_map` (contact/transition; the exit case is added in WP13)".
+    [...]
+    **Naturality of the per-reaction EB field in species maps.** Design statement (DESIGN_NetworkEpiCore.md §D.7, L3): "`lift_append`, `ebField_map`, `lift_map` (relabelling/gluing naturality with pushforward along fibres)".
+    [...]
+    **H1, part 2: the EB lift is natural in species maps (relabelling and gluing).** Design statement (DESIGN_NetworkEpiCore.md §D.4, row EB_N): "the per-reaction lift is additive and natural in species maps ([L] `lift_append`, `lift_map`)"; §D.7, L3: "`lift_map` (relabelling/gluing naturality with pushforward along fibres)"; §D.6 H1 (quoted at `lift_append`), with the exit case included.
+    [...]
+    **H1: the EB lift is strict under gluing.** Design statement (DESIGN_NetworkEpiCore.md §D.6): "**H1** EB(glue(A,B)) = glue(EB A, EB B), for fixed N with s glued to s | **yes, strict** | local per-reaction fields"; §D.3 (open systems): "composition identifies ported coordinates and **adds** vector fields".
+- id: SemanticsEB.pushSingle
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 140-140
+  text: The pushforward of `Pi.single X c` is `Pi.single (f X) c`.
+- id: SemanticsEB.pushAdd
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 147-147
+  text: The pushforward is additive.
+- id: SemanticsEB.pushNeg
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 151-151
+  text: The pushforward commutes with negation.
+- id: SemanticsEB.pushSub
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 155-155
+  text: The pushforward commutes with subtraction.
+- id: SemanticsEB.pushZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 159-159
+  text: The pushforward of zero is zero.
+- id: SemanticsEB.pushEBAdd
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 167-167
+  text: The pushforward of EB coordinates is additive.
+- id: SemanticsEB.pushEBZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 173-173
+  text: The pushforward of the zero EB vector is zero.
+- id: SemanticsEB.removalFluxEqZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 287-287
+  text: Without removals `X → ∅` the removal flux vanishes.
+- id: SemanticsEB.sumSingle
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 387-387
+  text: The sum over all species of `Pi.single X c` is `c`.
+- id: SemanticsEB.hasDerivWithinAtCompClm
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 410-410
+  text: Chain rule for a continuous linear map applied to a curve, within a set of times.
+- id: SemanticsEB.hasDerivWithinAtTheta
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 416-416
+  text: The θ-coordinate of a curve has, within `I`, the θ-coordinate of its derivative.
+- id: SemanticsEB.hasDerivWithinAtXi
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 421-421
+  text: The ξ-coordinate of a curve has, within `I`, the ξ-coordinate of its derivative.
+- id: SemanticsEB.hasDerivWithinAtPhi
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 427-427
+  text: Each φ-coordinate of a curve has, within `I`, the φ-coordinate of its derivative.
+- id: SemanticsEB.hasDerivWithinAtPop
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 435-435
+  text: Each pop-coordinate of a curve has, within `I`, the pop-coordinate of its derivative.
+- id: SemanticsEB.hasDerivWithinAtEdgeDefect
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 443-444
+  text: Chain rule for the edge defect along a curve, within a set of times `I`, when `ψ''` is the derivative
+    of `ψ'` at the current θ.
+- id: SemanticsEB.hasDerivWithinAtNodeTotal
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 460-461
+  text: Chain rule for the node total along a curve, within a set of times `I`, when `ψ'` is the derivative
+    of `ψ` at the current θ.
+- id: SemanticsEB.edgeDefectDerivAdd
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 477-477
+  text: '`edgeDefectDeriv N q u` is additive in the direction.'
+- id: SemanticsEB.nodeTotalDerivAdd
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 483-483
+  text: '`nodeTotalDeriv N q u` is additive in the direction.'
+- id: SemanticsEB.edgeDefectDerivEbField
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 489-489
+  text: Per reaction, the edge defect changes only through removals.
+- id: SemanticsEB.nodeTotalDerivEbField
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 512-512
+  text: Per reaction, the node total changes only through removals.
+- id: SemanticsEB.edgeDefectDerivLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 572-572
+  text: Along the EB field of a reaction list, the edge defect changes at the removal flux of φ.
+- id: SemanticsEB.nodeTotalDerivLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 582-583
+  text: Along the EB field of a reaction list, the node total changes at minus the removal flux of pop.
+- id: SemanticsEB.hasDerivWithinAtEdgeDefectLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 594-598
+  text: '**Edge balance along EB solutions, with removals.** Let `x` solve the EB field of a T_EB reaction
+    list `rs` within a set of times `I` at the time `t` (`HasDerivWithinAt`), and let `ψ''''` be the derivative
+    of `ψ''` at `θ(t)`. Then, within `I` at `t`, `d/dt (θ − φ_S − Σ_X φ_X) = Σ_{(X → ∅, a) ∈ rs} a φ_X`.
+    Removals `X → ∅` make the partner inert: its edges keep `θ` but leave every φ class, so the defect
+    grows.'
+- id: SemanticsEB.hasDerivWithinAtNodeTotalLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 606-609
+  text: '**Node balance along EB solutions, with removals.** Let `x` solve the EB field of a T_EB reaction
+    list `rs` within a set of times `I` at the time `t`, and let `ψ''` be the derivative of `ψ` at `θ(t)`.
+    Then, within `I` at `t`, `d/dt (S + Σ_X pop_X) = −Σ_{(X → ∅, a) ∈ rs} a pop_X`, where `S = qξψ(θ)`.'
+- id: SemanticsEB.hasDerivAtEdgeDefectLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 617-618
+  text: The edge balance law for two-sided derivatives (`hasDerivWithinAt_edgeDefect_lift` with `I = ℝ`).
+- id: SemanticsEB.hasDerivAtNodeTotalLift
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 626-627
+  text: The node balance law for two-sided derivatives (`hasDerivWithinAt_nodeTotal_lift` with `I = ℝ`).
+- id: SemanticsEB.constOfHasDerivWithinAtZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 636-637
+  text: 'A real function whose derivative within a convex set `I` vanishes at every point of `I` is constant
+    on `I`: `g t = g t₀` for all `t, t₀ ∈ I`.'
+- id: SemanticsEB.constOfHasDerivAtZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 647-647
+  text: A real function with derivative 0 everywhere is constant.
+- id: SemanticsEB.liftXiEqZero
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 657-657
+  text: Without exits the ξ-component of the EB field vanishes.
+- id: SemanticsEB.xiConst
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 673-676
+  text: '**ξ is constant along EB solutions of exit-free models.** Let `I` be a time interval (a convex
+    set of times) with `0 ∈ I`, and let `x` solve the EB field of a T_EB reaction list `rs` that has no
+    exit `s → Y` on `I` (`HasDerivWithinAt x (lift N q rs (x t)) I t` for `t ∈ I`). Then `ξ(t) = ξ(0)`
+    for every `t ∈ I`. No assumption on the degree data is needed.'
+- id: SemanticsEB.conservation
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 703-709
+  text: '**Edge conservation θ = φ_S + Σ_X φ_X is invariant along removal-free EB solutions.** Design
+    statement (DESIGN_NetworkEpiCore.md §D.4, Evidence): "The exit terms were checked by hand. Conservation
+    θ = φ_S + Σφ_X holds."; amended by §M.1: "For removal-free T_EB models (no `X → ∅`), θ = φ_S + Σφ_X
+    is invariant along every solution on a time interval: if it holds at t = 0 it holds at every time
+    of the interval. In particular, when ψ''(1) ≠ 0, it holds along solutions from the design''s initial
+    condition θ(0) = ξ(0) = 1, Σφ_X(0) = 1 − q."'
+- id: SemanticsEB.conservation.b
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 756-758
+  text: 'The no-removal hypothesis is necessary: with removals `hasDerivWithinAt_edgeDefect_lift` gives
+    `d/dt (θ − φ_S − Σφ) = Σ a φ_X` instead.'
+- id: SemanticsEB.conservation.c
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 753-756
+  text: 'Scope: global solutions are not required, and need not exist (numerically, EB SEIR on Poisson(5)
+    with τ = 1/6, σ = 1/3, γ = 1/4 and φ_I(0) = 0.01 blows up backward at t ≈ −7.33). Forward solutions
+    on `[0, T)` and local solutions on `(−ε, ε)` are covered, and `NEP.conservation_local` proves that
+    a local solution meeting all the hypotheses exists.'
+- id: SemanticsEB.nodeConservation
+  group: SemanticsEB
+  source:
+    file: NetworkEpi/Semantics/EB.lean
+    lines: 780-785
+  text: '**Node conservation S + Σ_X pop_X = 1.** Let `N` be a configuration network with `ψ(1) = 1`,
+    and let `rs` be a T_EB reaction list with no removal `X → ∅`. Let `I` be a time interval (a convex
+    set of times) with `0 ∈ I` and let `x` solve the EB field of `rs` on `I` (`HasDerivWithinAt x (lift
+    N q rs (x t)) I t` for `t ∈ I`), with `ψ''` the derivative of `ψ` at every visited `θ(t)`, `t ∈ I`,
+    and with `θ(0) = 1`, `ξ(0) = 1` and `Σ_X pop_X(0) = 1 − q`. Then `qξ(t)ψ(θ(t)) + Σ_X pop_X(t) = 1`
+    for every `t ∈ I`.'
+- id: SemanticsMA.header.scope
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 6-12
+  text: DESIGN_NetworkEpiCore.md §D.4, row **MA** ("Open(Petri) | x_X | total | **yes** (Baez–Pollard
+    2017)") and §D.7 L3 (`maField`). This module covers the T_net reactions of `NRxn σ` (one susceptible
+    species `s`, node species `σ`) in coordinates `(S, x)`, where `S` is the susceptible fraction and
+    `x X` the fraction in node species `X`. Mass action is total on `NRxn σ`, so no admissibility condition
+    is needed. The rate of each reaction is its written constant times the product of the reactant fractions
+    (per DESIGN §D.2, a rate convention `c_λ` must be applied to the syntax before `maField` when the
+    constants are per-contact rates).
+- id: SemanticsMA.maLiftAppend
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 53-56,118-121,137-142,150-151
+  text: |-
+    **H1′ for mass action, part 1: the MA lift is additive in the reaction list.** Design statement (DESIGN_NetworkEpiCore.md §D.6): "H1′ same for MA, IB, Stoch | yes | same argument"; §D.4, table row MA, column "Strict under gluing?": "**yes** (Baez–Pollard 2017)".
+    [...]
+    **H1′ for mass action, part 2: the MA lift is natural in species maps.** Design statement (DESIGN_NetworkEpiCore.md §D.6): "H1′ same for MA, IB, Stoch | yes | same argument" (the argument of H1: "local per-reaction fields").
+    [...]
+    **H1′ for mass action: the MA lift is strict under gluing.** Design statement (DESIGN_NetworkEpiCore.md §D.6): "H1′ same for MA, IB, Stoch | yes | same argument", where H1 is "EB(glue(A,B)) = glue(EB A, EB B)"; §D.4, table row MA, column "Strict under gluing?": "**yes** (Baez–Pollard 2017)"; §D.3 (open systems): "composition identifies ported coordinates and **adds** vector fields".
+    [...]
+    Scope: of the design's "H1′ same for MA, IB, Stoch", only the mass-action case is formalised; the individual-based (IB) and stochastic semantics are not part of this library.
+- id: SemanticsMA.pushMAAdd
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 73-73
+  text: The pushforward of MA coordinates is additive.
+- id: SemanticsMA.pushMAZero
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 79-79
+  text: The pushforward of the zero MA vector is zero.
+- id: SemanticsMA.elimMap
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 92-93
+  text: 'Reading a catalyst density after relabelling: `J = none` (the susceptible species) gives `S`,
+    `J = some X` gives `x (f X)`.'
+- id: SemanticsMA.maFieldMap
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 98-99
+  text: 'Naturality of the per-reaction mass-action field in species maps: the field of `r.map f` at `u`
+    is the pushforward of the field of `r` at `pullMA f u`.'
+- id: SemanticsPWS.header.designRow
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 6-9
+  text: 'DESIGN_NetworkEpiCore.md §D.4, row **PW^S_{N,K}**: "Petri/T_EB | [X], [sX], [ss] (+ θ for `PGFClosure`)
+    | closes only on T_EB | lax: a contact drains [Z s] for *every* Z"; §D.6: "**F2/F2′** same for PW,
+    PW^S, PB, clustered EB | **no** (lax) | a contact drains [Z s] (or triangle pairs) for every Z | Lean
+    witness (stretch, L3)".'
+- id: SemanticsPWS.header.fieldTable
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 13-17,20-24
+  text: |-
+    The state `w : PWS σ` is `([s], [ss], [sZ], [Z])`: the susceptible singles, the susceptible– susceptible pairs, the pairs `[sZ]` for node species `Z` and the singles `[Z]`. Triples are closed with a constant closure coefficient `K`: `[A s B] = K [As][sB]/[s]`. The per-reaction field is the one checked symbolically in the design pass (`check_pwS_general.py` for contacts and transitions, `check_exit_pws.py` for exits):
+    [...]
+    contact (s + J → X + J, τ): [s]' −= τ[sJ]; [ss]' −= 2τ[ssJ]; [X]' += τ[sJ]
+    [sZ]' −= τ[Z s J] for every Z; [sJ]' −= τ[sJ]; [sX]' += τ[s s J]
+    exit (s → Y, ν): [s]' −= ν[s]; [ss]' −= 2ν[ss]; [sZ]' −= ν[sZ] for every Z;
+    [sY]' += ν[ss]; [Y]' += ν[s]
+    trans (X → Y | ∅, a): [sX]' −= a[sX]; [sY]' += a[sX]; [X]' −= a[X]; [Y]' += a[X]
+- id: SemanticsPWS.header.closureKpsi
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 27-28
+  text: For the degree-dependent closure `K_ψ(θ) = ψψ''/ψ'²` of the design's M6, evaluate this field at
+    `K = K_ψ(θ)`. The terms "for every Z" are what make PW^S lax under gluing (`pwS_glue_not_strict`).
+- id: SemanticsPWS.pwSLiftAppend
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 63-63
+  text: The PW^S field is additive in the reaction list (like the EB lift).
+- id: SemanticsPWS.f2GluedSV
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 92-92
+  text: The `[sV]` component of the PW^S field of the glued witness model at `f2State` is `−1`.
+- id: SemanticsPWS.f2SumSV
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 98-98
+  text: The `[sV]` component of the sum of the pushed-forward PW^S fields of `A` and `B` is `0`.
+- id: SemanticsPWS.pwSGlueNotStrict
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 105-111
+  text: '**F2: the S-anchored pairwise field is not strict under gluing.** Design statement (DESIGN_NetworkEpiCore.md
+    §D.6): "**F2/F2′** same for PW, PW^S, PB, clustered EB | **no** (lax) | a contact drains [Z s] (or
+    triangle pairs) for every Z | Lean witness (stretch, L3)"; §D.4: "A PW^S contact drains every [Z s]
+    through the closed triple [Z s J]. When B''s species are glued in, A''s contacts must also drain [Z_B
+    s], which A''s system does not contain. So PW^S(glue(A,B)) ≠ glue(PW^S A, PW^S B)."'
+- id: SemanticsPoissonSIR.header.designRow
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 11-14
+  text: 'DESIGN_NetworkEpiCore.md §D.5, row **M3** ("Rempała quotient"): "EB_{Pois μ}(P) → MA(E_μ P),
+    E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR:
+    MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence**", with Lean evidence "**[L]** `NEP.rempala`
+    (SIR)".'
+- id: SemanticsPoissonSIR.header.portScope
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 16-20
+  text: 'This module ports the SIR case of `DynSysSketch.lean` and ties it to the general EB lift of `NetworkEpi.Semantics.EB`:
+    `ebPoisSIR_lift` shows that the two-dimensional system `ebPoisSIR` is the `(θ, φ_I)` part of `ebSys
+    (CNet.poisson μ) q (sirRxns τ γ)` on `ξ = 1`, and `rempala_lift` composes the two maps. The general-P
+    quotient (L4c) belongs to `NetworkEpi/Morphisms` (WP28).'
+- id: SemanticsPoissonSIR.hasFDerivAtPoisMap
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 46-46
+  text: 'The derivative of Rempała''s map: `Dπ(θ, φ)(dθ, dφ) = (qμe^{μ(θ−1)} dθ, dφ)`.'
+- id: SemanticsPoissonSIR.rempala
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 69-85
+  text: |-
+    **Rempała's theorem for SIR as a semiconjugacy (M3, SIR case).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "**Rempała quotient** ("back to mass action on the same species") | EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence** | natural semiconjugacy (surjective submersion) | **[L]** `NEP.rempala` (SIR)".
+    [...]
+    The design's "surjective submersion" holds for `μ ≠ 0` and `q > 0`, onto the mass-action states with `S > 0` (`rempala_quotient_sir`); it fails for `μ = 0` or `q = 0`.
+- id: SemanticsPoissonSIR.contDiffPoisMap
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 166-167
+  text: Rempała's map is C^∞, so `rempalaHom` is also a morphism of the design's category **Dyn** (whose
+    morphisms are C¹).
+- id: SemanticsPoissonSIR.poissonHasDerivAtPsi
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 214-214
+  text: On the Poisson network, `ψ'` is the derivative of `ψ` everywhere.
+- id: SemanticsPoissonSIR.poissonHasDerivAtPsiPrime
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 221-221
+  text: On the Poisson network, `ψ''` is the derivative of `ψ'` everywhere.
+- id: SemanticsPoissonSIR.sirChartLApply
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 246-246
+  text: '`sirChartL` is `sirChart`.'
+- id: SemanticsPoissonSIR.ebPoisSIRLift
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Semantics/PoissonSIR.lean
+    lines: 249-252
+  text: '**`ebPoisSIR` is the SIR EBCM of the general lift.** For `μ ≠ 0`, the chart `(θ, ξ, φ, pop) ↦
+    (θ, φ_I)` is a local semiconjugacy on `{ξ = 1}` from the general EB model `ebSys (CNet.poisson μ)
+    q (sirRxns τ γ)` (the per-reaction lift of `s + I → I + I` at τ and `I → R` at γ on a Poisson(μ) network)
+    to `ebPoisSIR μ τ γ q`.'
+- id: SemanticsPoissonSIR.rempalaLift
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 386-397
+  text: |-
+    **Rempała's quotient from the general SIR lift, with the design's map `(qξe^{μ(θ−1)}, φ_I)`, for `μ ≠ 0` (M3, SIR case).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence**".
+    [...]
+    On the slice `ξ = 1` the map is `(q e^{μ(θ−1)}, φ_I)` (`NEP.rempala_lift`).
+- id: SemanticsPoissonSIR.rempalaSolution
+  group: SemanticsPoissonSIR
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 403-415
+  text: |-
+    **Rempała's theorem on trajectories with the design's map `(qξe^{μ(θ−1)}, φ_I)`, for `μ ≠ 0` (M3, SIR).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P) [...] π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence**"; §D.3: "semiconjugacies map solution curves to solution curves".
+    [...]
+    No condition on `ξ(0)` is needed.
+- id: SemanticsSolutions.header.hypothesesMet
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 11-12
+  text: 'The conservation laws of `NetworkEpi.Semantics.EB` are stated for solutions on a time interval
+    `I ∋ 0`. This module shows that their hypotheses can be met for every T_EB model:'
+- id: SemanticsSolutions.header.bullets
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 14-24
+  text: '* `contDiffAt_lift`: the EB field `lift N q rs` is `C^n` at every state whose θ is a point where
+    ψ, ψ'', ψ'''' are `C^n`. `contDiff_lift`: if ψ, ψ'', ψ'''' are `C¹` everywhere (for example Poisson),
+    the EB model `ebSys N q rs` is an object of the design''s category **Dyn**. * `exists_local_solution`:
+    by the Picard–Lindelöf theorem, from every such state there is a solution on an open interval `(−ε,
+    ε)`. * `conservation_local`: for every removal-free T_EB model on a network whose degree data are
+    `C¹` near θ = 1, with `ψ''''` the derivative of `ψ''` near 1 and `ψ''(1) ≠ 0`, there is a solution
+    on some `(−ε, ε)` from the design''s initial condition, and `θ = φ_S + Σ_X φ_X` holds along it. `conservation_local_poisson`
+    specialises this to Poisson(μ), `μ ≠ 0`, and `seir_conservation_local` to EB SEIR on Poisson(5) with
+    τ = 1/6, σ = 1/3, γ = 1/4 and φ_I(0) = 0.01: a model with no global solution (numerically, it blows
+    up backward at t ≈ −7.33).'
+- id: SemanticsSolutions.contDiffAtPiSingle
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 35-35
+  text: '`Pi.single Y` applied to a `C^n` function is `C^n` (a `fun_prop` rule).'
+- id: SemanticsSolutions.ebFieldContactEq
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 47-47
+  text: The EB field of a contact `s + J → X + J`, written with the coordinate projections.
+- id: SemanticsSolutions.ebFieldExitEq
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 58-58
+  text: The EB field of an exit `s → Y`, written with the coordinate projections.
+- id: SemanticsSolutions.ebFieldRemoveEq
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 67-67
+  text: The EB field of a removal `X → ∅`, written with the coordinate projections.
+- id: SemanticsSolutions.ebFieldProgressEq
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 75-75
+  text: The EB field of a progression `X → Y`, written with the coordinate projections.
+- id: SemanticsSolutions.contDiffAtEbField
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 119-120
+  text: The EB field of one reaction is `C^n` at every state `u` such that ψ, ψ' and ψ'' are `C^n` at
+    `θ = u.1`.
+- id: SemanticsSolutions.contDiffAtLift
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 143-145
+  text: '**The EB field of a reaction list is `C^n` where the degree data are.** For every T_EB reaction
+    list `rs`, the EB field `lift N q rs` is `C^n` at every state `u` such that ψ, ψ'' and ψ'''' are `C^n`
+    at `θ = u.1`.'
+- id: SemanticsSolutions.contDiffLift
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 163-167
+  text: '**EB models on a network with C¹ degree data are objects of Dyn.** Design statement (DESIGN_NetworkEpiCore.md
+    §D.3): "Objects of **Dyn** are (V, F): V a finite-dimensional real normed space, F: V → V a C¹ vector
+    field."; §D.4, the row of the representation functor **EB_N** with domain "Open(Petri/T_EB), N fixed".'
+- id: SemanticsSolutions.existsLocalSolution
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 205-207
+  text: '**Local existence of EB solutions (Picard–Lindelöf).** For every T_EB reaction list `rs` and
+    every state `u₀` such that ψ, ψ'' and ψ'''' are `C¹` at `θ = u₀.1`, there are `ε > 0` and a curve
+    `x` with `x 0 = u₀` that solves the EB field of `rs` (`HasDerivAt`) at every `t ∈ (−ε, ε)`.'
+- id: SemanticsSolutions.conservationLocal
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 218-221
+  text: '**Edge conservation along a local EB solution from the design''s initial condition.** Design
+    statement (DESIGN_NetworkEpiCore.md §D.4, Evidence): "The exit terms were checked by hand. Conservation
+    θ = φ_S + Σφ_X holds."'
+- id: SemanticsSolutions.conservationLocalPoisson
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 293-296
+  text: 'Edge conservation along a local solution on a Poisson(μ) network, `μ ≠ 0` (`conservation_local`
+    for `CNet.poisson μ`): for every removal-free T_EB reaction list `rs` and initial data `φ₀, p₀` with
+    `Σ_X φ₀(X) = 1 − q`, there are `ε > 0` and a solution on `(−ε, ε)` from `(1, 1, φ₀, p₀)` along which
+    `θ = φ_S + Σ_X φ_X`.'
+- id: SemanticsSolutions.seirConservationLocal
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 344-346
+  text: '**Conservation is not vacuous for EB SEIR on Poisson(5).** With τ = 1/6, σ = 1/3, γ = 1/4, seed
+    φ_I(0) = pop_I(0) = 0.01 and q = 0.99 (so `Σ_X φ_X(0) = 1 − q`), there is a solution on some interval
+    `(−ε, ε)` from `(θ, ξ, φ, pop)(0) = (1, 1, φ₀, p₀)` along which `θ = φ_S + Σ_X φ_X`.'
+- id: SemanticsSolutions.seirConservationLocal.b
+  group: SemanticsSolutions
+  source:
+    file: NetworkEpi/Semantics/Solutions.lean
+    lines: 347-348
+  text: Integrated numerically, this model blows up backward in time at t ≈ −7.33, so it has no global
+    solution.
+- id: SyntaxRxn.header.typingTable
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 11-22
+  text: |-
+    The models are reaction networks on one susceptible species `s` (left implicit: it is the unique
+    species of type `:sus`, DESIGN §B.2, "On an untyped network |Σ| = 1") and a type `σ` of node
+    species (type `:node`). The typing of §B.2 is therefore built into the syntax:
+    | constructor | §B.2 shape | §B.2 type | in T_EB? |
+    |---|---|---|---|
+    | `contact J X τ` | s + J → X + J (per-contact rate τ; J, X ∉ Σ; X = J allowed) | `:contact` | yes |
+    | `exit Y ν` | s → Y (Y ∉ Σ) | `:exit` | yes |
+    | `trans X (some Y) a` | X → Y (X, Y ∉ Σ) | `:progress` | yes |
+    | `trans X none a` | X → ∅ | `:remove` | yes |
+    | `NRxn.resus X a` | X → s | `:resus` | no |
+    | `NRxn.nodeContact X J Y τ` | X + J → Y + J with X ∉ Σ (`J = none` is s) | `:node_contact` | no |
+- id: SyntaxRxn.header.tebTnet
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 24-27
+  text: '"**T_EB** = {contact, exit, progress, remove}: the sub-theory with **no arrow into Sus**. **T_net**
+    = all eight types." (§B.2). With a single susceptible species, the §B.2 types `:sus_move` (S₁ → S₂)
+    cannot occur and `:sus_contact` (a contact whose product or infector is susceptible) is not represented
+    by `NRxn`; neither is admissible for EB.'
+- id: SyntaxRxn.header.exitsToEmpty
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 29-32
+  text: '**Exits to ∅.** §B.2 allows an exit `s → Y` with "Y ∉ Σ (or ∅)". The constructor `exit (Y : σ)`
+    always names a node species, so `s → ∅` is not directly expressible. Model it with an *inert sink
+    species* `D`: a node species that appears in no other reaction (no transition out of `D` and no contact
+    with `D` as infector).'
+- id: SyntaxRxn.header.inertSink
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 32-35
+  text: In the EB field (`NetworkEpi.Semantics.EB`) no coordinate other than `φ_D` and `pop_D` depends
+    on `φ_D` or `pop_D`, so θ, ξ, S and every other `φ_X`, `pop_X` evolve exactly as for `s → ∅`. `φ_D`
+    and `pop_D` then record the removed edge and node mass, and the conservation laws count it.
+- id: SyntaxRxn.header.admissibilityScope
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 37-43
+  text: '**What the admissibility results say.** `EBAdmissible` is defined on the *syntax*: a T_net reaction
+    is admissible if it lies in the image of the T_EB syntax `Rxn σ`. The results `ebAdmissible_iff_type`,
+    `not_ebAdmissible_resus` and `exists_not_ebAdmissible` follow from the definitions by case analysis,
+    because `EBAdmissible` and `TNet.inTEB` are parallel case tables. They say that the EB semantics of
+    this library (`ebField`, defined on `Rxn σ`) has no input for `resus` or `nodeContact`. They do **not**
+    prove that no EB-type semantics for `X → s` could exist.'
+- id: SyntaxRxn.header.sisReason
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 43-45
+  text: The design's reason for refusing SIS/SIRS is mathematical ("SIS has no exact edge-based model";
+    a node that returns to Sus needs susceptible strata, which is pairwise, decision H6), and it is not
+    formalised here.
+- id: SyntaxRxn.toRxnToNRxn
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 130-130
+  text: '`NRxn.toRxn?` is a left inverse of the inclusion `Rxn.toNRxn`.'
+- id: SyntaxRxn.toNRxnInjective
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 134-134
+  text: The inclusion of T_EB syntax into T_net syntax is injective.
+- id: SyntaxRxn.ebAdmissibleIff
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 140-140
+  text: EB-admissibility is exactly membership in the image of T_EB syntax.
+- id: SyntaxRxn.ebAdmissibleIffType
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 153-169
+  text: |-
+    EB-admissibility is membership of the reaction's type in T_EB: "the sub-theory with no arrow into Sus" (DESIGN §B.2). Design statement (DESIGN_NetworkEpiCore.md §B.2): "**T_EB** = {contact, exit, progress, remove}: the sub-theory with **no arrow into Sus**. **T_net** = all eight types."
+    [...]
+    T_EB is the list {contact, exit, progress, remove}; the gloss "no arrow into Sus" does not characterise it in this syntax, since `nodeContact` (X + J → Y + J with X, Y ∉ Σ) has no arrow into Sus and is not in T_EB. `TNet` has six of the design's eight T_net types: `:sus_move` and `:sus_contact` need a second susceptible species or a susceptible product, which `NRxn` does not represent.
+- id: SyntaxRxn.eqToNRxnOfEbAdmissible
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 175-175
+  text: An EB-admissible T_net reaction comes from T_EB syntax.
+- id: SyntaxRxn.notEbAdmissibleResus
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 180-186
+  text: 'Resusceptibility `X → s` (§B.2 type `:resus`, e.g. SIS `I → S`) is not EB-admissible (DESIGN
+    executive summary: "The EB lift is strictly partial: SIS/SIRS are refused"). Design statement (DESIGN_NetworkEpiCore.md,
+    executive summary item 6): "**The EB lift is strictly partial**: SIS/SIRS are refused with the alternatives
+    named"; §B.2 table (the first ✗ is the EB column): "NodeTransition X ∉ Σ, Y ∈ Σ | `:resus` | I → S
+    (SIS), R → S (SIRS), I₁ → R₁ when R₁ can be infected | ✗".'
+- id: SyntaxRxn.notEbAdmissibleNodeContact
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 197-198
+  text: A node contact `X + J → Y + J` with a node-species recipient (§B.2 type `:node_contact`) is not
+    EB-admissible.
+- id: SyntaxRxn.existsNotEbAdmissible
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 203-207
+  text: 'T_EB ⊊ T_net: some T_net reaction is not EB-admissible (the resusceptibility `X → s`). Design
+    statement (DESIGN_NetworkEpiCore.md §D.1): "**Petri/T_EB ⊂ Petri/T_net ⊂ Petri**, and the back ends
+    are defined on these: EB on Petri/T_EB"; executive summary item 6: "**The EB lift is strictly partial**".'
+- id: SyntaxRxn.header.decidabilityExamples
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 217-218
+  text: 'Decidability in action (§B.2 examples): SIR is EB-admissible; SIS (`I → S`, a `:resus`) and an
+    S-catalysed recovery `I + S → R + S` (a `:node_contact`) are not.'
+- id: SyntaxRxn.decEBAdmissible
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 119-119,126-126
+  text: |-
+    EB-admissibility is decidable.
+    [...]
+    EB-admissibility of a reaction list is decidable.
+- id: SyntaxRxn.rxnMapId
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 252-252
+  text: Relabelling along the identity is the identity.
+- id: SyntaxRxn.rxnMapMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 258-258
+  text: 'Relabelling is functorial: relabelling along `f` then `g` is relabelling along `g ∘ f`.'
+- id: SyntaxRxn.nRxnMapId
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 264-264
+  text: Relabelling a T_net reaction along the identity is the identity.
+- id: SyntaxRxn.nRxnMapMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 271-271
+  text: Relabelling T_net reactions is functorial.
+- id: SyntaxRxn.toNRxnMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 279-279
+  text: Relabelling commutes with the inclusion T_EB ⊂ T_net.
+- id: SyntaxRxn.typeMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 283-283
+  text: Relabelling preserves the type of a reaction (morphisms of syntax are type-preserving).
+- id: SyntaxRxn.ebAdmissibleMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 289-289
+  text: Relabelling preserves and reflects EB-admissibility.
+- id: SyntaxRxn.scaleContactsMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 303-303
+  text: '`c_κ` commutes with relabelling (it acts reaction by reaction).'

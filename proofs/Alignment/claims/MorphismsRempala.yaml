@@ -1,0 +1,326 @@
+# SA-PASS claim registry fragment: group MorphismsRempala
+# Source: NetworkEpi/Morphisms/Rempala.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: MorphismsRempala.header.construction
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 14-23
+  text: '`E_μ` acts reaction by reaction (`Rxn.rempala`): | T_EB reaction of P | reactions of E_μ P (T_net,
+    mass action) | |---|---| | contact `s + J → X + J` at τ | contact `S + J → X + J` at `μτ`, and removal
+    `J → ∅` at `τ` | | exit `s → Y` at ν | exit `S → Y` at ν | | transition `X → Y` / `X → ∅` at a | the
+    same transition | The map is `rempalaMap μ q (θ, ξ, φ, pop) = (qξe^{μ(θ−1)}, φ)`: the MA species `X`
+    carries the EB edge probability `φ_X`, not the node fraction `pop_X`.'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: Rxn.rempala, rempalaRxns (= rs.flatMap (Rxn.rempala μ)) and rempalaMap μ q
+    u = ((CNet.poisson μ).susc q u.1 u.2.1, u.2.2.1).'
+  required: false
+  status: informal
+  notes: Module-header construction table (definition of E_μ and of the map). Checked indirectly through
+    the bridges of the M3 claims; no theorem is needed.
+- id: MorphismsRempala.rempalaGeneral
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: '134-140,151-152,27-30'
+  text: |-
+    **Rempała's quotient for every T_EB model (M3, general P).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "**Rempała quotient** ("back to mass action on the same species") | EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence** | natural semiconjugacy (surjective submersion)"; §J.10: "**Exits in D_μ** (§D.5 M2) are `s → Φ_Y + Y`; in E_μ they stay `S → V`."
+    [...]
+    the MA coordinate `x_X` is the EB edge probability `φ_X`, not the node fraction `pop_X`, which the map forgets.
+    [...]
+    for every T_EB reaction list `P` (contacts, exits, progressions, removals; any number of infectors and entry states) and every `μ ≠ 0`, `rempalaMap μ q` is a global semiconjugacy from the EB model of `P` on a Poisson(μ) configuration network to the mass-action model of `E_μ P`.
+  kind: dynamical
+  impl:
+  - NEP.rempala_general
+  supporting: []
+  impl_note: '∀ finite σ (DecidableEq), μ q, μ ≠ 0 → ∀ rs : List (Rxn σ), IsSemiconj (ebSys (CNet.poisson
+    μ) q rs) (maSys (rempalaRxns μ rs)) (rempalaMap μ q). Hypothesis μ ≠ 0 is not in the design statement
+    (it is in the header bullet); q is arbitrary. The map is (θ, ξ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ) (the design
+    writes π(θ, φ, pop) but uses ξ). E_μ keeps an exit s → Y as the MA exit S → Y (§J.10 "stay S → V")
+    and turns a contact into MA contact at μτ plus NRxn.trans J none τ (J → ∅ at τ). The design''s "(surjective
+    submersion)" is rempala_quotient and "natural" is rempala_natural (separate claims); "For SIR: MA(β
+    = μτ, γ_MA = γ + τ)" is rempala_general_sir. The MA "I" = φ_I is by definition of rempalaMap.'
+  required: true
+  status: implemented
+  notes: μ ≠ 0 is needed for the field identity (ψ''(θ)/ψ'(1) = μe^{μ(θ−1)} requires cancelling μ).
+- id: MorphismsRempala.rempalaGeneralSolution
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: '163-167,173,31-33'
+  text: |-
+    **Rempała's quotient on trajectories (M3, general P).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ)"; §D.3: "semiconjugacies map solution curves to solution curves".
+    [...]
+    No condition on `ξ(0)` is needed.
+    [...]
+    EB solutions on any set of times I (for example a time interval) map to MA solutions, both for derivatives within I and for two-sided derivatives at every time of I.
+  kind: dynamical
+  impl:
+  - NEP.rempala_general_solution_at
+  - NEP.rempala_general_solution
+  supporting: []
+  impl_note: 'rempala_general_solution_at: finite σ, μ ≠ 0, any q, any T_EB list rs, any set I : Set ℝ, (∀ t ∈ I, HasDerivAt x (lift (poisson μ) q rs (x t)) t) → ∀ t ∈ I, HasDerivAt (rempalaMap μ q ∘ x) (maLift (rempalaRxns μ rs) (rempalaMap μ q (x t))) t. rempala_general_solution: the same with HasDerivWithinAt … I t. No hypothesis on x 0.'
+  required: true
+  status: implemented
+  notes: 'Remediation: spec clarification (the module-header bullet now says ''any set of times I … both for derivatives within I and for two-sided derivatives''); HasDerivAt variant rempala_general_solution_at added. Text changed: re-shadow blind (the old shadows assumed Convex I).'
+- id: MorphismsRempala.rempalaNatural
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: '222-225,225-226,236-237,34-35'
+  text: |-
+    **Rempała's quotient is natural in P (M3).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r → ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ) [...] | natural semiconjugacy (surjective submersion)".
+    [...]
+    this is naturality with respect to the species maps of the syntax (relabelling and gluing, DESIGN §D.1); it is not stated as a natural transformation of functors into `DynSys`.
+    [...]
+    `E_μ` commutes with relabelling species, and the map commutes with the pushforward and pullback of coordinates along species maps.
+  kind: categorical
+  impl:
+  - NEP.rempala_natural_min
+  supporting:
+  - NEP.rempala_natural
+  impl_note: 'For f : σ → σ'' (σ finite, σ'' decidable eq) and all μ q, a conjunction: (1) ∀ rs, rempalaRxns
+    μ (rs.map (Rxn.map f)) = (rempalaRxns μ rs).map (NRxn.map f); (2) ∀ u : EB σ, rempalaMap μ q (pushEB
+    f u) = pushMA f (rempalaMap μ q u); (3) ∀ u : EB σ'', rempalaMap μ q (pullEB f u) = pullMA f (rempalaMap
+    μ q u). No μ ≠ 0. Not a natural transformation of functors into DynSys (no functor is defined), as
+    the quoted Scope sentence says; compatibility of the fields (lift_map, maLift_map) is not part of
+    the statement.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: rempala_natural_min puts [Fintype σ] [DecidableEq σ''] only on the pushforward conjunct.'
+- id: MorphismsRempala.rempalaQuotient
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: '305-307,308,36-37'
+  text: |-
+    **Rempała's map is a surjective submersion (M3).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ) [...] | natural semiconjugacy (surjective submersion)".
+    [...]
+    for `q ≠ 0` the map and its derivative at every point are surjective (a surjective submersion, i.e. a quotient).
+  kind: structural
+  impl:
+  - NEP.rempala_quotient
+  supporting: []
+  impl_note: ∀ μ q, q ≠ 0 → Function.Surjective (rempalaMap μ q) ∧ ∀ u, Function.Surjective (rempalaD
+    μ q u), finite σ not required. "Derivative" is the explicit CLM rempalaD, not fderiv; hasFDerivAt_rempalaMap
+    (not in the impl) says it is the Fréchet derivative, so a checker needs a bridge or must accept rempalaD
+    as the derivative. The semiconjugacy and naturality parts of the design row are other claims.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsRempala.rempalaGeneralSir
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: '367-369,369-371,378-379,38-40'
+  text: |-
+    **Rempała's theorem for SIR from the general quotient, without `ξ = 1` (M3, SIR).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P) [...] π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ). For SIR: MA(β = μτ, γ_MA = γ + τ). **The MA "I" is φ_I, not prevalence**".
+    [...]
+    it holds at every state, not only on `ξ = 1`.
+    [...]
+    for SIR, composing with the projection `(S, x) ↦ (S, x_I)` gives mass-action SIR with `β = μτ`, `ρ = γ + τ`, the SIR case `NEP.rempala`, now without the restriction `ξ = 1`.
+  kind: dynamical
+  impl:
+  - NEP.rempala_general_sir
+  supporting: []
+  impl_note: '∀ μ τ γ q, μ ≠ 0 → IsSemiconj (ebSys (CNet.poisson μ) q (sirRxns τ γ)) (maSIR (μ * τ) (γ
+    + τ)) (sirProj ∘ rempalaMap μ q); maSIR β ρ on (S, I): Ṡ = −βSI, İ = βSI − ρI. The map is (θ, ξ, φ,
+    pop) ↦ (qξe^{μ(θ−1)}, φ_I), on all states (no ξ = 1).'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsRempala.rempalaSeirField
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 460-463
+  text: '**Rempała''s quotient for SEIR: the mass-action equations of `E_μ(SEIR)` (M3, SEIR).** Design
+    statement (DESIGN_NetworkEpiCore.md §D.5, M3): "EB_{Pois μ}(P) → MA(E_μ P), E_μ P = c_μ P + {J_r →
+    ∅ at τ_r} on the edge copies; π = (θ, φ, pop) ↦ (qξe^{μ(θ−1)}, φ)".'
+  kind: algebraic-identity
+  impl:
+  - NEP.rempala_seir_field_eqns
+  supporting:
+  - NEP.rempala_seir_field
+  impl_note: 'For all μ τ a γ S and x : SEIRSp → ℝ, with F = maLift (rempalaRxns μ (seirRxns τ a γ)) (S,
+    x): F.1 = −μτ S x_I, F.2 E = μτ S x_I − a x_E, F.2 I = a x_E − (γ + τ) x_I, F.2 R = γ x_I. The theorem
+    states the mass-action field of E_μ(SEIR) only; the semiconjugacy from EB SEIR is rempala_general
+    at seirRxns. The design quote does not state these equations; the title names them.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: rempala_seir_field_eqns states Ṡ = −(μτ)·S·x_I (product form) for v : MA SEIRSp. WEAK (form chosen after the shadows; the quoted design text does not state the equations).'
+- id: MorphismsRempala.rempalaSeirConsequence
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 468-470
+  text: 'With `rempala_general`, EB SEIR on Poisson(μ) maps to this system by `(θ, ξ, φ, pop) ↦ (qξe^{μ(θ−1)},
+    φ)`: mass-action SEIR with `β = μτ` and removal rate `γ + τ` from I, whose E and I are the edge probabilities
+    `φ_E`, `φ_I`.'
+  kind: dynamical
+  impl: []
+  supporting:
+  - NEP.rempala_general
+  - NEP.rempala_seir_field
+  impl_note: Consequence of rempala_general (at seirRxns) and rempala_seir_field; no single theorem states
+    it, and rempala_general is registered once (MorphismsRempala.rempalaGeneral).
+  required: false
+  status: informal
+  notes: Natural-language remark inside the "Lean statement" paragraph of rempala_seir_field.
+- id: MorphismsRempala.rempalaDApply
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 68-68
+  text: '`rempalaD μ q u v = (q (v_ξ e^{μ(θ−1)} + ξ μ e^{μ(θ−1)} v_θ), v_φ)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.rempalaD_apply_left
+  supporting:
+  - NEP.rempalaD_apply
+  impl_note: rempalaD μ q u v = (q * (v.2.1 * exp(μ(u.1 − 1)) + u.2.1 * (μ * exp(μ(u.1 − 1)) * v.1)),
+    v.2.2.1).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: componentwise, left-associated ξ μ e^{μ(θ−1)} v_θ.'
+- id: MorphismsRempala.hasFDerivAtRempalaMap
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 76-76
+  text: '`rempalaMap μ q` has derivative `rempalaD μ q u` at every `u`.'
+  kind: other
+  impl:
+  - NEP.hasFDerivAt_rempalaMap_all
+  supporting:
+  - NEP.hasFDerivAt_rempalaMap
+  impl_note: HasFDerivAt (rempalaMap μ q) (rempalaD μ q u) u for every u, finite σ, all μ q.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: hasFDerivAt_rempalaMap_all has no Fintype σ (topological-vector-space derivative); the alignment helper hasFDerivAt_rempalaMap_any in Checks can now be replaced by it.'
+- id: MorphismsRempala.rempalaEbField
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 104-106
+  text: '**Per-reaction identity behind M3.** On the Poisson(μ) network with `μ ≠ 0`, the derivative of
+    Rempała''s map carries the EB field of each T_EB reaction `r` to the mass-action field of `E_μ r`
+    at the image point.'
+  kind: algebraic-identity
+  impl:
+  - NEP.rempala_ebField
+  supporting: []
+  impl_note: 'μ ≠ 0 → rempalaD μ q u (ebField (CNet.poisson μ) q r u) = maLift (r.rempala μ) (rempalaMap
+    μ q u) for every r : Rxn σ and u. "The derivative" is rempalaD.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsRempala.rxnRempalaMap
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 207-207
+  text: '`E_μ` commutes with relabelling the node species of one reaction.'
+  kind: structural
+  impl:
+  - NEP.Rxn.rempala_map
+  supporting: []
+  impl_note: (r.map f).rempala μ = (r.rempala μ).map (NRxn.map f).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsRempala.rempalaMapPull
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 214-214
+  text: 'The pullback of Rempała''s map: `π(θ, ξ, φ ∘ f, pop ∘ f) = pullMA f (π(θ, ξ, φ, pop))`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.rempalaMap_pull
+  supporting: []
+  impl_note: rempalaMap μ q (pullEB f u) = pullMA f (rempalaMap μ q u) (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsRempala.rempalaMapPush
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 218-218
+  text: 'The pushforward of Rempała''s map: `π(pushEB f u) = pushMA f (π u)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.rempalaMap_push
+  supporting: []
+  impl_note: rempalaMap μ q (pushEB f u) = pushMA f (rempalaMap μ q u) (rfl), σ finite.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsRempala.rempalaMapSurjective
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 273-274
+  text: 'For `q ≠ 0` Rempała''s map is surjective: `(S, x)` is the image of `(1, S/q, x, 0)` (θ = 1, ξ
+    = S/q, φ = x).'
+  kind: existence
+  impl:
+  - NEP.rempalaMap_surjective_preimage
+  supporting:
+  - NEP.rempalaMap_surjective
+  impl_note: q ≠ 0 → Function.Surjective (rempalaMap μ q). The explicit preimage (1, S/q, x, 0) appears
+    only in the proof.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: states the explicit preimage π(1, S/q, x, 0) = (S, x).'
+- id: MorphismsRempala.rempalaDSurjective
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 293-294
+  text: For `q ≠ 0` the derivative of Rempała's map is surjective at every point (the map is a submersion).
+  kind: existence
+  impl:
+  - NEP.rempalaD_surjective
+  supporting: []
+  impl_note: q ≠ 0 → ∀ u, Function.Surjective (rempalaD μ q u). "Derivative" is rempalaD.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsRempala.rempalaSirProj
+  group: MorphismsRempala
+  source:
+    file: NetworkEpi/Morphisms/Rempala.lean
+    lines: 347-347
+  text: '`E_μ` of SIR, projected to `(S, x_I)`, is mass-action SIR with `β = μτ` and `ρ = γ + τ`.'
+  kind: dynamical
+  impl:
+  - NEP.rempala_sir_proj_field
+  - NEP.rempala_sir_proj
+  supporting: []
+  impl_note: IsSemiconj (maSys (rempalaRxns μ (sirRxns τ γ))) (maSIR (μ * τ) (γ + τ)) sirProj for all
+    μ τ γ (sirProj (S, x) = (S, x_I)).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: rempala_sir_proj_field is the pointwise field identity sirProj (F v) = G (sirProj v).'

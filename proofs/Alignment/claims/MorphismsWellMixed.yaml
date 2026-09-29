@@ -1,0 +1,240 @@
+# SA-PASS claim registry fragment: group MorphismsWellMixed
+# Source: NetworkEpi/Morphisms/WellMixed.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: MorphismsWellMixed.header.model
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 15-23
+  text: 'Contacts are fleeting, so a stub meets a uniformly random node: the edge probabilities `φ_X`
+    of a configuration network are replaced by the node fractions `x_X`. The state is `(θ, ξ, x)` and
+    the per-reaction field (`wmField`) is, with `S = qξe^{κ(θ−1)}`: ``` contact s + J → X + J (τ): θ̇
+    += −τ x_J; x_X'' += κτ x_J S exit s → Y (ν): ξ̇ += −ν ξ; x_Y'' += ν S transition X → Y | ∅ (a): x_X''
+    −= a x_X; x_Y'' += a x_X (no gain for ∅) ```'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: the state WM σ = ℝ × ℝ × (σ → ℝ) and the per-reaction field wmField κ q (summed
+    by wmLift, bundled as wmSys); S = wmSusc κ q u = qξe^{κ(θ−1)}.'
+  required: false
+  status: informal
+  notes: Module-header modelling prose and field table (the definition of the EB model on WellMixed(κ)).
+    It matches the design's §C.3 row quoted in the wellmixedUnitSemiconj claim.
+- id: MorphismsWellMixed.wellmixedUnitSemiconj
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: '143-147,27-28'
+  text: |-
+    **The well-mixed unit as a semiconjugacy, with or without exits (M1).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "With exits, (θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x) is a quotient semiconjugacy"; §C.3, `WellMixed(κ)`: "(θ, ξ; x_X): θ̇ = −Σ_r τ_r x_{J_r}, S = qξe^{κ(θ−1)}, x_X gains κτ_r x_{J_r}S; conjugate to MA(c_κ P) (M1)".
+    [...]
+    for every T_EB model (exits allowed) and all κ, q, `(θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x)` is a global semiconjugacy onto MA(c_κ P);
+  kind: dynamical
+  impl:
+  - NEP.wellmixed_unit_semiconj
+  supporting: []
+  impl_note: '∀ finite σ (DecidableEq), κ q, rs : List (Rxn σ) (exits allowed): IsSemiconj (wmSys κ q
+    rs) (maSys (wmTarget κ rs)) (wmMap κ q), wmMap κ q (θ, ξ, x) = (qξe^{κ(θ−1)}, x), wmTarget κ rs =
+    c_κ rs as NRxn. No hypothesis on κ, q. "quotient" (surjective submersion) is wellmixed_unit_quotient,
+    and the §C.3 "conjugate to MA(c_κ P)" is the exit-free wellmixed_unit (both separate claims). "onto"
+    in the header is not a surjectivity statement here.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsWellMixed.wellmixedUnitQuotient
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: '165-168,29'
+  text: |-
+    **The well-mixed map with exits is a quotient (M1).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "With exits, (θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x) is a quotient semiconjugacy".
+    [...]
+    for `q ≠ 0` it is a surjective submersion.
+  kind: structural
+  impl:
+  - NEP.wellmixed_unit_submersion
+  supporting:
+  - NEP.wellmixed_unit_quotient
+  impl_note: ∀ κ q, q ≠ 0 → Function.Surjective (wmMap κ q) ∧ ∀ u, Function.Surjective (wmD κ q u). wmD
+    is the explicit derivative CLM (hasFDerivAt_wmMap, not in the impl). The "semiconjugacy" half of "quotient
+    semiconjugacy" is wellmixed_unit_semiconj, registered separately; this theorem alone does not state
+    it.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: wellmixed_unit_submersion: surjective (any σ) ∧ (∀ [Fintype σ], Differentiable) ∧ (∀ [Fintype σ], ∀ u, Surjective (fderiv ℝ (wmMap κ q) u)), for q ≠ 0.'
+- id: MorphismsWellMixed.wellmixedUnit
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: '257-260,261,30-31'
+  text: |-
+    **The well-mixed unit (M1): a conjugacy for exit-free models.** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "Well-mixed unit | EB_{WM(κ)}(P) on (θ; x) with S = q e^{κ(θ−1)} is conjugate to MA(c_κ P) on S ∈ (0, q], for every exit-free T_EB model P [...] | natural iso (quotient with exits)".
+    [...]
+    for exit-free P, `κ ≠ 0` and `q > 0`, the model on `(θ; x)` is conjugate to MA(c_κ P) restricted to `S > 0` (inverse `(S, x) ↦ (1 + log(S/q)/κ, x)`)
+  kind: categorical
+  impl:
+  - NEP.wellmixed_unit
+  supporting: []
+  impl_note: 'κ ≠ 0 → 0 < q → (∀ r ∈ rs, r.isExit = false) → IsConjOn (wmSys1 κ q rs) (maSys (wmTarget
+    κ rs)) Set.univ {v | 0 < v.1} (wmMap1 κ q) (wmInv κ q), wmMap1 (θ, x) = (q e^{κ(θ−1)}, x), wmInv (S,
+    x) = (1 + log(S/q)/κ, x). Differences from the design statement: the MA side is restricted to the
+    open set {S > 0}, not "S ∈ (0, q]" (the half-space θ ≤ 1 ↔ S ≤ q is wellmixed_unit_Iic, separate);
+    "natural iso" — naturality in P is not formalised (docstring Scope; see MorphismsWellMixed.wellmixedUnitNaturality);
+    "conjugate" is IsConjOn (see MorphismsCommon.isConjOn). κ ≠ 0 and q > 0 are in the header, not in
+    the design statement.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsWellMixed.wellmixedUnitIic
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: '308-311,31-32'
+  text: |-
+    **The half-space θ ≤ 1 corresponds to S ∈ (0, q] (M1).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "EB_{WM(κ)}(P) on (θ; x) with S = q e^{κ(θ−1)} is conjugate to MA(c_κ P) on S ∈ (0, q]".
+    [...]
+    for `κ > 0` the half-space `θ ≤ 1` corresponds to `S ∈ (0, q]`
+  kind: equivalence
+  impl:
+  - NEP.wellmixed_unit_Iic_image
+  - NEP.wellmixed_unit_Iic_preimage
+  supporting:
+  - NEP.wellmixed_unit_Iic
+  impl_note: 0 < κ → 0 < q → ∀ w, 0 < (wmMap1 κ q w).1 ∧ ((wmMap1 κ q w).1 ≤ q ↔ w.1 ≤ 1). That every
+    S ∈ (0, q] is hit is not stated here (it follows from the inverse in wellmixed_unit). The conjugacy
+    itself is not part of this impl.
+  required: true
+  status: implemented
+  notes: "Remediation (SA-PASS triage): new trusted theorem in the text's form: wellmixed_unit_Iic_image is the set correspondence wmMap1 '' {θ ≤ 1} = {S ∈ (0, q]} (κ, q > 0). Round-4 remediation (non-blind owner, 2026-09-28): forward 3 failed (the preimage direction was not stated). New trusted theorem wellmixed_unit_Iic_preimage (preimage of {S ∈ (0, q]} is {θ ≤ 1}) added to the impl and to CITABLE. Impl changed: checker update needed."
+- id: MorphismsWellMixed.wellmixedUnitSolution
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: '376-379,379-380,34-37'
+  text: |-
+    **The well-mixed unit on trajectories (M1).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M1): "EB_{WM(κ)}(P) on (θ; x) with S = q e^{κ(θ−1)} is conjugate to MA(c_κ P) [...]. With exits, (θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x) is a quotient semiconjugacy"; §D.3: "semiconjugacies map solution curves to solution curves".
+    [...]
+    solutions are mapped: `(θ, ξ, x) ↦ (qξe^{κ(θ−1)}, x)` (exits allowed) and, for exit-free P, `(θ, x) ↦ (q e^{κ(θ−1)}, x)` map EB solutions to solutions of MA(c_κ P); for exit-free P, `κ ≠ 0` and `q > 0` the inverse maps MA solutions that stay in `S > 0` (which contains `S ∈ (0, q]`) back to solutions on `(θ; x)`.
+  kind: dynamical
+  impl:
+  - NEP.wellmixed_unit_solution_at
+  - NEP.wellmixed_unit1_solution_at
+  - NEP.wellmixed_unit_inv_solution_at
+  - NEP.wellmixed_unit_solution
+  - NEP.wellmixed_unit1_solution
+  - NEP.wellmixed_unit_inv_solution
+  supporting: []
+  impl_note: 'wellmixed_unit_solution_at: finite σ, any rs (exits allowed), any κ q, any I; HasDerivAt x (wmLift κ q rs (x t)) t on I → HasDerivAt (wmMap κ q ∘ x) (maLift (wmTarget κ rs) (wmMap κ q (x t))) t on I. wellmixed_unit1_solution_at: exit-free rs, the same for wmSys1 solutions w and wmMap1. wellmixed_unit_inv_solution_at: exit-free, κ ≠ 0, q > 0, v an MA(c_κ rs) solution (HasDerivAt) with 0 < (v t).1 on I → wmInv κ q ∘ v solves wmSys1 (HasDerivAt) on I. wellmixed_unit_solution: the within-I version of the first.'
+  required: true
+  status: implemented
+  notes: "Remediation: spec clarification (the header bullet now spells out which maps and directions; the ambiguity 'solutions are mapped' is resolved as: both maps forward and the inverse backward); three new theorems. Text changed: re-shadow blind. Round-4 remediation (non-blind owner, 2026-09-28): forward 5 and 6 failed (no within-I versions of the exit-free map and of the inverse). New trusted theorems wellmixed_unit1_solution and wellmixed_unit_inv_solution (within I) added to the impl and to CITABLE. Impl changed: checker update needed."
+- id: MorphismsWellMixed.wellmixedUnitNaturality
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 273-274
+  text: 'Naturality in P is not proved separately: the conjugacy is the same formula for every exit-free
+    P.'
+  kind: categorical
+  impl: []
+  supporting:
+  - NEP.wellmixed_unit
+  - NEP.Rxn.scaleContacts_map
+  impl_note: No theorem states naturality of the M1 conjugacy (or of wmMap/wmTarget) with respect to species
+    maps, unlike rempala_natural (M3) and poisson_iso_natural (M2). The design row M1 says "natural iso".
+  required: false
+  status: missing
+  notes: 'Scope sentence of the wellmixed_unit docstring: a declared coverage gap.'
+- id: MorphismsWellMixed.wmDApply
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 89-89
+  text: '`wmD κ q u v = (q e^{κ(θ−1)} v_ξ + qξκ e^{κ(θ−1)} v_θ, v_x)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.wmD_apply
+  supporting: []
+  impl_note: wmD κ q u v = (q e^{κ(u.1−1)} v.2.1 + q u.2.1 κ e^{κ(u.1−1)} v.1, v.2.2) (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsWellMixed.hasFDerivAtWmMap
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 94-94
+  text: '`wmMap κ q` has derivative `wmD κ q u` at every `u`.'
+  kind: other
+  impl:
+  - NEP.hasFDerivAt_wmMap
+  supporting: []
+  impl_note: HasFDerivAt (wmMap κ q) (wmD κ q u) u for every u, finite σ.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsWellMixed.wmFieldEq
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 114-115
+  text: '**Per-reaction identity behind M1.** The derivative of `wmMap` carries the well-mixed EB field
+    of each T_EB reaction `r` to the mass-action field of `c_κ r`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.wm_field_eq_fderiv
+  supporting:
+  - NEP.wm_field_eq
+  impl_note: wmD κ q u (wmField κ q r u) = maField ((r.scaleContacts κ).toNRxn) (wmMap κ q u) for every
+    r and u; no hypothesis on κ, q. "The derivative" is wmD.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: wm_field_eq_fderiv states the identity with fderiv for finite σ; wm_field_eq (any σ, explicit wmD) is supporting.'
+- id: MorphismsWellMixed.wmLiftXiEqZero
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 219-219
+  text: Without exits the ξ-component of the well-mixed field vanishes.
+  kind: algebraic-identity
+  impl:
+  - NEP.wmLift_ξ_eq_zero
+  supporting: []
+  impl_note: (∀ r ∈ rs, r.isExit = false) → (wmLift κ q rs u).2.1 = 0.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsWellMixed.wmSys1Incl
+  group: MorphismsWellMixed
+  source:
+    file: NetworkEpi/Morphisms/WellMixed.lean
+    lines: 234-235
+  text: For an exit-free model, `(θ, x) ↦ (θ, 1, x)` is a semiconjugacy from `wmSys1` to `wmSys` (the
+    model on `(θ; x)` is the restriction to the invariant slice ξ = 1).
+  kind: dynamical
+  impl:
+  - NEP.wmSys1_incl
+  supporting: []
+  impl_note: Exit-free rs → IsSemiconj (wmSys1 κ q rs) (wmSys κ q rs) (fun w => (w.1, 1, w.2)). Invariance
+    of ξ = 1 is not a separate statement.
+  required: true
+  status: implemented
+  notes: ''

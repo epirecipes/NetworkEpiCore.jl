@@ -1,0 +1,138 @@
+# SA-PASS claim registry fragment: group SemanticsMA
+# Source module: NetworkEpi.Semantics.MA (NetworkEpi/Semantics/MA.lean; paths relative to proofs/). Trusted library NetworkEpi.* (namespace NEP).
+# Registrar: claim registrar 1/2 (non-blind). Merged into Alignment/claims.yaml by scripts/sa_merge_claims.py.
+#
+# Conventions
+#   id      <Group>.<lowerCamelTheoremName> for a theorem docstring (namespace prefix only where two
+#           theorems share a last component); '.b', '.c' for further claims of the same docstring;
+#           <Group>.header.<slug> for module-header prose/tables; <Group>.<lowerCamelDefName> for a
+#           claim made in the docstring of a definition or instance.
+#   text    VERBATIM (whitespace-normalised) quote; fragments separated by a line '[...]'. Lean comment
+#           delimiters are not part of the text. For a citable theorem the text is the bold title plus the
+#           full 'Design statement' paragraph. 'Lean statement:' paragraphs are NOT quoted (they transcribe
+#           the Lean statement and would leak it to blind shadow authors). 'Scope:' sentences are
+#           registered separately only when they assert mathematics.
+#   status  implemented -> impl lists trusted theorems; required: true
+#           missing     -> checkable mathematical claim that no trusted theorem states
+#           informal    -> definitional / interpretive / meta prose, Mathlib background facts, or a
+#                          summary of a claim registered elsewhere (see supporting + notes)
+#   Merged claims: where several theorems of one module quote overlapping design statements that
+#           name each other, they form ONE claim whose impl lists all of them (each citable name is the
+#           impl of exactly one required claim).
+#   impl_note / notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: SemanticsMA.header.scope
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 6-12
+  text: DESIGN_NetworkEpiCore.md §D.4, row **MA** ("Open(Petri) | x_X | total | **yes** (Baez–Pollard
+    2017)") and §D.7 L3 (`maField`). This module covers the T_net reactions of `NRxn σ` (one susceptible
+    species `s`, node species `σ`) in coordinates `(S, x)`, where `S` is the susceptible fraction and
+    `x X` the fraction in node species `X`. Mass action is total on `NRxn σ`, so no admissibility condition
+    is needed. The rate of each reaction is its written constant times the product of the reactant fractions
+    (per DESIGN §D.2, a rate convention `c_λ` must be applied to the syntax before `maField` when the
+    constants are per-contact rates).
+  kind: structural
+  impl: []
+  supporting:
+  - NEP.maLift_append
+  - NEP.maLift_map
+  - NEP.maLift_glue
+  impl_note: 'Definitional: maField is defined on every NRxn σ constructor (total, no admissibility),
+    with flux = written constant × product of reactant fractions (S for the susceptible species, x X otherwise;
+    J = none catalyst reads S). The strictness column ''**yes** (Baez–Pollard 2017)'' is covered by SemanticsMA.maLiftAppend.
+    The rate-convention remark (c_λ applied before maField) is a usage instruction.'
+  required: false
+  status: informal
+  notes: Definitional / cross-reference.
+- id: SemanticsMA.maLiftAppend
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: '53-56,118-121,137-142,150-151'
+  text: |-
+    **H1′ for mass action, part 1: the MA lift is additive in the reaction list.** Design statement (DESIGN_NetworkEpiCore.md §D.6): "H1′ same for MA, IB, Stoch | yes | same argument"; §D.4, table row MA, column "Strict under gluing?": "**yes** (Baez–Pollard 2017)".
+    [...]
+    **H1′ for mass action, part 2: the MA lift is natural in species maps.** Design statement (DESIGN_NetworkEpiCore.md §D.6): "H1′ same for MA, IB, Stoch | yes | same argument" (the argument of H1: "local per-reaction fields").
+    [...]
+    **H1′ for mass action: the MA lift is strict under gluing.** Design statement (DESIGN_NetworkEpiCore.md §D.6): "H1′ same for MA, IB, Stoch | yes | same argument", where H1 is "EB(glue(A,B)) = glue(EB A, EB B)"; §D.4, table row MA, column "Strict under gluing?": "**yes** (Baez–Pollard 2017)"; §D.3 (open systems): "composition identifies ported coordinates and **adds** vector fields".
+    [...]
+    Scope: of the design's "H1′ same for MA, IB, Stoch", only the mass-action case is formalised; the individual-based (IB) and stochastic semantics are not part of this library.
+  kind: categorical
+  impl:
+  - NEP.maLift_append
+  - NEP.maLift_map
+  - NEP.maLift_glue
+  supporting: []
+  impl_note: 'maLift_append: maLift (rs ++ rs'') u = maLift rs u + maLift rs'' u for all rs rs'' : List
+    (NRxn σ), u : MA σ = (S, x). maLift_map: for σ finite, f : σ → σ'': maLift (rs.map (NRxn.map f)) u
+    = pushMA f (maLift rs (pullMA f u)) (pushMA keeps S and sums x over fibres; pullMA keeps S, precomposes
+    x). maLift_glue: for a cospan f : σA → σ, g : σB → σ: maLift (A.map (NRxn.map f) ++ B.map (NRxn.map
+    g)) u = pushMA f (maLift A (pullMA f u)) + pushMA g (maLift B (pullMA g u)). Gluing is relabelling
+    along the cospan legs plus concatenation; the glued field is compared with the sum of pushed-forward
+    component fields. NOT IN IMPL: ''IB, Stoch'' (no individual-based or stochastic semantics exists in
+    the library; only MA); ''Baez–Pollard 2017'' is a citation (no open Petri net / black-boxing functor
+    is formalised).'
+  required: true
+  status: implemented
+  notes: 'Remediation (spot check): the quoted ''H1′ same for MA, IB, Stoch'' overclaims for this library; a Scope sentence (only MA is formalised) was added to maLift_glue''s docstring and to this text. Text changed: the checker must re-sync the sa_claim text; the existing MA-only shadows match the clarified text.'
+- id: SemanticsMA.pushMAAdd
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 73-73
+  text: The pushforward of MA coordinates is additive.
+  kind: algebraic-identity
+  impl:
+  - NEP.pushMA_add
+  supporting: []
+  impl_note: pushMA f (u + v) = pushMA f u + pushMA f v.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsMA.pushMAZero
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 79-79
+  text: The pushforward of the zero MA vector is zero.
+  kind: algebraic-identity
+  impl:
+  - NEP.pushMA_zero
+  supporting: []
+  impl_note: pushMA f 0 = 0.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsMA.elimMap
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 92-93
+  text: 'Reading a catalyst density after relabelling: `J = none` (the susceptible species) gives `S`,
+    `J = some X` gives `x (f X)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.elim_map
+  supporting: []
+  impl_note: '(J.map f).elim S x = J.elim S (x ∘ f) for J : Option σ, x : σ'' → ℝ (Option.elim: none ↦
+    S, some X ↦ x (f X)).'
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsMA.maFieldMap
+  group: SemanticsMA
+  source:
+    file: NetworkEpi/Semantics/MA.lean
+    lines: 98-99
+  text: 'Naturality of the per-reaction mass-action field in species maps: the field of `r.map f` at `u`
+    is the pushforward of the field of `r` at `pullMA f u`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.maField_map
+  supporting: []
+  impl_note: 'For σ finite: maField (r.map f) u = pushMA f (maField r (pullMA f u)) for every r : NRxn
+    σ, u : MA σ''.'
+  required: true
+  status: implemented
+  notes: ''

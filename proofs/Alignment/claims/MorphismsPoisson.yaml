@@ -1,0 +1,321 @@
+# SA-PASS claim registry fragment: group MorphismsPoisson
+# Source: NetworkEpi/Morphisms/Poisson.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: MorphismsPoisson.header.construction
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 13-24
+  text: 'The species of `D_μ P` (`DSp σ = Option (σ ⊕ σ)`) are `S` (`none`), an *edge copy* `Φ_X` (`some
+    (inl X)`) and a *node copy* `X` (`some (inr X)`) of every node species `X`. `D_μ` acts reaction by
+    reaction (`Rxn.poissonD`), with multiset stoichiometry (`NetworkEpi.Morphisms.Stoich`): | T_EB reaction
+    of P | reactions of D_μ P | |---|---| | contact `s + J → X + J` at τ | `S + Φ_J → Φ_X + X + Φ_J` at
+    `μτ`, and `Φ_J → ∅` at `τ` | | exit `s → Y` at ν | `S → Φ_Y + Y` at ν | | transition `X → Y` at a
+    | `Φ_X → Φ_Y` and `X → Y`, both at a | | removal `X → ∅` at a | `Φ_X → ∅` and `X → ∅`, both at a |
+    The map is `poissonMap μ q (θ, ξ, φ, pop) = (S = qξe^{μ(θ−1)}, Φ = φ, X = pop)`.'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: DSp σ = Option (σ ⊕ σ), Rxn.poissonD (multiset reactions), poissonRxns = rs.flatMap
+    (Rxn.poissonD μ), poissonMap μ q u = (none ↦ qξe^{μ(θ−1)}, inl X ↦ φ_X, inr X ↦ pop_X).'
+  required: false
+  status: informal
+  notes: Module-header construction table (definition of D_μ and of the map).
+- id: MorphismsPoisson.header.exitsNotConjugacy
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: '38-41,238'
+  text: |-
+    **With exits** the EB coordinates contain both θ and ξ, and the map `(θ, ξ) ↦ qξe^{μ(θ−1)}` has one-dimensional fibres, so `poisson_iso_semiconj` is a semiconjugacy but not a conjugacy; the design's "iso" is the exit-free statement `poisson_iso` (as in M1, whose exit case the design calls a quotient).
+    [...]
+    with exits this is a semiconjugacy, not a conjugacy (θ and ξ enter only through S)
+  kind: structural
+  impl: []
+  supporting:
+  - NEP.poisson_iso_semiconj
+  - NEP.poisson_iso
+  impl_note: No theorem states that poissonMap (with exits) is not injective or that EB with exits is
+    not conjugate to MA(D_μ P); the one-dimensional fibres of (θ, ξ) ↦ qξe^{μ(θ−1)} are not formalised.
+    The positive halves are poisson_iso_semiconj and poisson_iso.
+  required: false
+  status: missing
+  notes: Module-header remark and the Scope sentence of poisson_iso_semiconj. DESIGN §L.1 adopts this
+    reading of M2.
+- id: MorphismsPoisson.poissonIsoSemiconj
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: '222-227,28-29'
+  text: |-
+    **The Poisson map is a semiconjugacy for every T_EB model (M2, with exits).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M2): "Poisson isomorphism | EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ = φ, X = pop), natural in P. D_μ: contacts S + Φ_J → Φ_X + X + Φ_J at rate μτ; Φ_J → ∅ at τ; transitions on both copies"; §J.10: "**Exits in D_μ** (§D.5 M2) are `s → Φ_Y + Y`".
+    [...]
+    for every T_EB model (exits allowed) and `μ ≠ 0`, `poissonMap` is a global semiconjugacy from EB on Poisson(μ) to MA(D_μ P).
+  kind: dynamical
+  impl:
+  - NEP.poisson_iso_semiconj
+  supporting: []
+  impl_note: '∀ finite σ (DecidableEq), μ q, μ ≠ 0 → ∀ rs (exits allowed), IsSemiconj (ebSys (CNet.poisson
+    μ) q rs) (sSys (poissonRxns μ rs)) (poissonMap μ q). The design statement''s "≅" (isomorphism), "natural
+    in P" and the target "onto S > 0" are not part of this theorem: iso is poisson_iso (exit-free, onto
+    {S > 0}), naturality is poisson_iso_natural; with exits only a semiconjugacy holds (DESIGN §L.1).
+    The target is multiset mass action (sSys), not maSys. μ ≠ 0 is in the header, not in the design statement.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPoisson.poissonIso
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: '253-258,30-32'
+  text: |-
+    **The Poisson isomorphism for exit-free models (M2).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M2): "Poisson isomorphism | EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ = φ, X = pop), natural in P. D_μ: contacts S + Φ_J → Φ_X + X + Φ_J at rate μτ; Φ_J → ∅ at τ; transitions on both copies | natural iso onto S > 0".
+    [...]
+    for every **exit-free** T_EB model, `μ ≠ 0` and `q > 0`, the EB model in the design's coordinates `(θ, φ, pop)` is conjugate to MA(D_μ P) restricted to the open set `S > 0`, with inverse `(S, Φ, X) ↦ (1 + log(S/q)/μ, Φ, X)`.
+  kind: categorical
+  impl:
+  - NEP.poisson_iso
+  supporting: []
+  impl_note: 'μ ≠ 0 → 0 < q → exit-free rs → IsConjOn (ebSys1 (CNet.poisson μ) q rs) (sSys (poissonRxns
+    μ rs)) Set.univ {v | 0 < v none} (poissonMap μ q ∘ EB1.incl) (poissonInv μ q). Source is the EB model
+    on ξ = 1 in (θ, φ, pop) (ebSys1), the design''s coordinates. "natural in P" is poisson_iso_natural,
+    which covers D_μ and the map but not the inverse or the conjugacy as a whole. "Conjugacy" is IsConjOn
+    (MorphismsCommon.isConjOn). "onto S > 0": h has values in {S > 0} and h ∘ g = id there.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPoisson.poissonIsoSolution
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 308-323
+  text: |-
+    **The Poisson isomorphism on trajectories (M2).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M2): "EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ = φ, X = pop)"; §D.3: "semiconjugacies map solution curves to solution curves".
+    [...]
+    Scope: the Poisson(μ) network is taken with `μ ≠ 0`, as in the design, whose Poisson degree distributions have mean μ > 0 (for `μ = 0` the PGF has `ψ' ≡ 0` and the network has no edges). Solutions are mapped on any set of times `I`, both for derivatives within `I` (this theorem) and for two-sided derivatives at every `t ∈ I` (`poisson_iso_solution_at`), as amended by §M.5 and §M.10.
+  kind: dynamical
+  impl:
+  - NEP.poisson_iso_solution_at
+  - NEP.poisson_iso_solution
+  supporting: []
+  impl_note: 'poisson_iso_solution_at: finite σ, μ ≠ 0, any q, any T_EB list rs (exits allowed), any set I, (∀ t ∈ I, HasDerivAt x (lift (poisson μ) q rs (x t)) t) → ∀ t ∈ I, HasDerivAt (poissonMap μ q ∘ x) (sLift (poissonRxns μ rs) (poissonMap μ q (x t))) t. poisson_iso_solution: the same with HasDerivWithinAt … I t.'
+  required: true
+  status: implemented
+  notes: "Remediation: spec clarification (Scope sentence quoting μ ≠ 0 added to the docstring and to the text; §M.3); HasDerivAt variant poisson_iso_solution_at added. Text changed: re-shadow blind. Round-4 remediation (non-blind owner, 2026-09-28): the backward SHADOW? failure came from the ambiguous sentence 'Solutions with two-sided derivatives are poisson_iso_solution_at', which the blind author read as assigning the two-sided form to another theorem. The docstring now states both solution notions as part of this claim (DESIGN §M.5, §M.10). Text changed: re-shadow BLIND (sa_claim text re-registered in Checks/MorphismsPoisson.lean)."
+- id: MorphismsPoisson.poissonIsoNatural
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: '371-374,383,384,33-34'
+  text: |-
+    **The Poisson isomorphism is natural in P (M2).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M2): "EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ = φ, X = pop), natural in P".
+    [...]
+    naturality with respect to the species maps of the syntax (relabelling and gluing),
+    [...]
+    it is not stated as a natural transformation of functors into `DynSys`.
+    [...]
+    `D_μ` commutes with relabelling species, and the map commutes with the pullback and pushforward of coordinates along species maps.
+  kind: categorical
+  impl:
+  - NEP.poisson_iso_natural_min
+  supporting:
+  - NEP.poisson_iso_natural
+  impl_note: 'For f : σ → σ'' (σ finite, σ'' decidable eq), all μ q, a conjunction: (1) ∀ rs, poissonRxns
+    μ (rs.map (Rxn.map f)) = (poissonRxns μ rs).map (SRxn.map (dMap f)); (2) ∀ u : EB σ'', poissonMap
+    μ q (pullEB f u) = poissonMap μ q u ∘ dMap f; (3) ∀ u : EB σ, poissonMap μ q (pushEB f u) = push (dMap
+    f) (poissonMap μ q u); dMap f = Option.map (Sum.map f f). No μ ≠ 0. Not a natural transformation of
+    functors (as the quoted Scope says); compatibility of sLift with SRxn.map and of the inverse poissonInv
+    is not stated.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: instances only on the pushforward conjunct.'
+- id: MorphismsPoisson.poissonDSirField
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 446-449
+  text: '**The mass-action equations of `D_μ(SIR)` (M2, SIR).** Design statement (DESIGN_NetworkEpiCore.md
+    §D.5, M2): "D_μ: contacts S + Φ_J → Φ_X + X + Φ_J at rate μτ; Φ_J → ∅ at τ; transitions on both copies".'
+  kind: algebraic-identity
+  impl:
+  - NEP.poissonD_sir_field
+  supporting: []
+  impl_note: 'For all μ τ γ and v : DSp SIRSp → ℝ, F = sLift (poissonRxns μ (sirRxns τ γ)) v: F none =
+    −μτ S Φ_I, F Φ_I = μτ S Φ_I − τ Φ_I − γ Φ_I, F Φ_R = γ Φ_I, F I = μτ S Φ_I − γ I, F R = γ I (S = v
+    none, Φ_X = v (some (inl X)), X = v (some (inr X))). The design quote describes D_μ in general; the
+    title names the SIR equations without stating them.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPoisson.poissonIsoSir
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 473-477
+  text: '**The Poisson isomorphism for SIR (M2, SIR instance).** Design statement (DESIGN_NetworkEpiCore.md
+    §D.5, M2): "Poisson isomorphism | EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ =
+    φ, X = pop) [...] | natural iso onto S > 0"; §D.7, L4b: "SIR/SEIR concrete first".'
+  kind: categorical
+  impl:
+  - NEP.poisson_iso_sir_iso
+  supporting:
+  - NEP.poisson_iso_sir
+  impl_note: μ ≠ 0 → 0 < q → IsConjOn (ebSys1 (CNet.poisson μ) q (sirRxns τ γ)) (sSys (poissonRxns μ (sirRxns
+    τ γ))) Set.univ {v | 0 < v none} (poissonMap μ q ∘ EB1.incl) (poissonInv μ q) — poisson_iso at SIR.
+    "natural" not included.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: poisson_iso_sir_iso states the text''s form (semiconjugacy on the whole space into S > 0, and ∃ an inverse local semiconjugacy on S > 0); the explicit inverse poissonInv is poisson_iso_sir (supporting).'
+- id: MorphismsPoisson.poissonIsoSeir
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 489-493
+  text: '**The Poisson isomorphism for SEIR (M2, SEIR instance).** Design statement (DESIGN_NetworkEpiCore.md
+    §D.5, M2): "Poisson isomorphism | EB_{Pois μ}(P) ≅ MA(D_μ P) via π(θ, φ, pop) = (qξe^{μ(θ−1)}, Φ =
+    φ, X = pop) [...] | natural iso onto S > 0"; §D.7, L4b: "SIR/SEIR concrete first".'
+  kind: categorical
+  impl:
+  - NEP.poisson_iso_seir_iso
+  supporting:
+  - NEP.poisson_iso_seir
+  impl_note: As poissonIsoSir for seirRxns τ a γ (s + I → E + I at τ, E → I at a, I → R at γ).
+  required: true
+  status: implemented
+  notes: 'The docstring''s Lean statement calls the E → I rate "σ (the rate a of E → I)"; the binder is a (σ is also the species-type variable elsewhere). Harmless, but a wording slip. Remediation (SA-PASS triage): new trusted theorem in the text''s form: poisson_iso_seir_iso (existential inverse form).'
+- id: MorphismsPoisson.poissonDLNone
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 81-81
+  text: 'The `S`-component of `poissonDL`: `q (v_ξ e^{μ(θ−1)} + ξ μ e^{μ(θ−1)} v_θ)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.poissonDL_none_left
+  supporting:
+  - NEP.poissonDL_none
+  impl_note: poissonDL μ q u v none = q * (v.2.1 * exp(μ(u.1 − 1)) + u.2.1 * (μ * exp(μ(u.1 − 1)) * v.1)).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: left-associated ξ μ e^{μ(θ−1)} v_θ.'
+- id: MorphismsPoisson.poissonDLInl
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 88-88
+  text: The `Φ_X`-component of `poissonDL` is `v_{φ_X}`.
+  kind: algebraic-identity
+  impl:
+  - NEP.poissonDL_inl
+  supporting: []
+  impl_note: poissonDL μ q u v (some (inl X)) = v.2.2.1 X (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPoisson.poissonDLInr
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 92-92
+  text: The node-copy `X`-component of `poissonDL` is `v_{pop_X}`.
+  kind: algebraic-identity
+  impl:
+  - NEP.poissonDL_inr
+  supporting: []
+  impl_note: poissonDL μ q u v (some (inr X)) = v.2.2.2 X (rfl).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPoisson.hasFDerivAtPoissonMap
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 96-96
+  text: '`poissonMap μ q` has derivative `poissonDL μ q u` at every `u`.'
+  kind: other
+  impl:
+  - NEP.hasFDerivAt_poissonMap_all
+  supporting:
+  - NEP.hasFDerivAt_poissonMap
+  impl_note: HasFDerivAt (poissonMap μ q) (poissonDL μ q u) u for every u, finite σ.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: no Fintype σ (topological-vector-space derivative).'
+- id: MorphismsPoisson.poissonEbField
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 132-134
+  text: '**Per-reaction identity behind M2.** On the Poisson(μ) network with `μ ≠ 0`, the derivative of
+    `poissonMap` carries the EB field of each T_EB reaction `r` to the multiset mass-action field of `D_μ
+    r` at the image point.'
+  kind: algebraic-identity
+  impl:
+  - NEP.poisson_ebField_fderiv
+  supporting:
+  - NEP.poisson_ebField
+  impl_note: μ ≠ 0 → poissonDL μ q u (ebField (CNet.poisson μ) q r u) = sLift (r.poissonD μ) (poissonMap
+    μ q u). "The derivative" is poissonDL.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: poisson_ebField_fderiv states the identity with fderiv for finite σ (the standing hypothesis); poisson_ebField (any σ, explicit poissonDL) is supporting.'
+- id: MorphismsPoisson.rxnPoissonDMap
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 360-360
+  text: '`D_μ` commutes with relabelling the node species of one reaction.'
+  kind: structural
+  impl:
+  - NEP.Rxn.poissonD_map
+  supporting: []
+  impl_note: (r.map f).poissonD μ = (r.poissonD μ).map (SRxn.map (dMap f)).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPoisson.sirRxnsNoExit
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 434-434
+  text: SIR has no exits.
+  kind: structural
+  impl:
+  - NEP.sirRxns_noExit
+  supporting: []
+  impl_note: ∀ r ∈ sirRxns τ γ, r.isExit = false.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPoisson.seirRxnsNoExit
+  group: MorphismsPoisson
+  source:
+    file: NetworkEpi/Morphisms/Poisson.lean
+    lines: 440-440
+  text: SEIR has no exits.
+  kind: structural
+  impl:
+  - NEP.seirRxns_noExit
+  supporting: []
+  impl_note: ∀ r ∈ seirRxns τ a γ, r.isExit = false.
+  required: true
+  status: implemented
+  notes: ''

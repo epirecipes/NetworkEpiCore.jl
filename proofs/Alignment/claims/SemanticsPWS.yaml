@@ -1,0 +1,152 @@
+# SA-PASS claim registry fragment: group SemanticsPWS
+# Source module: NetworkEpi.Semantics.PWS (NetworkEpi/Semantics/PWS.lean; paths relative to proofs/). Trusted library NetworkEpi.* (namespace NEP).
+# Registrar: claim registrar 1/2 (non-blind). Merged into Alignment/claims.yaml by scripts/sa_merge_claims.py.
+#
+# Conventions
+#   id      <Group>.<lowerCamelTheoremName> for a theorem docstring (namespace prefix only where two
+#           theorems share a last component); '.b', '.c' for further claims of the same docstring;
+#           <Group>.header.<slug> for module-header prose/tables; <Group>.<lowerCamelDefName> for a
+#           claim made in the docstring of a definition or instance.
+#   text    VERBATIM (whitespace-normalised) quote; fragments separated by a line '[...]'. Lean comment
+#           delimiters are not part of the text. For a citable theorem the text is the bold title plus the
+#           full 'Design statement' paragraph. 'Lean statement:' paragraphs are NOT quoted (they transcribe
+#           the Lean statement and would leak it to blind shadow authors). 'Scope:' sentences are
+#           registered separately only when they assert mathematics.
+#   status  implemented -> impl lists trusted theorems; required: true
+#           missing     -> checkable mathematical claim that no trusted theorem states
+#           informal    -> definitional / interpretive / meta prose, Mathlib background facts, or a
+#                          summary of a claim registered elsewhere (see supporting + notes)
+#   Merged claims: where several theorems of one module quote overlapping design statements that
+#           name each other, they form ONE claim whose impl lists all of them (each citable name is the
+#           impl of exactly one required claim).
+#   impl_note / notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: SemanticsPWS.header.designRow
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 6-9
+  text: 'DESIGN_NetworkEpiCore.md §D.4, row **PW^S_{N,K}**: "Petri/T_EB | [X], [sX], [ss] (+ θ for `PGFClosure`)
+    | closes only on T_EB | lax: a contact drains [Z s] for *every* Z"; §D.6: "**F2/F2′** same for PW,
+    PW^S, PB, clustered EB | **no** (lax) | a contact drains [Z s] (or triangle pairs) for every Z | Lean
+    witness (stretch, L3)".'
+  kind: categorical
+  impl: []
+  supporting:
+  - NEP.pwS_glue_not_strict
+  impl_note: Design quote for the module; 'closes only on T_EB' corresponds to pwSField being defined
+    on Rxn σ (definitional); the F2 part is SemanticsPWS.pwSGlueNotStrict.
+  required: false
+  status: informal
+  notes: Cross-reference; the same design quotes are in SemanticsPWS.pwSGlueNotStrict.
+- id: SemanticsPWS.header.fieldTable
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 13-17,20-24
+  text: |-
+    The state `w : PWS σ` is `([s], [ss], [sZ], [Z])`: the susceptible singles, the susceptible– susceptible pairs, the pairs `[sZ]` for node species `Z` and the singles `[Z]`. Triples are closed with a constant closure coefficient `K`: `[A s B] = K [As][sB]/[s]`. The per-reaction field is the one checked symbolically in the design pass (`check_pwS_general.py` for contacts and transitions, `check_exit_pws.py` for exits):
+    [...]
+    contact (s + J → X + J, τ): [s]' −= τ[sJ]; [ss]' −= 2τ[ssJ]; [X]' += τ[sJ]
+    [sZ]' −= τ[Z s J] for every Z; [sJ]' −= τ[sJ]; [sX]' += τ[s s J]
+    exit (s → Y, ν): [s]' −= ν[s]; [ss]' −= 2ν[ss]; [sZ]' −= ν[sZ] for every Z;
+    [sY]' += ν[ss]; [Y]' += ν[s]
+    trans (X → Y | ∅, a): [sX]' −= a[sX]; [sY]' += a[sX]; [X]' −= a[X]; [Y]' += a[X]
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: The docstring of pwSField refers to this table, but no theorem restates pwSField per reaction
+    (unlike ebField, cf. NEP.ebField_contact_eq). With [ssJ] = K[ss][sJ]/[s] and [Z s J] = K[sZ][sJ]/[s]
+    the definition appears to follow the table; checkable only through a reviewed bridge or a restating
+    lemma.
+  required: false
+  status: missing
+  notes: Definitional correspondence without a theorem. 'checked symbolically in the design pass' is meta.
+- id: SemanticsPWS.header.closureKpsi
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 27-28
+  text: For the degree-dependent closure `K_ψ(θ) = ψψ''/ψ'²` of the design's M6, evaluate this field at
+    `K = K_ψ(θ)`. The terms "for every Z" are what make PW^S lax under gluing (`pwS_glue_not_strict`).
+  kind: other
+  impl: []
+  supporting:
+  - NEP.pwS_glue_not_strict
+  impl_note: Usage instruction (evaluate at K = K_ψ(θ)) plus a cross-reference to pwS_glue_not_strict.
+    No degree-dependent closure is formalised here.
+  required: false
+  status: informal
+  notes: ''
+- id: SemanticsPWS.pwSLiftAppend
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 63-63
+  text: The PW^S field is additive in the reaction list (like the EB lift).
+  kind: algebraic-identity
+  impl:
+  - NEP.pwSLift_append
+  supporting: []
+  impl_note: pwSLift K (rs ++ rs') w = pwSLift K rs w + pwSLift K rs' w for all K, rs, rs', w.
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsPWS.f2GluedSV
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 92-92
+  text: The `[sV]` component of the PW^S field of the glued witness model at `f2State` is `−1`.
+  kind: algebraic-identity
+  impl:
+  - NEP.f2_glued_sV
+  supporting: []
+  impl_note: (pwSLift 1 (f2A.map (Rxn.map Sum.inl) ++ f2B.map (Rxn.map Sum.inr)) f2State).2.2.1 (Sum.inr
+    ()) = −1 (the glued witness model is written out; K = 1).
+  required: true
+  status: implemented
+  notes: ''
+- id: SemanticsPWS.f2SumSV
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 98-98
+  text: The `[sV]` component of the sum of the pushed-forward PW^S fields of `A` and `B` is `0`.
+  kind: algebraic-identity
+  impl:
+  - NEP.f2_sum_sV_all
+  supporting:
+  - NEP.f2_sum_sV
+  impl_note: (pushPW Sum.inl (pwSLift 1 f2A (pullPW Sum.inl f2State)) + pushPW Sum.inr (pwSLift 1 f2B
+    (pullPW Sum.inr f2State))).2.2.1 (Sum.inr ()) = 0 (K = 1; states pulled back along the legs).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: f2_sum_sV_all holds for every closure coefficient K.'
+- id: SemanticsPWS.pwSGlueNotStrict
+  group: SemanticsPWS
+  source:
+    file: NetworkEpi/Semantics/PWS.lean
+    lines: 105-111
+  text: '**F2: the S-anchored pairwise field is not strict under gluing.** Design statement (DESIGN_NetworkEpiCore.md
+    §D.6): "**F2/F2′** same for PW, PW^S, PB, clustered EB | **no** (lax) | a contact drains [Z s] (or
+    triangle pairs) for every Z | Lean witness (stretch, L3)"; §D.4: "A PW^S contact drains every [Z s]
+    through the closed triple [Z s J]. When B''s species are glued in, A''s contacts must also drain [Z_B
+    s], which A''s system does not contain. So PW^S(glue(A,B)) ≠ glue(PW^S A, PW^S B)."'
+  kind: categorical
+  impl:
+  - NEP.pwS_glue_not_strict_all
+  - NEP.pwS_glue_not_strict_witness
+  supporting:
+  - NEP.pwS_glue_not_strict
+  impl_note: 'A single explicit witness: K = 1, A = f2A = [s + I → I + I at τ = 1] over Unit, B = f2B
+    = [s → V at ν = 1] over Unit, glued along Sum.inl, Sum.inr (only s shared), state f2State ([s] = [ss]
+    = 1, [sZ] = 1, [Z] = 0): pwSLift 1 (glued) f2State ≠ pushPW inl (pwSLift 1 f2A (pullPW inl f2State))
+    + pushPW inr (pwSLift 1 f2B (pullPW inr f2State)). So ''PW^S(glue(A,B)) ≠ glue(PW^S A, PW^S B)'' holds
+    for this A, B (failure of strictness as a universal law), not for all A, B. NOT IN IMPL: ''lax'' (existence
+    of a comparison map) is not formalised; PW, PB, clustered EB (named in the design row) and F2′ are
+    not formalised; only the constant-K closure PW^S. ''drains every [Z s] through the closed triple [Z
+    s J]'' is the mechanism, visible in the witness component [sV] (f2_glued_sV, f2_sum_sV) but not stated
+    as a general law.'
+  required: true
+  status: implemented
+  notes: "Citable: NEP.pwS_glue_not_strict. Remediation (SA-PASS triage): new trusted theorem in the text's form: pwS_glue_not_strict_all (K) is the negation of the gluing law for every K (witness inside the proof, [sI] components −2 vs −1); the K = 1 concrete witness pwS_glue_not_strict is supporting. Round-4 remediation (non-blind owner, 2026-09-28): forward 1/2 failed: pwS_glue_not_strict_all is a bare negation with no exported witness gluing. New trusted theorem pwS_glue_not_strict_witness (for every K, an explicit gluing cospan with injective, jointly surjective legs on which the two PW^S fields differ) added to the impl and to CITABLE. Impl changed: checker update needed."

@@ -1,0 +1,284 @@
+# SA-PASS claim registry fragment: group MorphismsPairwise
+# Source: NetworkEpi/Morphisms/Pairwise.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: MorphismsPairwise.header.target
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 17-23
+  text: 'The state is `(θ, w)` with `w = ([s], [ss], [sZ], [Z]) : PWS σ`. The PW^S part is the per-reaction
+    field `pwSField K` of `NetworkEpi.Semantics.PWS` (checked there against the design''s `check_pwS_general.py`
+    and `check_exit_pws.py`), evaluated at the degree-dependent closure `K = K_ψ(θ) = ψ(θ)ψ''''(θ)/ψ''(θ)²`.
+    The auxiliary θ evolves by `θ̇ = −(ψ(θ)/ψ''(θ)) Σ_contacts τ_r [s J_r]/[s]`. On the image of π^PW,
+    `[s] = qξψ(θ)`, so this is the design''s `θ̇ = −Σ_r τ_r [s J_r]/(qξψ''(θ))` written in the coordinates
+    of the target (ξ is not a coordinate of PW^S, so the target must not refer to it).'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: pgfSys N rs on PWSθ σ = ℝ × PWS σ with field pgfLift (per reaction pgfField
+    = (pgfThetaField, pwSField (N.closureK θ) r)). "On the image of π^PW, [s] = qξψ(θ)" holds by definition
+    of pwImage.'
+  required: false
+  status: informal
+  notes: Module-header description of the target system.
+- id: MorphismsPairwise.header.notFreeScalar
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 37-39
+  text: '**Not** the free-scalar identity: the legacy "pointwise pairwise identity" (§D.7 "Never cited")
+    is a statement about free scalars; here the derivatives of ψ enter only through the `HasDerivAt` hypotheses,
+    and the statement is a semiconjugacy of vector fields.'
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: 'Meta remark: the M6 theorems take HasDerivAt hypotheses on ψ, ψ'', ψ'''' and state IsSemiconjOn
+    of vector fields.'
+  required: false
+  status: informal
+  notes: Refers to §D.7 "Never cited" (the pointwise pairwise identity).
+- id: MorphismsPairwise.ebToPws
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 224-232,251-251,27-30
+  text: |-
+    **EB → S-anchored pairwise with the PGF closure, for every ψ and every T_EB model (M6).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M6): "**EB → S-anchored pairwise** | π^PW(θ, ξ, φ, pop) = (θ, [s] = qξψ(θ), [sX] = qξψ'(θ)φ_X, [ss] = q²ξ²ψ'(θ)²/ψ'(1), [X] = pop_X) onto PW^S with closure [Z s J] = K_ψ(θ)[Zs][sJ]/[s], K_ψ = ψψ''/ψ'². It holds **for every C² ψ and every T_EB model**, on U = {ψ ≠ 0, ψ' ≠ 0} (the DSA closure, Kiss, Kenah & Rempała 2023) | natural semiconjugacy"; §A.4: "`PGFClosure()`: the S-anchored subsystem with closure K_ψ(θ) = ψ(θ)ψ''(θ)/ψ'(θ)² and an auxiliary θ, where θ̇ = −Σ_r τ_r [s J_r]/(qξψ'(θ)). It is exact against EB for every ψ (M6)".
+    [...]
+    No condition on ψ'(1) is needed.
+    [...]
+    for every T_EB reaction list (contacts, exits, progressions, removals), every configuration network and every set Θ of θ values at which ψ' and ψ'' are the derivatives of ψ and ψ', π^PW is a local semiconjugacy from EB to `pgfSys` on `U = {θ ∈ Θ, ψ(θ) ≠ 0, ψ'(θ) ≠ 0, ξ ≠ 0}` (for `q ≠ 0`).
+  kind: dynamical
+  impl:
+  - NEP.eb_to_pws
+  supporting: []
+  impl_note: '∀ finite σ (DecidableEq) N q, q ≠ 0 → ∀ Θ, (∀ θ ∈ Θ, HasDerivAt N.ψ (N.ψ'' θ) θ) → (∀ θ
+    ∈ Θ, HasDerivAt N.ψ'' (N.ψ'''' θ) θ) → ∀ rs, IsSemiconjOn (ebSys N q rs) (pgfSys N rs) (pwsDomain
+    N Θ) (pwImage N q), pwsDomain N Θ = {u | u.1 ∈ Θ ∧ ψ u.1 ≠ 0 ∧ ψ'' u.1 ≠ 0 ∧ u.2.1 ≠ 0}. Differences
+    from the design statement: its U = {ψ ≠ 0, ψ'' ≠ 0} lacks ξ ≠ 0, and q ≠ 0 is an extra hypothesis
+    (both are in the header fragment; DESIGN §L.3 amends U to {ψ ≠ 0, ψ'' ≠ 0, ξ ≠ 0} with q ≠ 0); "every
+    C² ψ" is replaced by the two derivative relations on Θ (weaker, so C² ψ with Θ = ℝ is covered). "natural"
+    (in P) is not formalised. The PGFClosure θ-equation is stated in target coordinates, θ̇ = −(ψ/ψ'')Σ_contacts
+    τ[sJ]/[s], which equals the design''s −Σ τ[sJ]/(qξψ'') on the image of π^PW. "exact against EB" =
+    this semiconjugacy (trajectories: eb_to_pws_solution).'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPairwise.ebToPwsSolution
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 262-267,31-31
+  text: |-
+    **EB → PW^S on trajectories (M6).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M6): "π^PW(θ, ξ, φ, pop) = (θ, [s] = qξψ(θ), [sX] = qξψ'(θ)φ_X, [ss] = q²ξ²ψ'(θ)²/ψ'(1), [X] = pop_X) onto PW^S with closure [Z s J] = K_ψ(θ)[Zs][sJ]/[s], K_ψ = ψψ''/ψ'². It holds **for every C² ψ and every T_EB model**, on U = {ψ ≠ 0, ψ' ≠ 0}"; §D.3: "solutions that stay in U are mapped".
+    [...]
+    EB solutions that stay in `U` map to PGF-closure solutions.
+  kind: dynamical
+  impl:
+  - NEP.eb_to_pws_solution_at_global
+  - NEP.eb_to_pws_solution_global
+  supporting:
+  - NEP.eb_to_pws_solution_at
+  - NEP.eb_to_pws_solution
+  impl_note: 'Hypotheses of eb_to_pws, plus a HasDerivWithinAt solution x of lift N q rs on any I ⊆ ℝ
+    with x t ∈ pwsDomain N Θ for t ∈ I; conclusion: t ↦ pwImage N q (x t) solves pgfLift N rs within I.
+    The design''s U lacks ξ ≠ 0 (see ebToPws).'
+  required: true
+  status: implemented
+  notes: "Remediation (SA-PASS triage): new trusted theorem in the text's form: eb_to_pws_solution_at (two-sided HasDerivAt at every t ∈ I, any I) added; both solution notions are now covered. Round-4 remediation (non-blind owner, 2026-09-28): backward failed because the Θ-local impls are more general than the text (\"for every C² ψ\"). New exact-statement theorems eb_to_pws_solution_at_global / eb_to_pws_solution_global (ψ C² at every real θ, U = {ψ ≠ 0, ψ' ≠ 0, ξ ≠ 0}) are the impl; the Θ-local ones are supporting. CITABLE: eb_to_pws_solution{,_at} replaced by the _global names. Impl changed: checker update needed."
+- id: MorphismsPairwise.ebToPwsSir
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 284-288
+  text: '**EB → PW^S for SIR (M6, SIR instance).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M6):
+    "It holds **for every C² ψ and every T_EB model**, on U = {ψ ≠ 0, ψ'' ≠ 0}"; §D.7, L4e: "SIR and SEIR
+    with generic C² ψ via `HasDerivAt` hypotheses".'
+  kind: dynamical
+  impl:
+  - NEP.eb_to_pws_sir_global
+  supporting:
+  - NEP.eb_to_pws_sir
+  impl_note: 'eb_to_pws at rs = sirRxns τ γ: q ≠ 0 and derivative relations on Θ → IsSemiconjOn (ebSys
+    N q (sirRxns τ γ)) (pgfSys N (sirRxns τ γ)) (pwsDomain N Θ) (pwImage N q). Same domain differences
+    as ebToPws.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: eb_to_pws_sir_global (derivative relations at every θ, domain {ψ ≠ 0, ψ'' ≠ 0, ξ ≠ 0}); the Θ-local eb_to_pws_sir is supporting.'
+- id: MorphismsPairwise.ebToPwsSeir
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 300-304
+  text: '**EB → PW^S for SEIR (M6, SEIR instance).** Design statement (DESIGN_NetworkEpiCore.md §D.5,
+    M6): "It holds **for every C² ψ and every T_EB model**, on U = {ψ ≠ 0, ψ'' ≠ 0}"; §D.7, L4e: "SIR
+    and SEIR with generic C² ψ via `HasDerivAt` hypotheses".'
+  kind: dynamical
+  impl:
+  - NEP.eb_to_pws_seir_global
+  supporting:
+  - NEP.eb_to_pws_seir
+  impl_note: eb_to_pws at rs = seirRxns τ a γ; same hypotheses and domain as ebToPwsSir.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: eb_to_pws_seir_global (Θ = ℝ corollary).'
+- id: MorphismsPairwise.ebToPwsConst
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 325-329,337-337,33-34
+  text: |-
+    **The constant-closure pairwise model is exact when K_ψ is constant (M6 with M8).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT"; M6: "onto PW^S with closure [Z s J] = K_ψ(θ)[Zs][sJ]/[s], K_ψ = ψψ''/ψ'²".
+    [...]
+    this is the "if" direction of the design's "exact iff PT"
+    [...]
+    if `K_ψ ≡ κ` on Θ, the PW^S part alone, with the **constant** closure κ, is the image of EB: the constant-closure pairwise model is exact.
+  kind: dynamical
+  impl:
+  - NEP.eb_to_pws_const
+  supporting: []
+  impl_note: Hypotheses of eb_to_pws plus ∀ θ ∈ Θ, N.closureK θ = κ (K_ψ ≡ κ on Θ); conclusion IsSemiconjOn
+    (ebSys N q rs) (pwSSys κ rs) (pwsDomain N Θ) (fun u => (pwImage N q u).2) (π^PW without θ). The hypothesis
+    is "K_ψ constant", not "PT" (PT → K_ψ constant is pt_iff_closureK, used by eb_to_pws_pt). Only the
+    "if" direction of the design's "exact iff PT" (the "only if" is MorphismsPairwise.constClosureOnlyIf,
+    missing). "Exact" is this semiconjugacy; trajectories are not restated. Same domain differences as
+    ebToPws.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPairwise.constClosureOnlyIf
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 327-339
+  text: |-
+    So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT
+    [...]
+    The "only if" direction for trajectories (that a non-constant K_ψ makes the constant closure inexact along some solution) is not formalised.
+  kind: dynamical
+  impl: []
+  supporting:
+  - NEP.eb_to_pws_const
+  - NEP.eb_to_pws_pt
+  - NEP.pt_iff_const_closure
+  impl_note: No theorem shows that a non-constant K_ψ (non-PT ψ) makes the constant-closure PW^S model
+    inexact along some solution. The "if" half is eb_to_pws_const / eb_to_pws_pt; the pointwise equivalence
+    PT ⇔ K_ψ ≡ κ is pt_iff_const_closure / pt_iff_closureK.
+  required: false
+  status: missing
+  notes: 'Declared gap (Scope of eb_to_pws_const; also the Scope of pt_iff_const_closure: "that a non-PT
+    ψ makes it inexact along some trajectory is not formalised"). DESIGN §L.3 records that only the "if"
+    half is formalised for the dynamics.'
+- id: MorphismsPairwise.ebToPwsPt
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 355-371
+  text: |-
+    **For a Poisson-type degree distribution the constant closure is exact (M8 ⇒ M6).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "PT ⇔ constant closure | On an interval I with ψ > 0: K_ψ ≡ κ ⇔ ψ' = αψ^κ [...] So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT"; §C.3: "heterogeneous pairwise with constant K = closure_constant(d) (exact iff PT, M8)".
+    [...]
+    the "if" direction of "exact iff PT"
+  kind: dynamical
+  impl:
+  - NEP.eb_to_pws_pt_any
+  - NEP.eb_to_pws_pt_closure_one
+  supporting:
+  - NEP.eb_to_pws_pt
+  impl_note: 'q ≠ 0; Θ convex with nonempty interior; on Θ: HasDerivAt relations for ψ, ψ'', ψ > 0, ψ''
+    ≠ 0, and PT: ψ'' θ = α ψ θ ^ κ (real power). Conclusion as eb_to_pws_const with that κ: IsSemiconjOn
+    (ebSys N q rs) (pwSSys κ rs) (pwsDomain N Θ) (fun u => (pwImage N q u).2). "K = closure_constant(d)"
+    (κ = ψ''''(1)/ψ''(1)²) is not part of the statement (pt_closure_at_one gives it when 1 ∈ Θ and ψ(1)
+    = 1). "Interval I" of the design = convex Θ with nonempty interior. Only the "if" half of "exact iff
+    PT".'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: eb_to_pws_pt_any drops the derivable hypothesis ψ'' ≠ 0 on Θ; eb_to_pws_pt_closure_one gives NBM''s closure ψ''''(1)/ψ''(1)² (1 ∈ Θ, ψ(1) = 1; no ψ''(1) ≠ 0 needed since otherwise the domain is empty).'
+- id: MorphismsPairwise.ebToPwsPoisson
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 392-395
+  text: '**On a Poisson network the constant closure K = 1 is exact (M6, M8, Poisson instance).** Design
+    statement (DESIGN_NetworkEpiCore.md §D.5, M8): "So NBM''s constant closure ⟨k(k−1)⟩/⟨k⟩² is exact
+    **iff** the degree distribution is PT"; §0: "This covers Poisson (κ = 1)".'
+  kind: dynamical
+  impl:
+  - NEP.eb_to_pws_poisson_any
+  supporting:
+  - NEP.eb_to_pws_poisson
+  impl_note: μ ≠ 0 → q ≠ 0 → IsSemiconjOn (ebSys (CNet.poisson μ) q rs) (pwSSys 1 rs) {u | u.2.1 ≠ 0}
+    (fun u => (pwImage (CNet.poisson μ) q u).2), every T_EB list rs. The constant closure 1 is K = 1 (the
+    design's κ = 1).
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: eb_to_pws_poisson_any holds for every μ on the M6 domain {ψ ≠ 0, ψ'' ≠ 0, ξ ≠ 0} (empty for μ = 0).'
+- id: MorphismsPairwise.hasFDerivAtPwImage
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 109-110
+  text: π^PW has derivative `pwD N q u` at every state whose θ is a point where ψ' and ψ'' are the derivatives
+    of ψ and ψ'.
+  kind: other
+  impl:
+  - NEP.hasFDerivAt_pwImage
+  supporting: []
+  impl_note: HasDerivAt N.ψ (N.ψ' u.1) u.1 → HasDerivAt N.ψ' (N.ψ'' u.1) u.1 → HasFDerivAt (pwImage N
+    q) (pwD N q u) u.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsPairwise.pwsEbField
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 156-158
+  text: '**Per-reaction identity behind M6.** At a state with `ψ(θ) ≠ 0`, `ψ''(θ) ≠ 0` and `qξ ≠ 0`, the
+    derivative of π^PW carries the EB field of each T_EB reaction `r` to the PGF-closure field of `r`
+    at the image point.'
+  kind: algebraic-identity
+  impl:
+  - NEP.pws_ebField_of_mul
+  supporting:
+  - NEP.pws_ebField
+  impl_note: ψ(θ) ≠ 0 → ψ'(θ) ≠ 0 → q ≠ 0 → ξ ≠ 0 → pwD N q u (ebField N q r u) = pgfField N r (pwImage
+    N q u) (the text's "qξ ≠ 0" is split into q ≠ 0 and ξ ≠ 0, equivalent). "The derivative" is pwD. No
+    derivative relations are needed for this identity.
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): new trusted theorem in the text''s form: pws_ebField_of_mul takes the text''s hypothesis qξ ≠ 0 (form only).'
+- id: MorphismsPairwise.pwsDomainPoisson
+  group: MorphismsPairwise
+  source:
+    file: NetworkEpi/Morphisms/Pairwise.lean
+    lines: 383-384
+  text: 'The domain of M6 on a Poisson(μ) network with `μ ≠ 0` is `{ξ ≠ 0}`: ψ > 0 and ψ'' ≠ 0 everywhere.'
+  kind: algebraic-identity
+  impl:
+  - NEP.pwsDomain_poisson_of_ne
+  supporting:
+  - NEP.pwsDomain_poisson_spec
+  - NEP.pwsDomain_poisson
+  impl_note: μ ≠ 0 → pwsDomain (CNet.poisson μ) Set.univ = {u | u.2.1 ≠ 0}. The reason ("ψ > 0 and ψ'
+    ≠ 0 everywhere") is not stated separately.
+  required: true
+  status: implemented
+  notes: "Remediation (SA-PASS triage): new trusted theorem in the text's form: pwsDomain_poisson_spec adds the reason (ψ > 0 everywhere; ψ' ≠ 0 everywhere for μ ≠ 0). Round-4 remediation (non-blind owner, 2026-09-28): backward failed because pwsDomain_poisson_spec states ψ > 0 also for μ = 0. New exact-statement theorem pwsDomain_poisson_of_ne (μ ≠ 0 → domain = {ξ ≠ 0} ∧ ψ > 0 ∧ ψ' ≠ 0) is the impl; the spec theorem is supporting. CITABLE: pwsDomain_poisson_spec replaced by pwsDomain_poisson_of_ne. Impl changed: checker update needed."

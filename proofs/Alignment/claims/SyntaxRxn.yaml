@@ -1,0 +1,434 @@
+# SA-PASS claim registry fragment: group SyntaxRxn
+# Source module: NetworkEpi.Syntax.Rxn (NetworkEpi/Syntax/Rxn.lean; paths relative to proofs/). Trusted library NetworkEpi.* (namespace NEP).
+# Registrar: claim registrar 1/2 (non-blind). Merged into Alignment/claims.yaml by scripts/sa_merge_claims.py.
+#
+# Conventions
+#   id      <Group>.<lowerCamelTheoremName> for a theorem docstring (namespace prefix only where two
+#           theorems share a last component); '.b', '.c' for further claims of the same docstring;
+#           <Group>.header.<slug> for module-header prose/tables; <Group>.<lowerCamelDefName> for a
+#           claim made in the docstring of a definition or instance.
+#   text    VERBATIM (whitespace-normalised) quote; fragments separated by a line '[...]'. Lean comment
+#           delimiters are not part of the text. For a citable theorem the text is the bold title plus the
+#           full 'Design statement' paragraph. 'Lean statement:' paragraphs are NOT quoted (they transcribe
+#           the Lean statement and would leak it to blind shadow authors). 'Scope:' sentences are
+#           registered separately only when they assert mathematics.
+#   status  implemented -> impl lists trusted theorems; required: true
+#           missing     -> checkable mathematical claim that no trusted theorem states
+#           informal    -> definitional / interpretive / meta prose, Mathlib background facts, or a
+#                          summary of a claim registered elsewhere (see supporting + notes)
+#   Merged claims: where several theorems of one module quote overlapping design statements that
+#           name each other, they form ONE claim whose impl lists all of them (each citable name is the
+#           impl of exactly one required claim).
+#   impl_note / notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: SyntaxRxn.header.typingTable
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 11-22
+  text: |-
+    The models are reaction networks on one susceptible species `s` (left implicit: it is the unique
+    species of type `:sus`, DESIGN §B.2, "On an untyped network |Σ| = 1") and a type `σ` of node
+    species (type `:node`). The typing of §B.2 is therefore built into the syntax:
+    | constructor | §B.2 shape | §B.2 type | in T_EB? |
+    |---|---|---|---|
+    | `contact J X τ` | s + J → X + J (per-contact rate τ; J, X ∉ Σ; X = J allowed) | `:contact` | yes |
+    | `exit Y ν` | s → Y (Y ∉ Σ) | `:exit` | yes |
+    | `trans X (some Y) a` | X → Y (X, Y ∉ Σ) | `:progress` | yes |
+    | `trans X none a` | X → ∅ | `:remove` | yes |
+    | `NRxn.resus X a` | X → s | `:resus` | no |
+    | `NRxn.nodeContact X J Y τ` | X + J → Y + J with X ∉ Σ (`J = none` is s) | `:node_contact` | no |
+  kind: structural
+  impl: []
+  supporting:
+  - NEP.NRxn.ebAdmissible_iff_type
+  - NEP.NRxn.not_ebAdmissible_resus
+  - NEP.NRxn.not_ebAdmissible_nodeContact
+  impl_note: 'Definitional: the constructors of Rxn/NRxn, the case table NRxn.type and TNet.inTEB. The
+    ''in T_EB?'' column is the composite TNet.inTEB ∘ NRxn.type; its relation to EB-admissibility is SyntaxRxn.ebAdmissibleIffType
+    (and the resus/nodeContact claims).'
+  required: false
+  status: informal
+  notes: Definitional table; covered by the admissibility claims.
+- id: SyntaxRxn.header.tebTnet
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 24-27
+  text: '"**T_EB** = {contact, exit, progress, remove}: the sub-theory with **no arrow into Sus**. **T_net**
+    = all eight types." (§B.2). With a single susceptible species, the §B.2 types `:sus_move` (S₁ → S₂)
+    cannot occur and `:sus_contact` (a contact whose product or infector is susceptible) is not represented
+    by `NRxn`; neither is admissible for EB.'
+  kind: structural
+  impl: []
+  supporting:
+  - NEP.NRxn.ebAdmissible_iff_type
+  impl_note: TNet has six constructors (contact, exit, progress, remove, resus, nodeContact); the design's
+    T_net has eight. The paragraph explains why :sus_move and :sus_contact are absent (one susceptible
+    species). No theorem; definitional.
+  required: false
+  status: informal
+  notes: The design quote also appears in SyntaxRxn.ebAdmissibleIffType.
+- id: SyntaxRxn.header.exitsToEmpty
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 29-32
+  text: '**Exits to ∅.** §B.2 allows an exit `s → Y` with "Y ∉ Σ (or ∅)". The constructor `exit (Y : σ)`
+    always names a node species, so `s → ∅` is not directly expressible. Model it with an *inert sink
+    species* `D`: a node species that appears in no other reaction (no transition out of `D` and no contact
+    with `D` as infector).'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Modelling convention: exit (Y : σ) always names a node species; s → ∅ is represented with
+    an inert sink species. Definitional.'
+  required: false
+  status: informal
+  notes: DESIGN §J.2 makes the absorbing sink species the lowering of removals and exits to ∅.
+- id: SyntaxRxn.header.inertSink
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 32-35
+  text: In the EB field (`NetworkEpi.Semantics.EB`) no coordinate other than `φ_D` and `pop_D` depends
+    on `φ_D` or `pop_D`, so θ, ξ, S and every other `φ_X`, `pop_X` evolve exactly as for `s → ∅`. `φ_D`
+    and `pop_D` then record the removed edge and node mass, and the conservation laws count it.
+  kind: dynamical
+  impl: []
+  supporting: []
+  impl_note: No theorem states that, for an inert sink D (no reaction out of D and no contact with D as
+    infector), no component of the EB field other than φ_D and pop_D depends on φ_D or pop_D, nor that
+    θ, ξ, S and the other φ_X, pop_X evolve as for s → ∅ (s → ∅ is not expressible in Rxn, so the comparison
+    has no Lean counterpart). The conservation laws (NEP.conservation, NEP.node_conservation) require
+    no removal X → ∅ and include every species in Σ_X.
+  required: false
+  status: missing
+  notes: ''
+- id: SyntaxRxn.header.admissibilityScope
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 37-43
+  text: '**What the admissibility results say.** `EBAdmissible` is defined on the *syntax*: a T_net reaction
+    is admissible if it lies in the image of the T_EB syntax `Rxn σ`. The results `ebAdmissible_iff_type`,
+    `not_ebAdmissible_resus` and `exists_not_ebAdmissible` follow from the definitions by case analysis,
+    because `EBAdmissible` and `TNet.inTEB` are parallel case tables. They say that the EB semantics of
+    this library (`ebField`, defined on `Rxn σ`) has no input for `resus` or `nodeContact`. They do **not**
+    prove that no EB-type semantics for `X → s` could exist.'
+  kind: other
+  impl: []
+  supporting:
+  - NEP.NRxn.ebAdmissible_iff_type
+  - NEP.NRxn.not_ebAdmissible_resus
+  - NEP.NRxn.exists_not_ebAdmissible
+  impl_note: 'Meta description: EBAdmissible (r.toRxn?.isSome = true) and TNet.inTEB are parallel case
+    tables; the admissibility theorems follow by case analysis and are statements about syntax only.'
+  required: false
+  status: informal
+  notes: Scope statement for the admissibility claims.
+- id: SyntaxRxn.header.sisReason
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 43-45
+  text: The design's reason for refusing SIS/SIRS is mathematical ("SIS has no exact edge-based model";
+    a node that returns to Sus needs susceptible strata, which is pairwise, decision H6), and it is not
+    formalised here.
+  kind: other
+  impl: []
+  supporting: []
+  impl_note: '''SIS has no exact edge-based model'' (and the need for susceptible strata) is a mathematical
+    claim of the design that is not formalised (the text says so).'
+  required: false
+  status: missing
+  notes: ''
+- id: SyntaxRxn.toRxnToNRxn
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 130-130
+  text: '`NRxn.toRxn?` is a left inverse of the inclusion `Rxn.toNRxn`.'
+  kind: structural
+  impl:
+  - NEP.Rxn.toRxn?_toNRxn
+  supporting: []
+  impl_note: '∀ r : Rxn σ, r.toNRxn.toRxn? = some r.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.toNRxnInjective
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 134-134
+  text: The inclusion of T_EB syntax into T_net syntax is injective.
+  kind: structural
+  impl:
+  - NEP.Rxn.toNRxn_injective
+  supporting: []
+  impl_note: 'Function.Injective (Rxn.toNRxn : Rxn σ → NRxn σ).'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.ebAdmissibleIff
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 140-140
+  text: EB-admissibility is exactly membership in the image of T_EB syntax.
+  kind: equivalence
+  impl:
+  - NEP.NRxn.ebAdmissible_iff
+  supporting: []
+  impl_note: '∀ r : NRxn σ, r.EBAdmissible ↔ ∃ r'' : Rxn σ, r = r''.toNRxn.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.ebAdmissibleIffType
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 153-169
+  text: |-
+    EB-admissibility is membership of the reaction's type in T_EB: "the sub-theory with no arrow into Sus" (DESIGN §B.2). Design statement (DESIGN_NetworkEpiCore.md §B.2): "**T_EB** = {contact, exit, progress, remove}: the sub-theory with **no arrow into Sus**. **T_net** = all eight types."
+    [...]
+    T_EB is the list {contact, exit, progress, remove}; the gloss "no arrow into Sus" does not characterise it in this syntax, since `nodeContact` (X + J → Y + J with X, Y ∉ Σ) has no arrow into Sus and is not in T_EB. `TNet` has six of the design's eight T_net types: `:sus_move` and `:sus_contact` need a second susceptible species or a susceptible product, which `NRxn` does not represent.
+  kind: equivalence
+  impl:
+  - NEP.NRxn.ebAdmissible_iff_type
+  supporting: []
+  impl_note: '∀ σ (r : NRxn σ), r.EBAdmissible ↔ TNet.inTEB r.type = true, where inTEB is true exactly
+    on contact, exit, progress, remove. NOT IN IMPL: ''T_net = all eight types'' (TNet has six constructors;
+    SyntaxRxn.header.tebTnet). ''No arrow into Sus'' is the design''s gloss, not formalised; read literally
+    on the Petri net (no output arc into s), a nodeContact X + J → Y + J with a node catalyst J has no
+    arrow into Sus yet is neither in T_EB nor EB-admissible, so the theorem follows the enumerated set,
+    not the gloss. EBAdmissible is defined as membership in the image of Rxn σ (r.toRxn?.isSome = true);
+    the theorem is a case check that the two tables agree.'
+  required: true
+  status: implemented
+  notes: 'Remediation (spot check): the quoted design text is only partly true of this syntax (''T_net = all eight types'' vs six TNet constructors; ''no arrow into Sus'' is not a characterisation because of nodeContact). Scope sentences added to the docstring and to this text (DESIGN §M.6). Text changed: re-sync sa_claim text; re-shadow blind if needed.'
+- id: SyntaxRxn.eqToNRxnOfEbAdmissible
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 175-175
+  text: An EB-admissible T_net reaction comes from T_EB syntax.
+  kind: existence
+  impl:
+  - NEP.NRxn.eq_toNRxn_of_ebAdmissible
+  supporting: []
+  impl_note: '∀ r : NRxn σ, r.EBAdmissible → ∃ r'' : Rxn σ, r = r''.toNRxn.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.notEbAdmissibleResus
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 180-186
+  text: 'Resusceptibility `X → s` (§B.2 type `:resus`, e.g. SIS `I → S`) is not EB-admissible (DESIGN
+    executive summary: "The EB lift is strictly partial: SIS/SIRS are refused"). Design statement (DESIGN_NetworkEpiCore.md,
+    executive summary item 6): "**The EB lift is strictly partial**: SIS/SIRS are refused with the alternatives
+    named"; §B.2 table (the first ✗ is the EB column): "NodeTransition X ∉ Σ, Y ∈ Σ | `:resus` | I → S
+    (SIS), R → S (SIRS), I₁ → R₁ when R₁ can be infected | ✗".'
+  kind: structural
+  impl:
+  - NEP.NRxn.not_ebAdmissible_resus
+  supporting: []
+  impl_note: '∀ σ (X : σ) (a : ℝ), ¬ (NRxn.resus X a).EBAdmissible (true by definition of toRxn?). ''The
+    EB lift is strictly partial'' is reflected only by ebField being defined on Rxn σ, which has no resus
+    constructor; the Lean statement is about syntax, not about the non-existence of an EB semantics (the
+    Scope sentence says so). NOT IN IMPL: ''refused with the alternatives named'' (runtime error messages);
+    the §B.2 example ''I₁ → R₁ when R₁ can be infected'' needs several susceptible species and is not
+    representable (one implicit susceptible species).'
+  required: true
+  status: implemented
+  notes: 'Citable: NEP.NRxn.not_ebAdmissible_resus.'
+- id: SyntaxRxn.notEbAdmissibleNodeContact
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 197-198
+  text: A node contact `X + J → Y + J` with a node-species recipient (§B.2 type `:node_contact`) is not
+    EB-admissible.
+  kind: structural
+  impl:
+  - NEP.NRxn.not_ebAdmissible_nodeContact
+  supporting: []
+  impl_note: '∀ X (J : Option σ) Y τ, ¬ (NRxn.nodeContact X J Y τ).EBAdmissible (J = none is the susceptible
+    catalyst).'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.existsNotEbAdmissible
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 203-207
+  text: 'T_EB ⊊ T_net: some T_net reaction is not EB-admissible (the resusceptibility `X → s`). Design
+    statement (DESIGN_NetworkEpiCore.md §D.1): "**Petri/T_EB ⊂ Petri/T_net ⊂ Petri**, and the back ends
+    are defined on these: EB on Petri/T_EB"; executive summary item 6: "**The EB lift is strictly partial**".'
+  kind: existence
+  impl:
+  - NEP.NRxn.exists_not_ebAdmissible
+  supporting: []
+  impl_note: '∃ r : NRxn Unit, ¬ r.EBAdmissible (witness resus () 1), i.e. only for the species type Unit.
+    The inclusion T_EB ⊂ T_net is the definition Rxn.toNRxn; its injectivity is Rxn.toNRxn_injective and
+    ''not EB-admissible = not in the image'' is NRxn.ebAdmissible_iff (neither in impl). NOT IN IMPL:
+    Petri nets (''⊂ Petri'') are not formalised; ''the back ends are defined on these: EB on Petri/T_EB''
+    corresponds to ebField being defined on Rxn σ (definitional).'
+  required: true
+  status: implemented
+  notes: 'Citable: NEP.NRxn.exists_not_ebAdmissible.'
+- id: SyntaxRxn.header.decidabilityExamples
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 217-218
+  text: 'Decidability in action (§B.2 examples): SIR is EB-admissible; SIS (`I → S`, a `:resus`) and an
+    S-catalysed recovery `I + S → R + S` (a `:node_contact`) are not.'
+  kind: structural
+  impl: []
+  supporting:
+  - NEP.NRxn.not_ebAdmissible_resus
+  - NEP.NRxn.not_ebAdmissible_nodeContact
+  impl_note: Checked by three anonymous `example`s (lines 222-227, by decide) over a private species type;
+    examples cannot be cited as impl. The general resus/nodeContact facts are theorems (see supporting);
+    the SIR-is-admissible example has no named theorem.
+  required: false
+  status: missing
+  notes: 'Gap is formal only: the check exists but is not a named theorem.'
+- id: SyntaxRxn.decEBAdmissible
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 119-119,126-126
+  text: |-
+    EB-admissibility is decidable.
+    [...]
+    EB-admissibility of a reaction list is decidable.
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Docstrings of the instances NRxn.decEBAdmissible : DecidablePred EBAdmissible and NRxn.decEBAdmissibleList.
+    Decidability is data (a decision procedure); as a proposition it is classically trivial, so there
+    is no theorem to check.'
+  required: false
+  status: informal
+  notes: Computational claim realised by instance definitions.
+- id: SyntaxRxn.rxnMapId
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 252-252
+  text: Relabelling along the identity is the identity.
+  kind: algebraic-identity
+  impl:
+  - NEP.Rxn.map_id
+  supporting: []
+  impl_note: '∀ r : Rxn σ, r.map id = r.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.rxnMapMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 258-258
+  text: 'Relabelling is functorial: relabelling along `f` then `g` is relabelling along `g ∘ f`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.Rxn.map_map
+  supporting: []
+  impl_note: '∀ f g (r : Rxn σ), (r.map f).map g = r.map (g ∘ f). Only the composition law (the text defines
+    ''functorial'' by it); the identity law is Rxn.map_id (SyntaxRxn.rxnMapId).'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.nRxnMapId
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 264-264
+  text: Relabelling a T_net reaction along the identity is the identity.
+  kind: algebraic-identity
+  impl:
+  - NEP.NRxn.map_id
+  supporting: []
+  impl_note: '∀ r : NRxn σ, r.map id = r.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.nRxnMapMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 271-271
+  text: Relabelling T_net reactions is functorial.
+  kind: algebraic-identity
+  impl:
+  - NEP.NRxn.map_map
+  - NEP.NRxn.map_id
+  supporting: []
+  impl_note: 'NRxn.map_map: (r.map f).map g = r.map (g ∘ f); NRxn.map_id: r.map id = r. ''Functorial''
+    is read as both laws, so the identity law (next to it in the module) is included in impl.'
+  required: true
+  status: implemented
+  notes: impl includes NRxn.map_id because the docstring says 'functorial' without restricting it to composition.
+- id: SyntaxRxn.toNRxnMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 279-279
+  text: Relabelling commutes with the inclusion T_EB ⊂ T_net.
+  kind: algebraic-identity
+  impl:
+  - NEP.Rxn.toNRxn_map
+  supporting: []
+  impl_note: '∀ f (r : Rxn σ), (r.map f).toNRxn = r.toNRxn.map f.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.typeMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 283-283
+  text: Relabelling preserves the type of a reaction (morphisms of syntax are type-preserving).
+  kind: algebraic-identity
+  impl:
+  - NEP.NRxn.type_map
+  supporting: []
+  impl_note: '∀ f (r : NRxn σ), (r.map f).type = r.type.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.ebAdmissibleMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 289-289
+  text: Relabelling preserves and reflects EB-admissibility.
+  kind: equivalence
+  impl:
+  - NEP.NRxn.ebAdmissible_map
+  supporting: []
+  impl_note: '∀ f (r : NRxn σ), (r.map f).EBAdmissible ↔ r.EBAdmissible.'
+  required: true
+  status: implemented
+  notes: ''
+- id: SyntaxRxn.scaleContactsMap
+  group: SyntaxRxn
+  source:
+    file: NetworkEpi/Syntax/Rxn.lean
+    lines: 303-303
+  text: '`c_κ` commutes with relabelling (it acts reaction by reaction).'
+  kind: algebraic-identity
+  impl:
+  - NEP.Rxn.scaleContacts_map
+  supporting: []
+  impl_note: '∀ κ f (r : Rxn σ), (r.map f).scaleContacts κ = (r.scaleContacts κ).map f. ''It acts reaction
+    by reaction'' is definitional (scaleContacts is a function on single reactions).'
+  required: true
+  status: implemented
+  notes: ''

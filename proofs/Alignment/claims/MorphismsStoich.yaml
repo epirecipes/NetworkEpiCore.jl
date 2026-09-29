@@ -1,0 +1,124 @@
+# SA-PASS claim registry fragment: group MorphismsStoich
+# Source: NetworkEpi/Morphisms/Stoich.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: MorphismsStoich.header.multisetMassAction
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 8-13
+  text: 'The Poisson isomorphism M2 lands in mass action of the network `D_μ P`, whose contacts `S + Φ_J
+    → Φ_X + X + Φ_J` have **two** products. They are not reactions of the single-product syntax `NRxn
+    σ`, so this module defines mass action for general Petri-net reactions: a reaction `r : SRxn ι` over
+    a finite species type `ι` has an input multiset `inp`, an output multiset `out` and a rate constant
+    `k`; its flux at `x : ι → ℝ` is `k · Π_{i ∈ inp} x_i` (mass action) and its field is `flux · (out
+    − inp)` (the stoichiometric vector).'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional: SRxn ι (inp out : Multiset ι, k : ℝ), SRxn.flux r x = k * (inp.map x).prod,
+    SRxn.field r x i = flux * (count i out − count i inp), sLift = sum of fields, sSys. "They are not
+    reactions of NRxn σ" holds because every NRxn constructor has a single node product.'
+  required: false
+  status: informal
+  notes: Module-header prose defining multiset mass action.
+- id: MorphismsStoich.maEqStoich
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 173-176,182-183,15-17
+  text: |-
+    **The multiset mass-action semantics agrees with `maField`.** Design statement (DESIGN_NetworkEpiCore.md §D.4, row MA): "**MA** | Open(Petri) | x_X | total"; §D.7, "Honest feasibility": "The hard parts are [...] the multiset stoichiometry for D_μ".
+    [...]
+    So `sSys` extends the library's mass-action semantics to reactions with several products.
+    [...]
+    every T_net reaction `NRxn σ` is a multiset reaction over `Option σ` (`none` is the susceptible species) with the same mass-action field.
+  kind: dynamical
+  impl:
+  - NEP.ma_eq_stoich
+  - NEP.maField_toSRxn
+  supporting: []
+  impl_note: '∀ finite σ (DecidableEq), rs : List (NRxn σ): IsSemiconj (maSys rs) (sSys (rs.map NRxn.toSRxn))
+    maToS, maToS (S, x) = (none ↦ S, some X ↦ x_X). "Agrees" is expressed as a semiconjugacy along this
+    linear coordinate change (its bijectivity is not stated), not as an equality of fields; the per-reaction
+    equality maToS (maField r u) = r.toSRxn.field (maToS u) is maField_toSRxn, added to the impl because
+    the header fragment states the per-reaction agreement. The design quotes (MA is total on Open(Petri);
+    multiset stoichiometry is a hard part) are context and state no agreement.'
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsStoich.sLiftAppend
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 53-53
+  text: The multiset mass-action field is additive in the reaction list.
+  kind: algebraic-identity
+  impl:
+  - NEP.sLift_append
+  supporting: []
+  impl_note: sLift (rs ++ rs') x = sLift rs x + sLift rs' x.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsStoich.sLiftFlatMap
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 58-59
+  text: The multiset mass-action field of `rs.flatMap g` is the sum over `r ∈ rs` of the fields of `g
+    r`.
+  kind: algebraic-identity
+  impl:
+  - NEP.sLift_flatMap
+  supporting: []
+  impl_note: sLift (rs.flatMap g) x = (rs.map fun r => sLift (g r) x).sum.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsStoich.maToSLApply
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 94-94
+  text: '`maToSL` is `maToS`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.maToSL_apply
+  supporting: []
+  impl_note: maToSL u = maToS u (the CLM maToSL is the function maToS).
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsStoich.maFieldToSRxn
+  group: MorphismsStoich
+  source:
+    file: NetworkEpi/Morphisms/Stoich.lean
+    lines: 102-102
+  text: Per reaction, the `NRxn` mass-action field is the multiset mass-action field.
+  kind: algebraic-identity
+  impl:
+  - NEP.maField_toSRxn
+  supporting: []
+  impl_note: 'maToS (maField r u) = r.toSRxn.field (maToS u) for every r : NRxn σ (all six constructors)
+    and u : MA σ.'
+  required: true
+  status: implemented
+  notes: ''

@@ -1,0 +1,235 @@
+# SA-PASS claim registry fragment: group MorphismsNGM
+# Source: NetworkEpi/Morphisms/NGM.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: MorphismsNGM.header.r0Definition
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 18-19
+  text: 'R₀ is the spectral radius `spectralRadius ℝ K` (Mathlib: the supremum of `‖λ‖₊` over the real
+    spectrum of `K`, an extended non-negative real) of a next-generation matrix `K`.'
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Definitional convention: R₀ = spectralRadius ℝ K : ENNReal (Mathlib), sup of ‖λ‖₊ over the
+    real spectrum.'
+  required: false
+  status: informal
+  notes: Module-header convention used by every claim of the group.
+- id: MorphismsNGM.header.ngmDerivation
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 37-39
+  text: These are statements about given matrices. That these matrices are the next-generation matrices
+    of the EB models (the linearisation of the EB field at the disease-free state, the per-edge transmissibilities
+    `T`) is not formalised here.
+  kind: dynamical
+  impl: []
+  supporting: []
+  impl_note: No theorem derives a next-generation matrix from the linearisation of an EB field at the
+    disease-free state or relates T to the per-edge transmissibility; the matrices in r0_single_entry,
+    multiplex_r0 and multiplex_r0_eq_sum_iff are free parameters (multiplexNGM is a given 2 × 2 matrix).
+  required: false
+  status: missing
+  notes: Declared gap (module Scope; repeated in the Scope sentences of r0_single_entry and multiplex_r0).
+- id: MorphismsNGM.spectralRadiusVecMulVec
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: '94-97,23-24'
+  text: |-
+    **The spectral radius of a rank-one matrix (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "L5 (stretch) | R₀ | rank-one NGM for a single entry state".
+    [...]
+    a rank-one matrix `u vᵀ` (`u ≠ 0`) has real spectrum inside `{0, v·u}` containing `v·u`, so its spectral radius is `|v·u|`.
+  kind: algebraic-identity
+  impl:
+  - NEP.spectralRadius_vecMulVec
+  supporting:
+  - NEP.spectrum_vecMulVec_subset
+  - NEP.mem_spectrum_vecMulVec
+  impl_note: 'spectralRadius_vecMulVec: u ≠ 0 → spectralRadius ℝ (vecMulVec u v) = ‖v ⬝ᵥ u‖₊ (coerced
+    to ENNReal), for a finite index type with decidable equality. The two spectrum lemmas are added to
+    the impl because the header fragment states them: spectrum ℝ (vecMulVec u v) ⊆ {0, v ⬝ᵥ u} (no u ≠
+    0 needed) and u ≠ 0 → v ⬝ᵥ u ∈ spectrum ℝ (vecMulVec u v). The design statement is a plan-table row
+    that names the topic only.'
+  required: true
+  status: implemented
+  notes: "Round-4 remediation (non-blind owner, 2026-09-28): the backward SHADOW? failure (the blind shadow set has only the radius clause) is resolved at the registry: the two spectrum clauses of the text are registered and passing as their own claims (MorphismsNGM.spectrumVecMulVecSubset, MorphismsNGM.memSpectrumVecMulVec), so their theorems move to supporting here and this claim checks the radius. Shadows were not edited. If the owner prefers the spectrum clauses to be checked in this claim too, the shadow set must be re-derived blind with them. Impl changed: checker update needed."
+- id: MorphismsNGM.r0SingleEntry
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: '130-136,25-27'
+  text: |-
+    **R₀ for a single entry state: the next-generation matrix `e_E (wᵀV⁻¹)` has rank at most one (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "L5 (stretch) | R₀ | rank-one NGM for a single entry state; 2-layer multiplex R₀ = ρ(K)"; amended by §M.2: "for a single entry state E the next-generation matrix K = F V⁻¹ = e_E (wᵀV⁻¹) has rank at most one (rank one unless wᵀV⁻¹ = 0), and R₀ = ρ(K) = |(wᵀV⁻¹)_E|".
+    [...]
+    if every new infection enters one state `E` (`F = e_E wᵀ`), the next-generation matrix `K = F V⁻¹ = e_E (wᵀV⁻¹)` has rank at most one and `R₀ = ρ(K) = |(wᵀV⁻¹)_E|`
+  kind: algebraic-identity
+  impl:
+  - NEP.r0_single_entry_rank
+  - NEP.r0_single_entry_rank_one
+  supporting:
+  - NEP.r0_single_entry
+  impl_note: 'r0_single_entry_rank (E : n) (w : n → ℝ) (V : Matrix n n ℝ): vecMulVec (Pi.single E 1) w * V⁻¹ = vecMulVec (Pi.single E 1) (w ᵥ* V⁻¹) ∧ rank ≤ 1 ∧ spectralRadius ℝ (…) = ‖(w ᵥ* V⁻¹) E‖₊. V⁻¹ is Mathlib''s inverse (0 for singular V). r0_single_entry (supporting) is the radius conjunct alone.'
+  required: true
+  status: implemented
+  notes: "Remediation: text reworded by the design amendment §M.2 ('rank at most one', not 'rank one': K = 0 when wᵀV⁻¹ = 0); impl r0_single_entry -> r0_single_entry_rank. Text changed: re-shadow blind. Round-4 remediation (non-blind owner, 2026-09-28): forward 3 failed (no rank-one conjunct). New trusted theorem r0_single_entry_rank_one (wᵀV⁻¹ ≠ 0 → rank (F V⁻¹) = 1) added to the impl and to CITABLE; r0_single_entry_rank kept. Impl changed: checker update needed."
+- id: MorphismsNGM.spectralRadiusFinTwo
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: '199-201,30-31'
+  text: |-
+    **The spectral radius of a non-negative 2 × 2 matrix (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "2-layer multiplex R₀ = ρ(K)".
+    [...]
+    for a 2 × 2 matrix `[[a, b], [c, d]]` with `a, d ≥ 0` and `bc ≥ 0` (for example a non-negative NGM), `ρ = (a + d + √((a − d)² + 4bc))/2`.
+  kind: algebraic-identity
+  impl:
+  - NEP.spectralRadius_fin_two
+  supporting: []
+  impl_note: 0 ≤ a → 0 ≤ d → 0 ≤ b * c → spectralRadius ℝ !![a, b; c, d] = ENNReal.ofReal ((a + d + √((a
+    − d)^2 + 4bc))/2). The design quote "2-layer multiplex R₀ = ρ(K)" is context.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsNGM.multiplexR0
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: '253-256,30-31,32-34'
+  text: |-
+    **The two-layer multiplex R₀ = ρ(K) (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "L5 (stretch) | R₀ | rank-one NGM for a single entry state; 2-layer multiplex R₀ = ρ(K)"; §C.3, `MultiplexNetwork`: "R₀ = ρ(K)".
+    [...]
+    with `a, d ≥ 0` and `bc ≥ 0` (for example a non-negative NGM), `ρ = (a + d + √((a − d)² + 4bc))/2`.
+    [...]
+    for the two-layer multiplex NGM `K = [[T₁e₁, T₁k₁], [T₂k₂, T₂e₂]]` (as in `ngm.jl`: `M_ℓℓ = κ_ex,ℓ`, `M_mℓ = ⟨k_ℓ⟩`), `R₀ = ρ(K)` has the closed form above
+  kind: algebraic-identity
+  impl:
+  - NEP.multiplex_r0_of_entries
+  supporting:
+  - NEP.multiplex_r0
+  impl_note: 'For T₁ T₂ k₁ k₂ e₁ e₂ ≥ 0: spectralRadius ℝ (multiplexNGM T₁ T₂ k₁ k₂ e₁ e₂) = ENNReal.ofReal
+    ((T₁e₁ + T₂e₂ + √((T₁e₁ − T₂e₂)^2 + 4(T₁k₁)(T₂k₂)))/2), multiplexNGM = !![T₁e₁, T₁k₁; T₂k₂, T₂e₂].
+    The matrix is given, not derived from the multiplex EB model (header.ngmDerivation). The first header
+    fragment (the 2 × 2 closed form) is what "the closed form above" refers to.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (sign hypotheses on the entries T₁e₁, T₂e₂, T₁k₁·T₂k₂).'
+- id: MorphismsNGM.multiplexR0EqSumIff
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: '273-277,32-33,34-35'
+  text: |-
+    **The multiplex R₀ is the sum of the layer R₀s only in a degenerate case (L5).** Design statement (DESIGN_NetworkEpiCore.md §D.7 table): "2-layer multiplex R₀ = ρ(K)"; `NetworkEpiCore.jl/src/analysis/ngm.jl`: "R₀ = ρ(K), **not** the sum of the layer R₀s (verified issue E12)".
+    [...]
+    for the two-layer multiplex NGM `K = [[T₁e₁, T₁k₁], [T₂k₂, T₂e₂]]` (as in `ngm.jl`: `M_ℓℓ = κ_ex,ℓ`, `M_mℓ = ⟨k_ℓ⟩`),
+    [...]
+    it equals the sum `T₁e₁ + T₂e₂` of the layer R₀s iff `T₁T₂k₁k₂ = T₁T₂e₁e₂`.
+  kind: equivalence
+  impl:
+  - NEP.multiplex_r0_eq_sum_iff_of_entries
+  supporting:
+  - NEP.multiplex_r0_eq_sum_iff
+  impl_note: 'For T₁ T₂ k₁ k₂ e₁ e₂ ≥ 0: spectralRadius ℝ (multiplexNGM …) = ENNReal.ofReal (T₁e₁ + T₂e₂)
+    ↔ T₁k₁ (T₂k₂) = T₁e₁ (T₂e₂). The reduction to k₁k₂ = e₁e₂ when T₁T₂ ≠ 0 and the Poisson remark in
+    the Lean statement are not formalised. The title''s "only in a degenerate case" is this iff.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (entry signs; right-hand side T₁T₂k₁k₂ = T₁T₂e₁e₂).'
+- id: MorphismsNGM.memSpectrumIffDet
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 55-55
+  text: '`r` is in the real spectrum of `K` iff `det(r·1 − K) = 0`.'
+  kind: equivalence
+  impl:
+  - NEP.mem_spectrum_iff_det_smul
+  supporting:
+  - NEP.mem_spectrum_iff_det
+  impl_note: 'r ∈ spectrum ℝ K ↔ (diagonal (fun _ => r) − K).det = 0, K : Matrix n n ℝ, n finite with
+    decidable equality.'
+  required: true
+  status: implemented
+  notes: 'Remediation (SA-PASS triage): re-registered to the theorem that states the text''s form (r·1 as r • 1).'
+- id: MorphismsNGM.spectrumVecMulVecSubset
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 60-60
+  text: The real spectrum of the rank-one matrix `u vᵀ` lies in `{0, v·u}`.
+  kind: structural
+  impl:
+  - NEP.spectrum_vecMulVec_subset
+  supporting: []
+  impl_note: spectrum ℝ (vecMulVec u v) ⊆ {0, v ⬝ᵥ u}.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsNGM.memSpectrumVecMulVec
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 85-85
+  text: '`v·u` is in the real spectrum of `u vᵀ` when `u ≠ 0` (`u` is an eigenvector).'
+  kind: structural
+  impl:
+  - NEP.mem_spectrum_vecMulVec
+  supporting: []
+  impl_note: u ≠ 0 → v ⬝ᵥ u ∈ spectrum ℝ (vecMulVec u v). "(u is an eigenvector)" is the proof idea, not
+    stated.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsNGM.spectrumFinTwo
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 182-183
+  text: 'The real spectrum of a 2 × 2 matrix with non-negative discriminant `D = (a − d)² + 4bc`: the
+    two roots `(a + d ± √D)/2` of `λ² − (a + d)λ + (ad − bc)`.'
+  kind: algebraic-identity
+  impl:
+  - NEP.spectrum_fin_two
+  supporting: []
+  impl_note: 0 ≤ (a − d)^2 + 4bc → spectrum ℝ !![a, b; c, d] = {(a + d + √D)/2, (a + d − √D)/2}. The characteristic
+    polynomial is not stated.
+  required: true
+  status: implemented
+  notes: ''
+- id: MorphismsNGM.spectralRadiusFinTwoEqTraceIff
+  group: MorphismsNGM
+  source:
+    file: NetworkEpi/Morphisms/NGM.lean
+    lines: 225-226
+  text: 'For real `a, d ≥ 0`, `bc ≥ 0`: the spectral radius of `[[a, b], [c, d]]` is the trace `a + d`
+    iff `bc = ad` (the determinant vanishes).'
+  kind: equivalence
+  impl:
+  - NEP.spectralRadius_fin_two_eq_trace_iff
+  supporting: []
+  impl_note: 0 ≤ a → 0 ≤ d → 0 ≤ b * c → (spectralRadius ℝ !![a, b; c, d] = ENNReal.ofReal (a + d) ↔ b
+    * c = a * d).
+  required: true
+  status: implemented
+  notes: ''

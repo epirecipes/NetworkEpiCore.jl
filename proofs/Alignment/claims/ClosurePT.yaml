@@ -1,0 +1,154 @@
+# SA-PASS claim registry fragment: group ClosurePT
+# Source: NetworkEpi/Closure/PT.lean  (paths relative to proofs/)
+# Registrar: claim registrar 2/2 (non-blind), WP4-style SA-PASS on the NetworkEpi library.
+#
+# Conventions
+#   id       <Group>.<lowerCamelTheoremName> for a theorem docstring; <Group>.header.<slug> for
+#            module-header prose; <Group>.<slug> for a gap or remark stated in a docstring.
+#   text     VERBATIM (whitespace-normalised) quote of the cited lines; non-adjacent fragments are
+#            separated by a line '[...]'. Lean comment delimiters are not part of the text.
+#            For a citable theorem: the bold title and the "Design statement" paragraph, plus
+#            natural-language claim sentences of the docstring that are not transcriptions of the
+#            Lean statement (e.g. "No condition on ... is needed", a Scope sentence that names the
+#            part of the design statement being claimed), plus the module-header "Results" bullet
+#            for that theorem (without the leading theorem name). The "Lean statement:" paragraph
+#            is never quoted (it transcribes the formal statement).
+#   status   implemented -> impl lists trusted theorems; required: true
+#            missing     -> checkable claim with no implementing theorem (coverage gap)
+#            informal    -> definitional, interpretive or meta prose, or an index entry that
+#                           restates a claim registered elsewhere (see notes)
+#   Each CITABLE.txt name is the impl of exactly one required claim.
+#   impl_note/notes describe the Lean statements: BLIND shadow authors must not read this file.
+- id: ClosurePT.header.intervals
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 23-25
+  text: Intervals are convex sets with nonempty interior (for example `(0, 1]`, `[a, b]` with `a < b`,
+    or an open interval), and derivatives are taken within I, so one-sided derivatives at end points suffice.
+    The exponent `ψ^κ` is the real power `Real.rpow`, defined since ψ > 0.
+  kind: structural
+  impl: []
+  supporting: []
+  impl_note: 'Convention used by the theorems: an interval is I : Set ℝ with Convex ℝ I and (interior
+    I).Nonempty; derivatives are HasDerivWithinAt … I x; ψ^κ is Real.rpow.'
+  required: false
+  status: informal
+  notes: Module-header convention; the shadow authors need it to read "interval".
+- id: ClosurePT.ptIffConstClosure
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: '65-71,79,16'
+  text: |-
+    **Poisson type ⇔ constant closure (M8), both directions.** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "PT ⇔ constant closure | On an interval I with ψ > 0: K_ψ ≡ κ ⇔ ψ' = αψ^κ. Proof of ⇒: d/dx(ψ'ψ^{−κ}) = ψ^{−κ−1}(ψψ'' − κψ'²) = 0. So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT"; §D.7, L4d `Closure/PT`: "`(∀ x ∈ I, ψ x * ψ'' x = κ * ψ' x ^ 2) ↔ ∃ α, ∀ x ∈ I, ψ' x = α * ψ x ^ κ` (with ψ > 0 on I; `is_const_of_deriv_eq_zero`)".
+    [...]
+    an analytic statement about ψ on I
+    [...]
+    (both directions, product form of the design's §D.7 table)
+  kind: equivalence
+  impl:
+  - NEP.pt_iff_const_closure
+  supporting: []
+  impl_note: 'For ψ ψ'' ψ'''' : ℝ → ℝ (free functions, not a CNet) and I convex with nonempty interior:
+    (∀ x ∈ I, 0 < ψ x) → (∀ x ∈ I, HasDerivWithinAt ψ (ψ'' x) I x) → (∀ x ∈ I, HasDerivWithinAt ψ'' (ψ''''
+    x) I x) → ∀ κ, ((∀ x ∈ I, ψ x * ψ'''' x = κ * ψ'' x ^ 2) ↔ ∃ α, ∀ x ∈ I, ψ'' x = α * ψ x ^ κ) (rpow).
+    This is the product form of the §D.7 table; the §D.5 "K_ψ ≡ κ" ratio form is pt_iff_closureK. The
+    sentence "So NBM''s constant closure … is exact iff the degree distribution is PT" is dynamical and
+    not part of this theorem (the quoted Scope fragment: an analytic statement); its "if" half is eb_to_pws_pt
+    and its "only if" half is missing (MorphismsPairwise.constClosureOnlyIf). The proof hint d/dx(ψ''ψ^{−κ})
+    = ψ^{−κ−1}(ψψ'''' − κψ''²) is hasDerivWithinAt_pt_quotient (ClosurePT.hasDerivWithinAtPtQuotient).'
+  required: true
+  status: implemented
+  notes: ''
+- id: ClosurePT.ptIffClosureK
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: '110-113,17'
+  text: |-
+    **PT ⇔ K_ψ ≡ κ in ratio form (M8).** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "On an interval I with ψ > 0: K_ψ ≡ κ ⇔ ψ' = αψ^κ"; M6: "K_ψ = ψψ''/ψ'²".
+    [...]
+    (the ratio form `K_ψ = ψψ''/ψ'² ≡ κ`, where ψ' ≠ 0)
+  kind: equivalence
+  impl:
+  - NEP.pt_iff_closureK
+  supporting: []
+  impl_note: 'For N : CNet and I convex with nonempty interior: ψ > 0 on I, ψ'' ≠ 0 on I, HasDerivWithinAt
+    relations within I → ∀ κ, ((∀ x ∈ I, N.closureK x = κ) ↔ ∃ α, ∀ x ∈ I, N.ψ'' x = α * N.ψ x ^ κ). ψ''
+    ≠ 0 is an extra hypothesis (implicit in the ratio form and stated in the header fragment).'
+  required: true
+  status: implemented
+  notes: ''
+- id: ClosurePT.ptClosureAtOne
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 154-158,18-20
+  text: |-
+    **The PT constants at θ = 1 (M8), with `α = ψ'(1)` unconditional.** Design statement (DESIGN_NetworkEpiCore.md §D.5, M8): "So NBM's constant closure ⟨k(k−1)⟩/⟨k⟩² is exact **iff** the degree distribution is PT"; §C.1: "closure_constant(d) # K_ψ(1) = ψ''(1)/ψ'(1)² (NBM's heterogeneous constant closure)".
+    [...]
+    if moreover `1 ∈ I` and `ψ(1) = 1`, the constants are `α = ψ'(1)` and `κ = ψ''(1)/ψ'(1)²` (the value of NBM's constant closure, `closure_constant(d)`); the value of κ, and `K_ψ(1)` itself, need `ψ'(1) ≠ 0`
+  kind: algebraic-identity
+  impl:
+  - NEP.pt_constants_at_one
+  supporting:
+  - NEP.pt_closure_at_one
+  impl_note: 'pt_constants_at_one: N : CNet, I convex with nonempty interior, ψ > 0 on I, HasDerivWithinAt relations within I, 1 ∈ I, ψ 1 = 1, ∀ x ∈ I, ψ'' x = α * ψ x ^ κ → α = ψ'' 1 ∧ (ψ'' 1 ≠ 0 → κ = ψ'''' 1 / ψ'' 1 ^ 2) ∧ (ψ'' 1 ≠ 0 → κ = N.closureK 1). The older pt_closure_at_one (supporting) assumes ψ'' 1 ≠ 0 for both constants.'
+  required: true
+  status: implemented
+  notes: 'Remediation: impl pt_closure_at_one -> pt_constants_at_one (α = ψ''(1) unconditional; the κ value and K_ψ(1) under ψ''(1) ≠ 0, the proviso now in the quoted header fragment). Text re-cited from pt_constants_at_one''s docstring and extended by the proviso: the checker must re-sync sa_claim text; the existing shadows already carry the proviso.'
+- id: ClosurePT.ptOnlyExactConstant
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 138-139
+  text: So the only constant closure that a PT degree distribution makes exact is `K_ψ(1) = ψ''(1)/ψ'(1)²`.
+  kind: dynamical
+  impl: []
+  supporting:
+  - NEP.pt_closure_at_one
+  - NEP.eb_to_pws_pt
+  impl_note: 'Uniqueness of the exact constant closure is not formalised: pt_closure_at_one pins down
+    κ in the PT representation, and eb_to_pws_pt shows the closure κ is exact, but no theorem shows that
+    a different constant closure is inexact (that needs the unformalised "only if" direction, MorphismsPairwise.constClosureOnlyIf).'
+  required: false
+  status: missing
+  notes: Natural-language consequence inside the "Lean statement" paragraph of pt_closure_at_one.
+- id: ClosurePT.poissonClosureK
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: '182-185,21'
+  text: |-
+    **The Poisson PGF is of Poisson type with κ = 1 (M8, Poisson instance).** Design statement (DESIGN_NetworkEpiCore.md §0): "**Poisson type (PT).** A degree PGF ψ is PT if ψ' = αψ^κ. This covers Poisson (κ = 1)".
+    [...]
+    the Poisson PGF is PT with `α = μ`, `κ = 1`.
+  kind: algebraic-identity
+  impl:
+  - NEP.poisson_isPT
+  supporting:
+  - NEP.poisson_closureK
+  impl_note: 'μ ≠ 0 → ∀ x, (CNet.poisson μ).ψ'' x = μ * (CNet.poisson μ).ψ x ^ (1 : ℝ) ∧ (CNet.poisson
+    μ).closureK x = 1. PT holds on all of ℝ with α = μ, κ = 1 (pointwise statement; no interval).'
+  required: true
+  status: implemented
+  notes: 'Remediation: impl poisson_closureK -> poisson_isPT (every μ; no μ ≠ 0, no closureK conjunct). Text unchanged.'
+- id: ClosurePT.hasDerivWithinAtPtQuotient
+  group: ClosurePT
+  source:
+    file: NetworkEpi/Closure/PT.lean
+    lines: 37-38
+  text: 'The derivative of `ψ''ψ^{−κ}` within `I`, when ψ > 0 at `x`: `ψ''''ψ^{−κ} − κψ''²ψ^{−κ−1} = ψ^{−κ−1}(ψψ''''
+    − κψ''²)`.'
+  kind: other
+  impl:
+  - NEP.hasDerivWithinAt_pt_quotient_expanded
+  - NEP.hasDerivWithinAt_pt_quotient
+  supporting: []
+  impl_note: 0 < ψ x → HasDerivWithinAt ψ (ψ' x) I x → HasDerivWithinAt ψ' (ψ'' x) I x → HasDerivWithinAt
+    (fun y => ψ' y * ψ y ^ (−κ)) (ψ x ^ (−κ − 1) * (ψ x * ψ'' x − κ * ψ' x ^ 2)) I x. The intermediate
+    form ψ''ψ^{−κ} − κψ'²ψ^{−κ−1} is not stated.
+  required: true
+  status: implemented
+  notes: 'Remediation: the expanded form hasDerivWithinAt_pt_quotient_expanded (ψ''''ψ^{−κ} − κψ''²ψ^{−κ−1}) added as first impl; text unchanged.'
