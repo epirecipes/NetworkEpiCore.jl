@@ -780,13 +780,19 @@ end
                               SymbolicODE(:q; states = [y], rhs = [sqrt(g^2) * y]), [y => x]))
     @test !rw.ok && rw.max_residual > 0.1
     # identities that hold for every value of the part are still confirmed, also where a large
-    # value overflows (exp(10w) at w ≥ 71: that probe is redrawn with a small value); verify
-    # does not prove this one symbolically, so the probes decide
+    # value overflows (exp(10w) at w ≥ 71: that probe is redrawn with a small value). Whether
+    # the simplifier proves this one depends on the Symbolics release (and, in recent ones, on
+    # the session's cached expressions), so the probes are also asked alone
     e = exp(10 * max(a - 2, 0))
-    re = verify(Semiconjugacy(:e, SymbolicODE(:s; states = [x], rhs = [e * x]),
-                              SymbolicODE(:q; states = [y], rhs = [e * (sin(y)^2 + cos(y)^2) * y]),
-                              [y => x]))
-    @test re.ok && re.method === :numeric
+    se = Semiconjugacy(:e, SymbolicODE(:s; states = [x], rhs = [e * x]),
+                       SymbolicODE(:q; states = [y], rhs = [e * (sin(y)^2 + cos(y)^2) * y]),
+                       [y => x])
+    re = verify(se)
+    @test re.ok
+    re.ok || @info "verify(:e)" re.method re.details
+    rn = verify(se; method = :numeric)
+    @test rn.ok && rn.method === :numeric
+    rn.ok || @info "verify(:e; method = :numeric)" rn.details
     @test vector_fields_equal(
         SymbolicODE(:p; states = [x], rhs = [max(a - 2, 0) * (sin(x)^2 + cos(x)^2) * x]),
         SymbolicODE(:q; states = [x], rhs = [max(a - 2, 0) * x]))
