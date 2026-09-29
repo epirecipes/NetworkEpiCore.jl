@@ -1,0 +1,11 @@
+# The local Manifest.toml pins the development stack; CI resolves each Julia version afresh.
+Manifest.toml
+Manifest-v*.toml
+# Local OS/build artifacts
+.DS_Store
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+docs/build/
+# Lean build artefacts of proofs/ (owned by the Lean work packages)
+proofs/.lake/

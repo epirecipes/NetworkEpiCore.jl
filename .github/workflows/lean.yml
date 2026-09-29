@@ -1,0 +1,74 @@
+# Owner: WP13 (DESIGN_NetworkEpiCore.md §G.2 WP13 and §D.7). The Julia workflow is CI.yml (WP5).
+# Builds the Lean library NetworkEpi in proofs/, runs the axiom gate on CITABLE.txt (with the gate's
+# own self-test) and the SA-PASS harness self-test.
+name: Lean
+
+on:
+  push:
+    branches: [main]
+    paths: ['proofs/**', '.github/workflows/lean.yml']
+  pull_request:
+    paths: ['proofs/**', '.github/workflows/lean.yml']
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+jobs:
+  lean:
+    name: lake build + axiom gate + SA-PASS self-test
+    runs-on: ubuntu-latest
+    # Generous: if no Mathlib cache exists for the pinned revision, lake builds Mathlib from source.
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: proofs
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (the toolchain comes from proofs/lean-toolchain)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o /tmp/elan-init.sh
+          bash /tmp/elan-init.sh -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Restore the downloaded Mathlib cache (compressed build files)
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/mathlib
+          key: lake-${{ runner.os }}-${{ hashFiles('proofs/lean-toolchain', 'proofs/lake-manifest.json') }}
+
+      - name: Fetch the Mathlib build cache (revision pinned in lake-manifest.json)
+        run: |
+          if ! lake exe cache get; then
+            echo "::warning::lake exe cache get failed (no cache for this Mathlib revision?); lake build compiles Mathlib from source"
+          fi
+
+      - name: lake build (trusted library NetworkEpi)
+        run: lake build
+
+      - name: Axiom gate on CITABLE.txt, with the gate self-test
+        run: bash scripts/axiom_gate.sh --no-build --self-test
+
+      - name: Set up Python for the SA-PASS scripts
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the SA-PASS script dependencies
+        run: python -m pip install --quiet pyyaml
+
+      - name: SA-PASS harness self-test (mocks get their expected statuses; EXAMPLE.* pass)
+        run: bash scripts/sa_pass.sh --self-test
+
+      # Informational until the SA-PASS claims for CITABLE.txt are registered: sa_pass.sh --strict
+      # passes vacuously with no claims, so list the citable names that lack a passing claim. The
+      # release gate is `bash scripts/sa_pass_citable.sh` (exit 1 on any uncovered name).
+      - name: SA-PASS report and CITABLE coverage (informational)
+        run: |
+          bash scripts/sa_pass.sh --no-build
+          python scripts/sa_citable_coverage.py

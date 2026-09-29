@@ -1,0 +1,83 @@
+# Owner: WP5 (DESIGN_NetworkEpiCore.md §G.2 WP5; the Lean workflow is lean.yml, owned by WP13).
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['*']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  # Cancel superseded runs of the same branch or pull request (never on main).
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+env:
+  # A missing or stale committed scenario summary is an error in CI (§E.4).
+  NETEPI_STRICT_CACHE: "1"
+
+jobs:
+  test:
+    name: Julia ${{ matrix.version }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        # 1.10 and 1.11 give the cross-version check of the scenario hash goldens (WP12).
+        version: ['1.10', '1.11', '1']
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: ${{ matrix.version }}
+      - uses: julia-actions/cache@v2
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-runtest@v1
+
+  integration:
+    # The collision integration test (§A.8): all four packages path-developed side by side.
+    # The suite self-skips until EdgeBasedModels, NodeBasedModels and NetworkOutbreaks are >= 0.2.
+    name: Integration with the sibling packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: NetworkEpiCore.jl
+      - uses: actions/checkout@v4
+        with:
+          repository: epirecipes/EdgeBasedModels.jl
+          path: EdgeBasedModels.jl
+      - uses: actions/checkout@v4
+        with:
+          repository: epirecipes/NodeBasedModels.jl
+          path: NodeBasedModels.jl
+      - uses: actions/checkout@v4
+        with:
+          repository: epirecipes/NetworkOutbreaks.jl
+          path: NetworkOutbreaks.jl
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1'
+      - uses: julia-actions/cache@v2
+      - name: Build the integration workspace
+        shell: julia --color=yes {0}
+        run: |
+          using Pkg
+          Pkg.activate("integration")
+          Pkg.develop([PackageSpec(path = p) for p in ("NetworkEpiCore.jl", "EdgeBasedModels.jl",
+                                                       "NodeBasedModels.jl", "NetworkOutbreaks.jl")])
+          Pkg.add(["Catalyst", "Distributions", "Graphs", "LinearAlgebra", "ModelingToolkit",
+                   "ModelingToolkitBase", "Plots", "Random", "StableRNGs", "Statistics",
+                   "StatsBase", "Symbolics", "TOML", "Test"])
+          Pkg.precompile()
+      - name: Run the integration suite
+        run: julia --color=yes --project=integration NetworkEpiCore.jl/test/runtests.jl
+        env:
+          NEC_TEST_SUITES: integration
